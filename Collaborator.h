@@ -6,7 +6,7 @@
 #include "Client.h"
 #include "Project.h"
 #include "Date.h"
-#include "Task.h"
+
 
 
 #include <string>
@@ -21,7 +21,7 @@ using namespace std;
 #define MANAGER_COST 3
 #define TESTER_COST 4
 
-
+class Vazia;
 class Project;
 class Task;
 
@@ -34,7 +34,7 @@ private:
 	int maxdailyhours;
 	int workinghours;
 	vector<Project*> projects;
-	vector<pair<Task*, unsigned int> > tasks;
+	vector<pair<Task*, unsigned int>> tasks;
 public:
 	class CollaboratorExcept
 	{
@@ -44,20 +44,65 @@ public:
 		string operator()(){ return description; };
 	};
 	Collaborator(string name, int weeklyhours) : name(name), maxdailyhours(weeklyhours){ ++Collaborator::lastID; this->ID = Collaborator::lastID; };
-	static int numCollaborators(){ return Collaborator::lastID; };
+	//static int numCollaborators(){ return Collaborator::lastID; };
 	int getID() const{ return this->ID; };
+	void setID(int newID) { lastID = newID; };
 	string getName() const { return this->name; };
 	int getWorkingHours() const { return  this->workinghours; };
 	int getMaxWeeklyHours() const { return this->maxdailyhours; };
 	int getWorkinghours() const{ return this->workinghours; };
 	vector<Project*> getProjects() const { return this->projects; };
-	vector<pair<Task*, unsigned int> > getTasks() const { return this->tasks; };
+	vector<pair<Task*, unsigned int>> getTasks() const { return this->tasks; };
 	void setName(string newname){ this->name = newname; };
 	void setWeeklyHours(int newhours) { this->maxdailyhours = newhours; };
 	virtual float getCost() const;
-	bool addTask(Task* t1, unsigned int hours);
-	bool changeTaskHours(Task* t1, unsigned int hours);
-
+	bool addTask(Task* t1, unsigned int hours) 
+	{
+		for (size_t i = 0; i < this->tasks.size(); ++i)
+		{
+			if (tasks[i].first == t1)
+			{
+				throw CollaboratorExcept("Task already exists");
+			}
+		}
+		if (this->getWorkingHours() + hours > this->maxdailyhours)
+			return false;
+		tasks.push_back(make_pair(t1, hours));
+		workinghours += hours;
+		return true;		
+	};
+	bool changeTaskHours(Task* t1, unsigned int hours)
+	{
+		for (size_t i = 0; i < this->tasks.size(); ++i)
+		{
+			if (tasks[i].first == t1)
+			{
+				if (workinghours - tasks[i].second + hours >maxdailyhours)
+					return false;
+				else tasks[i].second = hours;
+				workinghours = workinghours - tasks[i].second + hours;
+			}
+		}
+		return false;
+	};
+	bool removeTask(const Task* t)
+	{ 
+		if (t == NULL)
+			throw CollaboratorExcept("Invalid task");
+		for (size_t i = 0; i < tasks.size(); ++i)
+		if (tasks.at(i).first == t)
+		{
+			workinghours -= tasks.at(i).second;
+			tasks.erase(tasks.begin() + i);
+			return true;
+		}
+		return false;
+	};
+	static double averageCost()
+	{
+		vector<Collaborator*> v;
+		return -1;
+	}
 };
 
 class Programmer : public Collaborator

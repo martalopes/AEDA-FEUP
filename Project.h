@@ -32,6 +32,13 @@ private:
 	vector<Task*> tasks;
 	vector<Collaborator*> collaborators;
 public:
+	class ProjectExcept
+	{
+		string description;
+	public:
+		ProjectExcept(string description) :description(description){};
+		string operator()(){ return description; };
+	};
 	Project(Date deadline, string name, string type = "", Client* client = NULL, int id = Project::lastID) : deadline(deadline), name(name), type(type), client(client), ID(id){ if (id > lastID) lastID = id; };
 	int getID() const		{ return this->ID; };
 	static int getLastID()  { return lastID; };
@@ -42,8 +49,16 @@ public:
 	vector<Task*> getTasks() const { return this->tasks; };
 	vector<Collaborator*> getCollaborators() const { return this->collaborators; };
 	int setID(int ID) { this->ID = ID; };
-	static int setLastID(int lID) { lastID = lID; };
+	static void setLastID(int lID) { lastID = lID; };
 	bool operator==(const Project& p2) const { return this->ID == p2.ID; };
+	void setClient(Client* c){ if (c == NULL) throw ProjectExcept("Invalid client"); else client = c; };
+	bool setName(string newname){ name = newname; };
+	void tick()
+	{ 
+		for (size_t i = 0; i < tasks.size(); ++i)
+			cost += tasks.at(i)->tick();
+	}
+
 	void print() { cout << ID << name << type << client << cost; };
 	
 

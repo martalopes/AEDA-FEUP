@@ -3,7 +3,6 @@
 
 #include "Project.h"
 #include "Client.h"
-#include "Collaborator.h"
 #include "Date.h"
 
 
@@ -28,11 +27,10 @@ private:
 	vector<Task*> dependants;
 public:
 	Task(string name, unsigned int effort){this->name = name; this->effort = effort;};
-	Task(){};
-	void setname(string nm){ name = nm; };
-	void seteffort(unsigned int ef){ effort = ef; };
+	//Task(){};
+	void setName(string nm){ name = nm; };
+	void setEffort(unsigned int ef){ effort = ef; };
 	bool operator==(Task& t2);
-
 	class TaskComparator
 	{
 	public:
@@ -66,7 +64,7 @@ public:
 		for (size_t i = 0; i < collaborators.size(); i++) 
 			sum += collaborators.at(i).second; 
 		if (sum == 0) 
-			return 999999999;
+			return INT_MAX; 
 		else return int(double (effort) / sum + .5);
 	};
 	int calculateTimeToCompletion() const 
@@ -76,6 +74,29 @@ public:
 			sum += dependencies.at(i)->calculateTimeToCompletion();
 		return sum; 
 	};
+	bool isReady()
+	{ 
+		for (size_t i = 0; i < dependencies.size(); ++i)
+		if (dependencies.at(i)->effort != 0)
+			return false;
+		return true;
+	}
+	double tick()
+	{
+		if (!isReady())
+			return -1;
+		double sum = 0;
+		for (size_t i = 0; i < collaborators.size(); ++i)
+		{
+			sum += collaborators.at(i).second * collaborators.at(i).first->getCost();
+			if(effort > 0) effort -= collaborators.at(i).second;
+			if (effort <= 0)
+			{
+				effort = 0;
+				collaborators.at(i).first->removeTask(this);
+			}
+		}
+		return sum;
+	}
 };
-
 #endif

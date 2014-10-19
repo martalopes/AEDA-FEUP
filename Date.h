@@ -19,12 +19,6 @@ public:
 	int getSeconds() const	{ return this->seconds; };
 	string printDate() const;
 	string printTime() const;
-	void setDay(int day) { this->day = day; };
-	void setMonth(int month) { this->month= month; };
-	void setYear(int year) { this->year = year; };
-	void setHours(int hours) { this->hours = hours; };
-	void setMinutes(int minutes) { this->minutes = minutes; };
-	void setSeconds(int seconds) { this->seconds = seconds; };
 
 private:
 	static bool isLeapYear(int year) 

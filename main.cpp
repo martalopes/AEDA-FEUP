@@ -12,6 +12,6 @@ int main()
 	Date d = Date();
 	Task t;
 	cout << d.printDate();
-
+	system("pause");
 	return 0;
 }

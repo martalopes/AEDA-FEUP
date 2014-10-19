@@ -11,7 +11,6 @@
 #include <vector>
 
 
-
 using namespace std;
 
 class Project;
@@ -23,6 +22,7 @@ private:
 	static int lastID; 
 	string name;
 	vector<Project*> projects;
+
 public:
 	Client(string name):name(name),ID(++lastID){};
 	Client(string name, int setID) :name(name), ID(ID) { if (setID > lastID) lastID = setID; };
