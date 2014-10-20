@@ -50,15 +50,29 @@ public:
 	vector<Collaborator*> getCollaborators() const { return this->collaborators; };
 	int setID(int ID) { this->ID = ID; };
 	static void setLastID(int lID) { lastID = lID; };
-	bool operator==(const Project& p2) const { return this->ID == p2.ID; };
+	bool operator==(const Project& p2) const { return (this->ID) == (p2.ID); };
 	void setClient(Client* c){ if (c == NULL) throw ProjectExcept("Invalid client"); else client = c; };
 	bool setName(string newname){ name = newname; };
-	void tick()
+	Date getDeadline()const {return deadline;};
+	bool tick()
 	{ 
+		if(isCompleted())
+			return false;
 		for (size_t i = 0; i < tasks.size(); ++i)
-			cost += tasks.at(i)->tick();
+			{
+				double value = tasks.at(i)->tick();
+				if(value >= 0)
+					cost += value;
+			}
+		return true;
 	}
-
+	bool isCompleted()
+	{
+		for(int i = 0; i< tasks.size(); ++i)
+				if(!tasks.at(i)->isCompleted())
+					return false;
+			return true;
+	}
 	void print() { cout << ID << name << type << client << cost; };
 	
 

@@ -34,7 +34,7 @@ private:
 	int maxdailyhours;
 	int workinghours;
 	vector<Project*> projects;
-	vector<pair<Task*, unsigned int>> tasks;
+	vector<pair<Task*, unsigned int> > tasks;
 public:
 	class CollaboratorExcept
 	{
@@ -52,7 +52,7 @@ public:
 	int getMaxWeeklyHours() const { return this->maxdailyhours; };
 	int getWorkinghours() const{ return this->workinghours; };
 	vector<Project*> getProjects() const { return this->projects; };
-	vector<pair<Task*, unsigned int>> getTasks() const { return this->tasks; };
+	vector<pair<Task*, unsigned int> > getTasks() const { return this->tasks; };
 	void setName(string newname){ this->name = newname; };
 	void setWeeklyHours(int newhours) { this->maxdailyhours = newhours; };
 	virtual float getCost() const;
