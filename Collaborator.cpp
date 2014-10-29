@@ -1,26 +1,57 @@
 #include "Collaborator.h"
 #include "Task.h"
+int Collaborator::lastID=0;
+bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
+	{
+		for (size_t i = 0; i < this->tasks.size(); ++i)
+		{
+			if (*(tasks[i].first) == *t1)
+			{
+				throw CollaboratorExcept("Task already exists");
+			}
+		}
+		if (this->getWorkingHours() + hours > this->maxweeklyhours)
+			return false;
+		tasks.push_back(make_pair(t1, hours));
+		size_t i = 0;
+		for (; i < projects.size(); i++)
+		if (*t1->getProject() == *projects.at(i))
+			break;
+		if (i == projects.size())
+			projects.push_back(t1->getProject());
+		if(addCollaborator)
+		t1->addCollaborator(this, hours, false);
+		workinghours += hours;
+		return true;
+	}
 
-//int Collaborator::lastID = 0;
-//
-//Collaborator::Collaborator(string name, int weeklyhours)
-//{
-//	this->name = name;
-//	this->weeklyhours = weeklyhours;
-//	++lastID;
-//	this->ID = lastID;
-//}
-//
-//
-//int Collaborator::numCollaborators(){ return Collaborator::lastID; }
-//int Collaborator::getID() const { return this->ID; }
-//string Collaborator::getName() const { return this->name; }
-//void Collaborator::setName(string newname){ this->name = newname; }
-//int Collaborator::getWorkingHours() const { return  this->workinghours; }
-//int Collaborator::getWeeklyHours() const { return this->weeklyhours; }
-//void Collaborator::setWeeklyHours(int newhours) { this->weeklyhours = newhours; }
-//
-//float Programmer::getCost() const { return PROGRAMMER_COST; }
-//float Architect::getCost() const { return ARCHITECT_COST; }
-//float Manager::getCost() const { return MANAGER_COST; }
-//float Testers::getCost() const { return TESTER_COST; }
+bool Collaborator::removeTask(Task* t, bool removeCollaborator)
+{
+	if (t == NULL)
+		throw CollaboratorExcept("Invalid task");
+	for (size_t i = 0; i < tasks.size(); ++i)
+	if (tasks.at(i).first == t)
+	{
+		workinghours -= tasks.at(i).second;
+		tasks.erase(tasks.begin() + i);
+		if(removeCollaborator)
+			return t->removeCollaborator(this, false);
+		return true;
+	}
+	return false;
+}
+ostream & operator<<(ostream& out, const Collaborator& c)
+{
+	out << c.ID << endl;
+	out << c.name << endl;
+	out << c.maxweeklyhours << endl;
+	out << c.workinghours << endl;
+	out << c.projects.size() << endl;
+	for (size_t i = 0; i < c.projects.size(); i++)
+		out << c.projects.at(i)->getID() << endl;
+	out << c.tasks.size() << endl;
+	for (size_t i = 0; i < c.tasks.size(); i++)
+		out << c.tasks.at(i).first->getID() << " " << c.tasks.at(i).second << endl;
+	out << endl;
+	return out;
+}

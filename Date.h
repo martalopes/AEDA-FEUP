@@ -2,54 +2,87 @@
 #define DATE_H
 #include <string>
 #include <sstream>
+#include <ctime>
+#include <stdlib.h>
 
 using namespace std;
 
 class Date
 {
 public:
-	Date(){};
-	Date(int day, int month, int year, int hours = 0, int minutes = 0, int seconds = 0) :day(day), month(month), year(year), hours(hours), minutes(minutes), seconds(seconds){};
-	bool operator<(const Date& d2) const;
-	int getDay() const		{ return this->day; };
-	int getMonth() const	{ return this->month; };
-	int getYear() const		{ return this->year; };
-	int getHours() const	{ return this->hours; };
-	int getMinutes() const	{ return this->minutes; };
-	int getSeconds() const	{ return this->seconds; };
-	string printDate() const;
-	string printTime() const;
+	friend bool operator<(const Date& d1, const Date& d2);
+	friend bool operator==(const Date& d1, const Date& d2);
+	friend bool operator!=(const Date& d1, const Date& d2);
+	friend Date operator+(const Date& d1, const Date& d2);
+	friend Date operator-(const Date& d1, const Date& d2);
+	friend Date& operator+=(Date& d1, const Date& d2);
+	friend Date& operator-=(Date& d1, const Date& d2);
+	friend Date operator+(const Date& d1, const int& i);
+	friend Date operator-(const Date& d1, const int& i);
+	friend Date& operator+=(Date& d1, const int& i);
+	friend Date& operator-=(Date& d1, const int& i);
 
-private:
-	static bool isLeapYear(int year) 
-	{ 
-		if (year % 4 != 0)
-			return false; 
-		if (year % 100 != 0)
-			return true; 
-		if (year % 400 != 0)
-			return false; 
-		return true; 
-	};
-	static int daysInaMonth(int month, int year) 
+	Date():totalseconds(time(NULL)),datetime(localtime(&totalseconds))
+	{};
+	Date(time_t seconds):totalseconds(seconds),datetime(localtime(&totalseconds))
 	{
-		if (month < 0 || month >12)
-			throw 1; //mudar para Dateexception
-		if (month == 2)
-		if (isLeapYear(year))
-			return 29;
-		else return 28;
-		if (month < 8){
-		if (month % 2 == 0)
-			return 30;
-		else return 31;
-		}
-		else if (month % 2 == 0)
-				return 31;
-		else return 30;
 	};
-	int day, month, year;
-	int hours, minutes, seconds;
+	Date(int day,int month, int year, int hours, int minutes, int seconds)
+	{
+		time_t t = time(NULL);
+		datetime = localtime(&t);
+		datetime->tm_mday = day;
+		datetime->tm_mon = month - 1;
+		datetime->tm_year= year - 1900;
+		datetime->tm_hour = hours;
+		datetime->tm_min = minutes;
+		datetime->tm_sec = seconds;
+		totalseconds = mktime(datetime);
+	};
+	class DateExcept
+	{
+		string description;
+	public:
+		DateExcept(string description) :description(description){};
+		string operator()(){ return description; };
+	};
+	/*static Date AbsoluteDate(int day,int month, int year, int hours, int minutes, int seconds)
+	{return Date(day,month, year,hours,minutes, seconds);};*/
+	Date& Date::operator=(const Date& d2)
+	{
+		this->totalseconds = d2.totalseconds;
+		time_t seconds = d2.totalseconds;
+		datetime = localtime(&this->totalseconds);
+		return *this;
+	}
+	static int toSeconds(int day,int month, int year, int hours, int minutes, int seconds)
+	{
+		day += 1;
+		month += 1;
+		year += 1970;
+		Date d = Date(day,month, year,hours,minutes, seconds);
+		return (int) (d.totalseconds);
+	};
+	time_t getTotalSeconds() const {return this->totalseconds;};
+	int getDay() const		{ return datetime->tm_mday; };
+	int getMonth() const	{ return datetime->tm_mon+1; };
+	int getYear() const		{ return datetime->tm_year+1900; };
+	int getHours() const	{ return datetime->tm_hour; };
+	int getMinutes() const	{ return datetime->tm_min; };
+	int getSeconds() const	{ return datetime->tm_sec; };
+	int getWeekDay() const  { return datetime->tm_wday+1;};
+	int getYearDay() const  { return datetime->tm_yday;};
+	string printDate() const
+	{
+		stringstream s;
+		s << getDay() << "/" << getMonth()<< "/" << getYear() << " " << getHours() << ":" << getMinutes() << ":" <<getSeconds();
+		return s.str();
+	};
+	//~Date(){free(datetime);};
+private:
+	time_t totalseconds;
+	tm* datetime;
 };
+
 
 #endif
