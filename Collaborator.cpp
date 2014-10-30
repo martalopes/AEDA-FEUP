@@ -10,15 +10,16 @@ bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
 				throw CollaboratorExcept("Task already exists");
 			}
 		}
-		if (this->getWorkingHours() + hours > this->maxweeklyhours)
+		if ((this->getWorkingHours() + hours) > this->maxweeklyhours)
 			return false;
 		tasks.push_back(make_pair(t1, hours));
-		size_t i = 0;
+		/*size_t i = 0;
 		for (; i < projects.size(); i++)
 		if (*t1->getProject() == *projects.at(i))
 			break;
 		if (i == projects.size())
-			projects.push_back(t1->getProject());
+			projects.push_back(t1->getProject());*/
+		addProject(t1->getProject());
 		if(addCollaborator)
 		t1->addCollaborator(this, hours, false);
 		workinghours += hours;
@@ -52,7 +53,6 @@ ostream & operator<<(ostream& out, const Collaborator& c)
 	out << c.tasks.size() << endl;
 	for (size_t i = 0; i < c.tasks.size(); i++)
 		out << c.tasks.at(i).first->getID() << " " << c.tasks.at(i).second << endl;
-	out << endl;
 	return out;
 }
 
@@ -77,17 +77,16 @@ istream & operator>>(istream& in, Collaborator& c)
 	}
 	int numtasks = 0;
 	in >> numtasks;
+	in.ignore();
 	for (size_t i = 0; i < numtasks; i++)
 	{
 		unsigned long int taskid = 0;
 		unsigned int hours = 0;
 		in >> taskid >> hours;
-		in.ignore(2);
+		in.ignore();
 		c.tasks.push_back(make_pair((Task*)taskid, hours));
 	}
-	string s;
-	in >> s;
-	in.ignore();
+	return in;
 }
 void Collaborator::connect()
 {
@@ -103,4 +102,34 @@ void Collaborator::connect()
 		if (ptr != NULL)
 			tasks.at(i).first = ptr;
 	}
+}
+
+bool Collaborator::changeTaskHours(Task* t1, unsigned int hours)
+{
+	for (size_t i = 0; i < this->tasks.size(); ++i)
+	{
+		if (*tasks[i].first == *t1)
+		{
+			if (workinghours - tasks[i].second + hours > maxweeklyhours)
+				return false;
+			else tasks[i].second = hours;
+			workinghours = workinghours - tasks[i].second + hours;
+		}
+	}
+	return false;
+}
+
+bool Collaborator::addProject(Project* p, bool addCollaborator)
+{
+	for (size_t i = 0; i < this->projects.size(); ++i)
+	{
+		if (*projects.at(i) == *p)
+		{
+			return false;
+		}
+	}
+	projects.push_back(p);
+	if (addCollaborator)
+		p->addCollaborator(this,false);
+	return true;
 }

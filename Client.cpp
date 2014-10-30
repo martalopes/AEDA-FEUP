@@ -18,7 +18,6 @@ ostream & operator<<(ostream& out, const Client& c)
 	out << c.projects.size() << endl;
 	for (size_t i = 0; i < c.projects.size(); i++)
 		out << c.projects.at(i)->getID() << endl;
-	out << endl;
 	return out;
 }
 
@@ -29,6 +28,7 @@ istream & operator>>(istream& in, Client& c)
 	getline(in,c.name);
 	int numprojects = 0;
 	in >> numprojects;
+	in.ignore();
 	for (size_t i = 0; i < numprojects; i++)
 	{
 		unsigned long int projectid = 0;
@@ -36,8 +36,6 @@ istream & operator>>(istream& in, Client& c)
 		in.ignore();
 		c.projects.push_back((Project*) projectid);
 	}
-	string s;
-	in >> s;
 	return in;
 }
 void Client::connect()

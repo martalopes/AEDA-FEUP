@@ -33,8 +33,8 @@ class Collaborator
 protected:
 	static int lastID;
 private:
-	string name;
 	int ID;
+	string name;
 	int maxweeklyhours;// numero de horas de trabalho por semana;
 	int workinghours;// numero total de horas de trabalho;
 	vector<Project*> projects;
@@ -67,7 +67,7 @@ public:
 	public:
 		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getID() < t2.getID(); };
 	};
-	
+	Collaborator():ID(0), maxweeklyhours(0),workinghours(0){};
 	Collaborator(string name, int dailyhours) : name(name), maxweeklyhours(dailyhours),ID(++lastID),workinghours(0)	{};
 	Collaborator(string name, int dailyhours, int setID) : name(name), maxweeklyhours(dailyhours), workinghours(0){ if (setID > lastID) lastID = setID; };
 	Collaborator(int i)
@@ -91,24 +91,11 @@ public:
 	void setName(string newname){ this->name = newname; };
 	void setWeeklyHours(int newhours) { this->maxweeklyhours = newhours; };
 	virtual float getCost() const{ return 0; };
-	bool operator==(const Collaborator& c2){return this->ID == c2.ID;};
+	bool operator==(const Collaborator& c2)const{return this->ID == c2.ID;};
 	bool addTask(Task* t1, unsigned int hours, bool addCollaborator=true);
-	bool changeTaskHours(Task* t1, unsigned int hours)
-	{
-		for (size_t i = 0; i < this->tasks.size(); ++i)
-		{
-			if (tasks[i].first == t1)
-			{
-				if (workinghours - tasks[i].second + hours > maxweeklyhours)
-					return false;
-				else tasks[i].second = hours;
-				workinghours = workinghours - tasks[i].second + hours;
-			}
-		}
-		return false;
-	};
+	bool changeTaskHours(Task* t1, unsigned int hours);
 	bool removeTask(Task* t, bool removeCollaborator = true);
-
+	bool addProject(Project* p, bool addCollaborator = true);
 };
 
 class Programmer : public Collaborator

@@ -28,11 +28,12 @@ private:
 	string name;
 	string type;
 	Client* client;
-	int cost;
+	double cost;
 	Date deadline;
 	vector<Task*> tasks;
 	vector<Collaborator*> collaborators;
 public:
+	
 	class ProjectExcept
 	{
 		string description;
@@ -60,8 +61,9 @@ public:
 	public:
 		bool operator()(const Project& t1, const Project& t2) { return t1.getID() < t2.getID(); };
 	};
-	Project(string name, string type, Date deadline ) : deadline(deadline), name(name), type(type), ID(++lastID), cost(0){};
-	Project(string name, string type, Date deadline, int setID) :  name(name), type(type), ID(++lastID),deadline(deadline), cost(0){ if (setID > lastID) lastID = setID; };
+	Project() : ID(0), client(NULL), cost(0) {};
+	Project(string name, string type, Date deadline, double cost ) : deadline(deadline), name(name), type(type), ID(++lastID), cost(cost){};
+	Project(string name, string type, Date deadline, double cost, int setID) : name(name), type(type), ID(++lastID), deadline(deadline), cost(cost){ if (setID > lastID) lastID = setID; };
 	Project(int i);
 	friend ostream & operator<<(ostream& out, const Project& p);
 	friend istream & operator>>(istream& in,Project& p);
@@ -80,6 +82,7 @@ public:
 	void setClient(Client* c, bool addProject = true);
 	void setName(string newname){ name = newname; };
 	void setType(string newtype){ type = newtype; };
+	bool addCollaborator(Collaborator* c, bool addProject = true);
 	Date getDeadline()const {return deadline;};
 	bool tick();
 	bool isCompleted();

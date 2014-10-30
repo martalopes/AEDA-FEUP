@@ -7,7 +7,7 @@ Project::Project(int i)
 		stringstream s1, s2;
 		s1 << "Project " << i;
 		s2 << "Type " << i;
-		*this = Project(s1.str(), s2.str(), Date() + Date::toSeconds(0, 6 + rand() % 10, 0, 0, 0, 0));
+		*this = Project(s1.str(), s2.str(), Date() + Date::toSeconds(0, 6 + rand() % 10, 0, 0, 0, 0), 10000 + (rand() % 5000-2500));
 }
 
 bool Project::tick()
@@ -66,7 +66,6 @@ ostream & operator<<(ostream& out, const Project& p)
 	out << p.collaborators.size() << endl;
 	for (size_t i = 0; i < p.collaborators.size(); i++)
 		out << p.collaborators.at(i)->getID() << endl;
-	out << endl;
 	return out;
 }
 istream & operator>>(istream& in, Project& p)
@@ -81,7 +80,6 @@ istream & operator>>(istream& in, Project& p)
 	p.client = (Client*) clientid;
 	in >> p.cost;
 	in.ignore();
-
 
 	time_t totalseconds;
 	in >> totalseconds;
@@ -100,6 +98,7 @@ istream & operator>>(istream& in, Project& p)
 	}
 	int numcollaborators;
 	in >> numcollaborators;
+	in.ignore();
 	for (size_t i = 0; i < numcollaborators; i++)
 	{
 		long unsigned int collaboratorid;
@@ -107,9 +106,6 @@ istream & operator>>(istream& in, Project& p)
 		in.ignore();
 		p.collaborators.push_back((Collaborator*) collaboratorid);
 	}
-	string s;
-	in >> s;
-	in.ignore();
 	return in;
 }
 void Project::connect()
@@ -129,4 +125,19 @@ void Project::connect()
 			collaborators.at(i) = ptr;
 	}
 
+}
+
+bool Project::addCollaborator(Collaborator* c, bool addProject)
+{
+	for (size_t i = 0; i < this->collaborators.size(); ++i)
+	{
+		if (*collaborators.at(i) == *c)
+		{
+			return false;
+		}
+	}
+	collaborators.push_back(c);
+	if (addProject)
+		c->addProject(this, false);
+	return true;
 }

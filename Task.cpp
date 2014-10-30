@@ -35,6 +35,7 @@ bool Task::addCollaborator(Collaborator* c1, unsigned int hours, bool addTask)
 		{
 			if (*collaborators[i].first == *c1)
 			{
+				return false;
 				throw TaskExcept("Collaborator already exists");
 			}
 		}
@@ -43,6 +44,7 @@ bool Task::addCollaborator(Collaborator* c1, unsigned int hours, bool addTask)
 				return true;
 			else return false;
 		collaborators.push_back(make_pair(c1, hours));
+		//project->addCollaborator(c1);
 		return true;
 	}
 bool Task::removeCollaborator(Collaborator* c, bool removeTask)
@@ -86,7 +88,6 @@ ostream & operator<<(ostream& out, const Task& t)
 	for (size_t i = 0; i < t.dependants.size(); i++)
 		out << t.dependants.at(i)->getID() << endl;
 	out << t.project->getID();
-	out << endl;
 	return out;
 }
 
@@ -106,7 +107,7 @@ istream & operator>>(istream& in, Task& t)
 		unsigned long int collaboratorid=0;
 		unsigned int numhours;
 		in >> collaboratorid >> numhours;
-		in.ignore(2);
+		in.ignore();
 		t.collaborators.push_back(make_pair((Collaborator*) collaboratorid, numhours));
 	}
 	int numdependencies = 0;
@@ -133,8 +134,6 @@ istream & operator>>(istream& in, Task& t)
 	in >> projectid;
 	in.ignore();
 	t.project = (Project*)projectid;
-	string s;
-	in >> s;
 	return in;
 }
 void Task::connect()
@@ -158,3 +157,63 @@ void Task::connect()
 			dependants.at(i) = ptr;
 	}
 }
+
+Task& Task::addDependant(Task* t, bool addDependency)
+{
+	if (t == NULL)
+		throw TaskExcept("No Task being added to Task:", ID);
+	for (size_t i = 0; i < dependants.size(); ++i)
+	if (*dependants.at(i) == *t)
+		throw TaskExcept("Dependant already exists in Task:", ID);
+	dependants.push_back(t);
+	if (addDependency)
+		t->addDependency(this, false);
+	return *this;
+}
+
+Task& Task::addDependency(Task* t, bool addDependant)
+{
+	if (t == NULL)
+		throw TaskExcept("No Task being added to Task:", ID);
+	for (size_t i = 0; i < dependencies.size(); ++i)
+	if (*dependencies.at(i) == *t)
+		throw TaskExcept("Dependency already exists in Task:", ID);
+	dependencies.push_back(t);
+	if (addDependant)
+		t->addDependant(this, false);
+	return *this;
+}
+
+bool Task::isReady()
+{
+	for (size_t i = 0; i < dependencies.size(); ++i)
+	if (!dependencies.at(i)->isCompleted()) //uma tarefa pode ser realizada se todas as tarefas das quais depende estiverem completas
+		return false;
+	return true;
+}
+
+int Task::calculateTimeToCompletion() const //tempo que a tarefa vai demorar a ser completada, tendo em conta que as tarefas das quais depende terao de ser completadas primeiro
+{
+	int sum = this->calculateEstimatedTime();
+	for (size_t i = 0; i < dependencies.size(); i++)
+		sum += dependencies.at(i)->calculateTimeToCompletion();
+	return sum;
+};
+
+int  Task::calculateEstimatedTime() const //tempo que demora a tarefa a ser completada, sem ter em conta dependencias
+{
+	int sum = 0;
+	for (size_t i = 0; i < collaborators.size(); i++)
+		sum += collaborators.at(i).second;
+	if (sum == 0)
+		return INT_MAX;
+	else return int(double(effort) / sum + .5);
+};
+
+int Task::getPriority() const
+{
+	double sum = calculateEstimatedTime();
+	for (size_t i = 0; i < dependants.size(); i++)
+		sum += double(dependants.at(i)->getPriority()) / dependencies.size();
+	return sum;
+};

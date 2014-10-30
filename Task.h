@@ -30,6 +30,7 @@ private:
 	vector<Task*> dependants; // tarefas que dependem da tarefa
 	Project* project;
 public:
+	Task(): ID(0),effort(0),project(NULL){};
 	Task(string name, string description, unsigned int effort): name(name), description(description), effort(effort),ID(++lastID), project(NULL){};
 	Task(string name, string description, unsigned int effort, int setID): name(name), description(description), effort(effort),ID(setID), project(NULL){if(setID > lastID) lastID = setID;};
 	Task(int i)
@@ -75,65 +76,17 @@ public:
 	string getName() const { return this->name; };
 	int getID() const { return this->ID; };
 	Project* getProject()const{ return this->project; };
-	int getPriority() const 
-	{ 
-		double sum = calculateEstimatedTime();
-		for (size_t i = 0; i < dependants.size(); i++)
-			sum += double(dependants.at(i)->getPriority()) / dependencies.size();
-		return sum;
-	};
-	int calculateEstimatedTime() const //tempo que demora a tarefa a ser completada, sem ter em conta dependencias
-	{ 
-		int sum = 0; 
-		for (size_t i = 0; i < collaborators.size(); i++) 
-			sum += collaborators.at(i).second; 
-		if (sum == 0) 
-			return INT_MAX; 
-		else return int(double (effort) / sum + .5);
-	};
-	int calculateTimeToCompletion() const //tempo que a tarefa vai demorar a ser completada, tendo em conta que as tarefas das quais depende terao de ser completadas primeiro
-	{ 
-		int sum = this->calculateEstimatedTime(); 
-		for (size_t i = 0; i < dependencies.size(); i++) 
-			sum += dependencies.at(i)->calculateTimeToCompletion();
-		return sum; 
-	};
-	bool isReady()
-	{ 
-		for (size_t i = 0; i < dependencies.size(); ++i)
-		if (!dependencies.at(i)->isCompleted()) //uma tarefa pode ser realizada se todas as tarefas das quais depende estiverem completas
-			return false;
-		return true;
-	}
+	int getPriority() const;
+	int calculateEstimatedTime() const;
+	int calculateTimeToCompletion() const;
+	bool isReady();
 	double tick();//dia de trabalho
 	bool isCompleted() const
 	{
 		return effort == 0;
 	}
-	Task& addDependency(Task* t, bool addDependant=true)
-	{
-		if(t == NULL)
-			throw TaskExcept("No Task being added to Task:", ID);
-		for(size_t i = 0; i < dependencies.size(); ++i)
-			if(*dependencies.at(i)== *t)
-				throw TaskExcept("Dependency already exists in Task:", ID);
-		dependencies.push_back(t);
-		if(addDependant)
-		t->addDependant(this, false);
-		return *this;
-	}
-	Task& addDependant(Task* t, bool addDependency=true)
-		{
-			if(t == NULL)
-				throw TaskExcept("No Task being added to Task:", ID);
-			for(size_t i = 0; i < dependants.size(); ++i)
-				if(*dependants.at(i)== *t)
-					throw TaskExcept("Dependant already exists in Task:", ID);
-			dependants.push_back(t);
-			if(addDependency)
-			t->addDependency(this, false);
-			return *this;
-		}
+	Task& addDependency(Task* t, bool addDependant = true);
+	Task& addDependant(Task* t, bool addDependency = true);
 	bool addCollaborator(Collaborator* t1, unsigned int hours, bool addTask=true);
 	bool removeCollaborator(Collaborator* c, bool removeTask = true);
 	void setProject(Project* p, bool addTask = true);

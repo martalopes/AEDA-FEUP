@@ -31,6 +31,7 @@ public:
 			ClientExcept(string description) :description(description){};
 			string operator()(){ return description; };
 		};
+	Client():ID(0){};
 	Client(string name):name(name),ID(++lastID){};
 	Client(string name, int setID) :name(name), ID(setID) { if (setID > lastID) lastID = setID; };
 	Client(int i)

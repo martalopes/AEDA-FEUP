@@ -12,7 +12,14 @@ using namespace std;
 int main( )
 {
 	Application a;
-	a.genApplication();
-	a.writeFiles();
+	if (0){
+		Application b;
+		b.genApplication();
+		b.writeFiles();
+	}
+	else{
+		a.readFiles();
+		a.writeFiles();
+	}
 	system("pause");
 }
