@@ -40,6 +40,8 @@ public:
 		*this = Client(s1.str());
 	};
 	friend ostream & operator<<(ostream& out, const Client& p);
+	friend istream & operator>>(istream& in, Client& c);
+	void connect();
 	string getName() const { return this->name; };
 	vector<Project*> getProjects() const { return this->projects; };
 	int getID()const {return ID;};

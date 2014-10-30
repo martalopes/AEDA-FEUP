@@ -21,4 +21,34 @@ ostream & operator<<(ostream& out, const Client& c)
 	out << endl;
 	return out;
 }
+
+istream & operator>>(istream& in, Client& c)
+{
+	in >> c.ID;
+	in.ignore();
+	getline(in,c.name);
+	int numprojects = 0;
+	in >> numprojects;
+	for (size_t i = 0; i < numprojects; i++)
+	{
+		unsigned long int projectid = 0;
+		in >> projectid;
+		in.ignore();
+		c.projects.push_back((Project*) projectid);
+	}
+	string s;
+	in >> s;
+	return in;
+}
+void Client::connect()
+{
+	for (size_t i = 0; i < projects.size(); i++)
+	{
+		Project * ptr = Application::getProjectPtr((int)projects.at(i));
+		if (ptr != NULL)
+		projects.at(i) = ptr;
+	}
+}
+
+
 int Client::lastID = 0;

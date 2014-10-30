@@ -65,6 +65,7 @@ public:
 	Project(int i);
 	friend ostream & operator<<(ostream& out, const Project& p);
 	friend istream & operator>>(istream& in,Project& p);
+	void connect();
 	int getID() const		{ return this->ID; };
 	static int getLastID()  { return lastID; };
 	string getName() const	{ return this->name; };

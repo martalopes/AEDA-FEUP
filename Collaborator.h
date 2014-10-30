@@ -78,6 +78,8 @@ public:
 	};
 	static Collaborator* newCollaborator(int i);
 	friend ostream & operator<<(ostream& out, const Collaborator& c);
+	friend istream & operator>>(istream& in, Collaborator& c);
+	void connect();
 	//static int numCollaborators(){ return Collaborator::lastID; };
 	int getID() const { return this->ID; };
 	void setID(int newID) { lastID = newID; };

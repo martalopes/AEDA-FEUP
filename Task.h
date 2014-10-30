@@ -40,6 +40,8 @@ public:
 		*this = Task(s1.str(),s2.str(), 1 + rand() % 100);
 	};
 	friend ostream & operator<<(ostream& out, const Task& t);
+	friend istream & operator>>(istream& in, Task& t);
+	void connect();
 	void setName(string nm){ name = nm; };
 	void setEffort(unsigned int ef){ effort = ef; };
 	bool operator==(Task& t2);

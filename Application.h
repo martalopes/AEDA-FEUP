@@ -22,8 +22,6 @@
 
 using namespace std;
 
-enum ASSOC_TYPE = {};
-
 
 class Application
 {
@@ -115,6 +113,23 @@ public:
 			fin >> *t;
 		}
 		fin.close();
+
+		for (size_t i = 0; i < projects.size(); i++)
+		{
+			projects.at(i)->connect();
+		}
+		for (size_t i = 0; i < clients.size(); i++)
+		{
+			clients.at(i)->connect();
+		}
+		for (size_t i = 0; i < collaborators.size(); i++)
+		{
+			collaborators.at(i)->connect();
+		}
+		for (size_t i = 0; i < tasks.size(); i++)
+		{
+			tasks.at(i)->connect();
+		}
 	}
 	void tick()
 	{
@@ -125,28 +140,28 @@ public:
 	vector<Client*> getClients() const {return clients;};
 	vector<Collaborator*> getCollaborators() const {return collaborators;};
 	vector<Task*> getTasks() const {return tasks;};
-	Project* getProjectPtr(int ID) const /////////////////////******
+	static Project* getProjectPtr(int ID) /////////////////////******
 	{
 		for(size_t i = 0; i < projects.size() ; ++i)
 			if(projects.at(i)->getID() == ID)
 				return projects.at(i);
 		return NULL;
 	};
-	Client* getClientPtr(int ID) const /////////////////////******
+	static Client* getClientPtr(int ID)/////////////////////******
 		{
 			for(size_t i = 0; i < clients.size() ; ++i)
 				if(clients.at(i)->getID() == ID)
 					return clients.at(i);
 			return NULL;
 		};
-	Collaborator* getCollaboratorPtr(int ID) const /////////////////////******
+	static Collaborator* getCollaboratorPtr(int ID) /////////////////////******
 		{
 			for(size_t i = 0; i < collaborators.size() ; ++i)
 				if(collaborators.at(i)->getID() == ID)
 					return collaborators.at(i);
 			return NULL;
 		};
-	Task* getTaskPtr(int ID) const /////////////////////******
+	static Task* getTaskPtr(int ID)/////////////////////******
 		{
 			for(size_t i = 0; i < tasks.size() ; ++i)
 				if(tasks.at(i)->getID() == ID)
@@ -242,12 +257,10 @@ public:
 		int i = 0;
 	};
 private:
-	vector<Project*> projects;
-	vector<Client*> clients;
-	vector<Collaborator*> collaborators;
-	vector<Task*> tasks;
-	//static vector<pair<int, int> > dependants;
-	static vector<pair<void *, vector<int>>> cenas;
+	static vector<Project*> projects;
+	static vector<Client*> clients;
+	static vector<Collaborator*> collaborators;
+	static vector<Task*> tasks;
 };
 
 

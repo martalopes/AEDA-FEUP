@@ -55,3 +55,52 @@ ostream & operator<<(ostream& out, const Collaborator& c)
 	out << endl;
 	return out;
 }
+
+istream & operator>>(istream& in, Collaborator& c)
+{
+	in >> c.ID;
+	in.ignore();
+	getline(in,c.name);
+	in >> c.maxweeklyhours;
+	in.ignore();
+	in >> c.workinghours;
+	in.ignore();
+	int numprojects = 0;
+	in >> numprojects;
+	in.ignore();
+	for (size_t i = 0; i < numprojects; i++)
+	{
+		unsigned long int projectid;
+		in >> projectid;
+		in.ignore();
+		c.projects.push_back((Project*)projectid);
+	}
+	int numtasks = 0;
+	in >> numtasks;
+	for (size_t i = 0; i < numtasks; i++)
+	{
+		unsigned long int taskid = 0;
+		unsigned int hours = 0;
+		in >> taskid >> hours;
+		in.ignore(2);
+		c.tasks.push_back(make_pair((Task*)taskid, hours));
+	}
+	string s;
+	in >> s;
+	in.ignore();
+}
+void Collaborator::connect()
+{
+	for (size_t i = 0; i < projects.size(); i++)
+	{
+		Project * ptr = Application::getProjectPtr((int)projects.at(i));
+		if (ptr != NULL)
+			projects.at(i) = ptr;
+	}
+	for (size_t i = 0; i < tasks.size(); i++)
+	{
+		Task* ptr = Application::getTaskPtr((int)tasks.at(i).first);
+		if (ptr != NULL)
+			tasks.at(i).first = ptr;
+	}
+}

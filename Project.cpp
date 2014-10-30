@@ -52,7 +52,7 @@ void Project::addTask(Task * t, bool setProject)
 		t->setProject(this, false);
 }
 
-ostream & operator<<(ostream& in, const Project& p)
+ostream & operator<<(ostream& out, const Project& p)
 {
 	out << p.ID << endl;
 	out << p.name << endl;
@@ -72,17 +72,61 @@ ostream & operator<<(ostream& in, const Project& p)
 istream & operator>>(istream& in, Project& p)
 {
 	in >> p.ID;
-	in >> p.type;
-	Application::cenas.push_
-	in >> p.client->getID();
+	in.ignore();
+	getline(in, p.name);
+	getline(in, p.type);
+	long unsigned int clientid;
+	in >> clientid;
+	in.ignore();
+	p.client = (Client*) clientid;
 	in >> p.cost;
-	in >> p.deadline.getTotalSeconds();
-	in >> p.tasks.size();
-	for (size_t i = 0; i < p.tasks.size(); i++)
-		in >> p.tasks.at(i)->getID();
-	in >> p.collaborators.size();
-	for (size_t i = 0; i < p.collaborators.size(); i++)
-		in >> p.collaborators.at(i)->getID() >> endl;
-	in >> endl;
+	in.ignore();
+
+
+	time_t totalseconds;
+	in >> totalseconds;
+	in.ignore();
+	p.deadline= Date(totalseconds);
+
+	int numtasks;
+	in >> numtasks;
+	in.ignore();
+	for (size_t i = 0; i < numtasks; i++)
+	{
+		long unsigned int taskid;
+		in >> taskid;
+		in.ignore();
+		p.tasks.push_back((Task*) taskid);
+	}
+	int numcollaborators;
+	in >> numcollaborators;
+	for (size_t i = 0; i < numcollaborators; i++)
+	{
+		long unsigned int collaboratorid;
+		in >> collaboratorid;
+		in.ignore();
+		p.collaborators.push_back((Collaborator*) collaboratorid);
+	}
+	string s;
+	in >> s;
+	in.ignore();
 	return in;
+}
+void Project::connect()
+{
+	client = Application::getClientPtr((int)client);
+
+	for (size_t i = 0; i < tasks.size(); i++)
+	{
+		Task* ptr = Application::getTaskPtr((int)tasks.at(i));
+		if (ptr != NULL)
+			tasks.at(i) = ptr;
+	}
+	for (size_t i = 0; i < collaborators.size(); i++)
+	{
+		Collaborator* ptr = Application::getCollaboratorPtr((int)collaborators.at(i));
+		if (ptr != NULL)
+			collaborators.at(i) = ptr;
+	}
+
 }
