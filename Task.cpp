@@ -87,7 +87,7 @@ ostream & operator<<(ostream& out, const Task& t)
 	out << t.dependants.size() << endl;
 	for (size_t i = 0; i < t.dependants.size(); i++)
 		out << t.dependants.at(i)->getID() << endl;
-	out << t.project->getID();
+	out << t.project->getID() << endl;
 	return out;
 }
 
@@ -95,6 +95,8 @@ istream & operator>>(istream& in, Task& t)
 {
 	in >> t.ID;
 	in.ignore();
+	if (t.ID > Task::lastID)
+		Task::lastID = t.ID;
 	getline(in,t.name);
 	getline(in,t.description);
 	in >> t.effort;
@@ -106,7 +108,9 @@ istream & operator>>(istream& in, Task& t)
 	{
 		unsigned long int collaboratorid=0;
 		unsigned int numhours;
-		in >> collaboratorid >> numhours;
+		in >> collaboratorid;
+		in.ignore();
+		in >> numhours;
 		in.ignore();
 		t.collaborators.push_back(make_pair((Collaborator*) collaboratorid, numhours));
 	}
@@ -156,6 +160,9 @@ void Task::connect()
 		if (ptr != NULL)
 			dependants.at(i) = ptr;
 	}
+	Project * ptr = Application::getProjectPtr((int)project);
+	if (ptr != NULL)
+		project = ptr;
 }
 
 Task& Task::addDependant(Task* t, bool addDependency)

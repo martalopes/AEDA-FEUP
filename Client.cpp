@@ -25,6 +25,8 @@ istream & operator>>(istream& in, Client& c)
 {
 	in >> c.ID;
 	in.ignore();
+	if (c.ID > Client::lastID)
+		Client::lastID = c.ID;
 	getline(in,c.name);
 	int numprojects = 0;
 	in >> numprojects;

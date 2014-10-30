@@ -72,6 +72,8 @@ istream & operator>>(istream& in, Project& p)
 {
 	in >> p.ID;
 	in.ignore();
+	if (p.ID > Project::lastID)
+		Project::lastID = p.ID;
 	getline(in, p.name);
 	getline(in, p.type);
 	long unsigned int clientid;

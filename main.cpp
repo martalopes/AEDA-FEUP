@@ -19,7 +19,8 @@ int main( )
 	}
 	else{
 		a.readFiles();
-		a.writeFiles();
+		int x= 0;
+		//a.writeFiles();
 	}
 	system("pause");
 }

@@ -60,6 +60,8 @@ istream & operator>>(istream& in, Collaborator& c)
 {
 	in >> c.ID;
 	in.ignore();
+	if (c.ID > Collaborator::lastID)
+		Collaborator::lastID = c.ID;
 	getline(in,c.name);
 	in >> c.maxweeklyhours;
 	in.ignore();
