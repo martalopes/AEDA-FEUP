@@ -5,28 +5,23 @@
 #include <ctime>
 #include <stdlib.h>
 
+/*
+Class Date é composta:
+day, month, year;
+hours, minutes, seconds;
+A data é das classes mais importantes a ser utilizada pois todas dependem desta
+já que tanto tarefas como os projectos estao definidos de acordo com datas.
+Para facilitar as comparações de datas definimos o operador menor.
+*/
+
 using namespace std;
 
 class Date
 {
 public:
-	friend bool operator<(const Date& d1, const Date& d2);
-	friend bool operator==(const Date& d1, const Date& d2);
-	friend bool operator!=(const Date& d1, const Date& d2);
-	friend Date operator+(const Date& d1, const Date& d2);
-	friend Date operator-(const Date& d1, const Date& d2);
-	friend Date& operator+=(Date& d1, const Date& d2);
-	friend Date& operator-=(Date& d1, const Date& d2);
-	friend Date operator+(const Date& d1, const int& i);
-	friend Date operator-(const Date& d1, const int& i);
-	friend Date& operator+=(Date& d1, const int& i);
-	friend Date& operator-=(Date& d1, const int& i);
 
-	Date():totalseconds(time(NULL)),datetime(localtime(&totalseconds))
-	{};
-	Date(time_t seconds):totalseconds(seconds),datetime(localtime(&totalseconds))
-	{
-	};
+	Date():totalseconds(time(NULL)),datetime(localtime(&totalseconds)){};
+	Date(time_t seconds) :totalseconds(seconds), datetime(localtime(&totalseconds)){};
 	Date(int day,int month, int year, int hours, int minutes, int seconds)
 	{
 		time_t t = time(NULL);
@@ -79,6 +74,18 @@ public:
 		return s.str();
 	};
 	//~Date(){free(datetime);};
+	friend bool operator<(const Date& d1, const Date& d2);
+	friend bool operator==(const Date& d1, const Date& d2);
+	friend bool operator!=(const Date& d1, const Date& d2);
+	friend Date operator+(const Date& d1, const Date& d2);
+	friend Date operator-(const Date& d1, const Date& d2);
+	friend Date& operator+=(Date& d1, const Date& d2);
+	friend Date& operator-=(Date& d1, const Date& d2);
+	friend Date operator+(const Date& d1, const int& i);
+	friend Date operator-(const Date& d1, const int& i);
+	friend Date& operator+=(Date& d1, const int& i);
+	friend Date& operator-=(Date& d1, const int& i);
+
 private:
 	time_t totalseconds;
 	tm* datetime;

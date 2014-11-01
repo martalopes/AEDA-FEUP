@@ -34,7 +34,7 @@ protected:
 	static int lastID;
 private:
 	int ID;
-	string name;
+	string name; 
 	int maxweeklyhours;// numero de horas de trabalho por semana;
 	int workinghours;// numero total de horas de trabalho;
 	vector<Project*> projects;
@@ -76,35 +76,42 @@ public:
 		s << "Collaborator " << i;
 		*this = Collaborator(s.str(), (6 + rand() % 4)*5);
 	};
-	static Collaborator* newCollaborator(int i);
-	friend ostream & operator<<(ostream& out, const Collaborator& c);
-	friend istream & operator>>(istream& in, Collaborator& c);
-	void connect();
 	//static int numCollaborators(){ return Collaborator::lastID; };
 	int getID() const { return this->ID; };
-	void setID(int newID) { lastID = newID; };
 	string getName() const { return this->name; };
 	int getWorkingHours() const { return  this->workinghours; };
 	int getMaxWeeklyHours() const { return this->maxweeklyhours; };
 	vector<Project*> getProjects() const { return this->projects; };
 	vector<pair<Task*, unsigned int> > getTasks() const { return this->tasks; };
+	virtual float getCost() const{ return 0; };
+	virtual string getTitle() const{ return "Collaborator"; };
+	void setID(int newID) { lastID = newID; };
 	void setName(string newname){ this->name = newname; };
 	void setWeeklyHours(int newhours) { this->maxweeklyhours = newhours; };
-	virtual float getCost() const{ return 0; };
-	bool operator==(const Collaborator& c2)const{return this->ID == c2.ID;};
 	bool addTask(Task* t1, unsigned int hours, bool addCollaborator=true);
-	bool changeTaskHours(Task* t1, unsigned int hours);
 	bool removeTask(Task* t, bool removeCollaborator = true);
+	bool removeProject(Project* p, bool removeCollaborator = true);
+	bool changeTaskHours(Task* t1, unsigned int hours);
 	bool addProject(Project* p, bool addCollaborator = true);
+	static Collaborator* newRandomCollaborator(int i);
+	static Collaborator* newCollaboratorTitle(string title);
+	void connect();
+	bool operator==(const Collaborator& c2)const{ return this->ID == c2.ID; };
+	friend ostream & operator<<(ostream& out, const Collaborator& c);
+	friend istream & operator>>(istream& in, Collaborator& c);
+
 };
 
 class Programmer : public Collaborator
 {
 public:
-	float getCost() const { return PROGRAMMER_COST; };
+
 	Programmer(string name, int dailyhours): Collaborator(name, dailyhours){};
 	Programmer(string name, int dailyhours, int setID): Collaborator(name, dailyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; };
 	Programmer(int i): Collaborator(i){};
+	Programmer() : Collaborator(){};
+	float getCost() const { return PROGRAMMER_COST; };
+	string getTitle() const{ return "Programmer"; };
 private:
 
 };
@@ -114,7 +121,9 @@ public:
 	Architect(string name, int dailyhours): Collaborator(name, dailyhours){};
 	Architect(string name, int dailyhours, int setID): Collaborator(name, dailyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; };
 	Architect(int i): Collaborator(i){};
+	Architect(): Collaborator(){};
 	float getCost() const { return ARCHITECT_COST; };
+	string getTitle() const{ return "Architect"; };
 private:
 
 };
@@ -124,40 +133,24 @@ public:
 	Manager(string name, int dailyhours): Collaborator(name, dailyhours){};
 	Manager(string name, int dailyhours, int setID): Collaborator(name, dailyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; };
 	Manager(int i): Collaborator(i){};
+	Manager() : Collaborator(){};
 	float getCost() const { return MANAGER_COST; };
+	string getTitle() const{ return "Manager"; };
 private:
 
 };
-class Testers : public Collaborator
+class Tester : public Collaborator
 {
 public:
-	Testers(string name, int dailyhours): Collaborator(name, dailyhours){};
-	Testers(string name, int dailyhours, int setID): Collaborator(name, dailyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; };
-	Testers(int i): Collaborator(i){};
+	Tester(string name, int dailyhours): Collaborator(name, dailyhours){};
+	Tester(string name, int dailyhours, int setID): Collaborator(name, dailyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; };
+	Tester(int i): Collaborator(i){};
+	Tester() : Collaborator(){};
 	float getCost() const { return TESTER_COST; };
+	string getTitle() const{ return "Tester"; };
 private:
 
 };
-static Collaborator* newCollaborator(int i)
-{
-	int n = rand() % 4;
-	switch (n)
-	{
-	case 0:
-		return new Programmer(i);
-		break;
-	case 1:
-		return new Architect(i);
-		break;
-	case 2:
-		return new Manager(i);
-		break;
-	case 3:
-		return new Testers(i);
-		break;
-	default:
-		break;
-	}
-}
+
 
 #endif

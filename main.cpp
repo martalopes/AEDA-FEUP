@@ -9,18 +9,25 @@
 
 using namespace std;
 
-int main( )
+int main()
 {
+	srand(time(NULL));
 	Application a;
-	if (0){
-		Application b;
-		b.genApplication();
-		b.writeFiles();
+	if (0)
+	{
+		a.genApplication();
+		a.writeFiles();
+		return 0;
 	}
-	else{
-		a.readFiles();
-		int x= 0;
-		//a.writeFiles();
-	}
+	//string cmd;
+	//getline(cin,cmd);
+	//if (cmd == "gen")
+	//a.genApplication();
+	//else if (cmd == "read")
+	a.readFiles();
+	a.createMenus();
+	a.play();
+	a.writeFiles();
+	int x = 0;
 	system("pause");
 }

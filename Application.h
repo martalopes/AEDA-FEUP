@@ -7,6 +7,7 @@
 #include "Collaborator.h"
 #include "Task.h"
 #include "Date.h"
+#include "Menu.h"
 
 #include <string>
 #include <utility>
@@ -22,6 +23,7 @@
 
 using namespace std;
 
+class Menu;
 
 class Application
 {
@@ -30,6 +32,7 @@ class Application
 	friend class Collaborator;
 	friend class Project;
 public:
+	//class de excepção associada a Aplicações 
 	class ApplicationExcept
 		{
 			string description;
@@ -37,10 +40,8 @@ public:
 			ApplicationExcept(string description) :description(description){};
 			string operator()(){ return description; };
 		};
-	Application(){};
-	void writeFiles();
-	void readFiles();
-	void tick();
+	Application(){};  
+	~Application();
 	vector<Project*> getProjects() const {return projects;};
 	vector<Client*> getClients() const {return clients;};
 	vector<Collaborator*> getCollaborators() const {return collaborators;};
@@ -53,13 +54,43 @@ public:
 	static void addClient(Client* c);
 	static void addCollaborator(Collaborator* c);
 	static void addTask(Task* t);
-	~Application();
-	void genApplication();
+
+
+	bool removeProject(Project* p);
+	bool removeClient(Client* c);
+	bool removeTask(Task* t);
+	bool removeCollaborator(Collaborator* c);
+
+
+					/*escrita*/
+
+	void writeFiles(); //função que escreve nos ficheiros 
+	void writeProjects(ofstream& fout)const;
+	void writeClients(ofstream& fout)const;
+	void writeCollaborators(ofstream& fout)const;
+	void writeTasks(ofstream& fout)const;
+
+					/*leitura*/
+
+	void readFiles(); //função que lê dos ficheiros
+	void readProjects(ifstream& fin);
+	void readClients(ifstream& fin);
+	void readCollaborators(ifstream& fin);
+	void readTasks(ifstream& fin);
+	void connect();
+	void play();
+	void createMenus();
+
+
+	void tick(); //guarda no vector de projectos o custo de cada projecto
+	void genApplication(); //função geradora de Applications 
 private:
 	static vector<Project*> projects;
 	static vector<Client*> clients;
 	static vector<Collaborator*> collaborators;
 	static vector<Task*> tasks;
+	Menu* menu;
+	vector<Menu*> menus;
 };
 
 
