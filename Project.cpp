@@ -154,3 +154,39 @@ bool Project::removeTask(Task* t, bool removeProject)
 	}
 	throw(ProjectExcept("Task does not exist"));
 }
+bool Project::removeClient(bool removeProject)
+{
+	if (client == NULL)
+		throw ProjectExcept("Client being removed does not exist");
+	if (removeProject)
+		client->removeProject(this, false);
+	client = NULL;
+	return true;
+}
+
+bool Project::removeCollaborator(Collaborator* c, bool removeProject)
+{
+	if (c == NULL)
+		throw ProjectExcept("Invalid Collaborator");
+	for (size_t i = 0; i < collaborators.size(); i++)
+	{
+		if (*c == *collaborators.at(i))
+		{
+			collaborators.erase(collaborators.begin() + i);
+			if (removeProject)
+				return c->removeProject(this, false);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Project::removeTrace()
+{
+	for (size_t i = 0; i < tasks.size(); i++)
+	{
+		tasks.at(i)->removeTraceOutsideProject();
+	}
+	client->removeProject(this, false);
+	return true;
+}

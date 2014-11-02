@@ -59,13 +59,13 @@ public:
 	void setName(string nm){ name = nm; };
 	void setEffort(unsigned int ef){ effort = ef; };
 	void setProject(Project* p, bool addTask = true);
-	Task& addDependency(Task* t, bool addDependant = true);
-	Task& addDependant(Task* t, bool addDependency = true);
+	bool addDependency(Task* t, bool addDependant = true);
+	bool addDependant(Task* t, bool addDependency = true);
 	bool addCollaborator(Collaborator* t1, unsigned int hours, bool addTask = true);
 	bool removeCollaborator(Collaborator* c, bool removeTask = true);
 	bool removeProject(bool removeTask=true);
 	bool removeTrace();
-
+	bool removeTraceOutsideProject();
 	bool removeDependency(Task* t, bool removeDependant = true);
 	bool removeDependant(Task* t, bool removeDependency = true);
 	int calculateEstimatedTime() const; //tempo estimado de realização da tarefa

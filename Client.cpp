@@ -12,6 +12,24 @@ void Client::addProject(Project* proj, bool setClient)
 		if (setClient)
 			proj->setClient(this, false);
 	};
+
+bool Client::removeProject(Project* p, bool removeClient)
+{
+	if (p == NULL)
+		throw ClientExcept("Invalid project");
+	for (size_t i = 0; i < projects.size(); i++)
+	{
+		if (*projects.at(i) == *p)
+		{
+			projects.erase(projects.begin() + i);
+			if (removeClient)
+				return p->removeClient(false);
+			return true;
+		}
+	}
+	throw ClientExcept("Project does not exist");
+}
+
 void Client::connect()
 {
 	for (size_t i = 0; i < projects.size(); i++)

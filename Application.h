@@ -40,7 +40,7 @@ public:
 			ApplicationExcept(string description) :description(description){};
 			string operator()(){ return description; };
 		};
-	Application(){};  
+	Application();  
 	~Application();
 	vector<Project*> getProjects() const {return projects;};
 	vector<Client*> getClients() const {return clients;};
@@ -89,6 +89,7 @@ private:
 	static vector<Client*> clients;
 	static vector<Collaborator*> collaborators;
 	static vector<Task*> tasks;
+	Date d;
 	Menu* menu;
 	vector<Menu*> menus;
 };

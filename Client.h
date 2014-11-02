@@ -56,7 +56,7 @@ public:
 	void setName(string name) { this->name = name; };
 	void addProject(Project* proj, bool setClient = true);
 	void connect();
-
+	bool removeProject(Project* p, bool removeClient = true);
 	bool operator==(const Client& c2) const { return this->ID == c2.ID; };
 	friend ostream & operator<<(ostream& out, const Client& p);
 	friend istream & operator>>(istream& in, Client& c);

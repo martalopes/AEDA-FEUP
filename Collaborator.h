@@ -39,6 +39,7 @@ private:
 	int workinghours;// numero total de horas de trabalho;
 	vector<Project*> projects;
 	vector<pair<Task*, unsigned int> > tasks;
+	//vector<Task*> finishedtasks;
 public:
 	class CollaboratorExcept
 	{
@@ -68,8 +69,8 @@ public:
 		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getID() < t2.getID(); };
 	};
 	Collaborator():ID(0), maxweeklyhours(0),workinghours(0){};
-	Collaborator(string name, int dailyhours) : name(name), maxweeklyhours(dailyhours),ID(++lastID),workinghours(0)	{};
-	Collaborator(string name, int dailyhours, int setID) : name(name), maxweeklyhours(dailyhours), workinghours(0){ if (setID > lastID) lastID = setID; };
+	Collaborator(string name, int weeklyhours) : name(name), maxweeklyhours(weeklyhours),ID(++lastID),workinghours(0)	{};
+	Collaborator(string name, int weeklyhours, int setID) : name(name), maxweeklyhours(weeklyhours), workinghours(0){ if (setID > lastID) lastID = setID; };
 	Collaborator(int i)
 	{
 		stringstream s;
@@ -91,6 +92,7 @@ public:
 	bool addTask(Task* t1, unsigned int hours, bool addCollaborator=true);
 	bool removeTask(Task* t, bool removeCollaborator = true);
 	bool removeProject(Project* p, bool removeCollaborator = true);
+	bool removeTrace();
 	bool changeTaskHours(Task* t1, unsigned int hours);
 	bool addProject(Project* p, bool addCollaborator = true);
 	static Collaborator* newRandomCollaborator(int i);

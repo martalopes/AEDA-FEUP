@@ -54,9 +54,12 @@ bool Collaborator::removeProject(Project* p, bool removeCollaborator)
 	if (p == NULL)
 		throw CollaboratorExcept("Invalid Project");
 	for (size_t i = 0; i < projects.size(); ++i)
-	if (projects.at(i) == p)
+	if (*projects.at(i) == *p)
 	{
-		
+		projects.erase(projects.begin() + i);
+		if (removeCollaborator)
+			return p->removeCollaborator(this, false);
+		return true;
 	}
 	return false;
 }
@@ -102,6 +105,18 @@ void Collaborator::connect()
 	}
 }
 
+bool Collaborator::removeTrace()
+{
+	for (size_t i = 0; i < projects.size(); i++)
+	{
+		projects.at(i)->removeCollaborator(this, false);
+	}
+	for (size_t i = 0; i < tasks.size(); i++)
+	{
+		tasks.at(i).first->removeCollaborator(this, false);
+	}
+	return true;
+}
 
 ostream & operator<<(ostream& out, const Collaborator& c)
 {
@@ -186,4 +201,5 @@ Collaborator* Collaborator::newCollaboratorTitle(string title)
 		return new Manager();
 	if ("Tester" == title)
 		return new Tester();
+	return NULL;
 }

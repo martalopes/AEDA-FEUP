@@ -19,29 +19,33 @@ void Task::setProject(Project* p, bool addTask)
 	if (addTask)
 		p->addTask(this, false);
 }
-Task& Task::addDependency(Task* t, bool addDependant)
+bool Task::addDependency(Task* t, bool addDependant)
 {
 	if (t == NULL)
 		throw TaskExcept("No Task being added to Task:", ID);
+	if (!(*project == *t->project))
+		return false;
 	for (size_t i = 0; i < dependencies.size(); ++i)
 	if (*dependencies.at(i) == *t)
 		throw TaskExcept("Dependency already exists in Task:", ID);
 	dependencies.push_back(t);
 	if (addDependant)
 		t->addDependant(this, false);
-	return *this;
+	return true;
 }
-Task& Task::addDependant(Task* t, bool addDependency)
+bool Task::addDependant(Task* t, bool addDependency)
 {
 	if (t == NULL)
 		throw TaskExcept("No Task being added to Task:", ID);
+	if (!(*project == *t->project))
+		return false;
 	for (size_t i = 0; i < dependants.size(); ++i)
 	if (*dependants.at(i) == *t)
 		throw TaskExcept("Dependant already exists in Task:", ID);
 	dependants.push_back(t);
 	if (addDependency)
 		t->addDependency(this, false);
-	return *this;
+	return true;
 }
 bool Task::addCollaborator(Collaborator* c1, unsigned int hours, bool addTask)
 {
@@ -53,12 +57,9 @@ bool Task::addCollaborator(Collaborator* c1, unsigned int hours, bool addTask)
 			throw TaskExcept("Collaborator already exists");
 		}
 	}
-	if (addTask)
-	if (c1->addTask(this, hours, false))
-		return true;
-	else return false;
 	collaborators.push_back(make_pair(c1, hours));
-	//project->addCollaborator(c1);
+	if (addTask)
+		return c1->addTask(this, hours, false);
 	return true;
 }
 bool Task::removeCollaborator(Collaborator* c, bool removeTask)
@@ -109,7 +110,6 @@ double Task::tick()			//semana de trabalho
 		if (effort > 0) effort -= collaborators.at(i).second;
 		if (effort <= 0)
 			effort = 0;
-
 	}
 	if (effort == 0)		//tarefa terminada
 	for (size_t i = 0; i < collaborators.size(); ++i)
@@ -195,7 +195,7 @@ istream & operator>>(istream& in, Task& t)
 		in.ignore();
 		t.dependencies.push_back((Task*) dependencyid);
 	}
-	int numdependants = 0;
+	unsigned int numdependants = 0;
 	in >> numdependants;
 	in.ignore();
 	for (size_t i = 0; i < numdependants; i++)
@@ -238,6 +238,15 @@ bool Task::removeTrace()//remover todas as referencias de outros objectos à tare
 		dependants.at(i)->removeDependency(this, false);
 		for (size_t j = 0; j < dependencies.size(); j++)
 			dependants.at(i)->addDependency(dependencies.at(j), false);//tarefas que dependem da tarefa atual passam a depender das tarefas das quais dependem a tarefa actual
+	}
+	return true;
+}
+
+bool Task::removeTraceOutsideProject()
+{
+	for (size_t i = 0; i < collaborators.size(); ++i)
+	{
+		collaborators.at(i).first->removeTask(this, false);// remover tarefa de todos os colaboradores
 	}
 	return true;
 }

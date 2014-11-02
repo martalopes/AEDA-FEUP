@@ -87,7 +87,7 @@ public:
 	string getName() const	{ return this->name; };
 	string getType() const  { return this->type; };
 	Client* getClient()	{ return this->client; };
-	int getCost() const	{ return this->cost; };
+	double getCost() const	{ return this->cost; };
 	Date getDeadline()const { return deadline; };
 	vector<Task*> getTasks() const { return this->tasks; };
 	vector<Collaborator*> getCollaborators() const { return this->collaborators; };
@@ -103,7 +103,9 @@ public:
 	void connect();
 
 	bool removeTask(Task* t, bool removeProject = true);
-
+	bool removeTrace();
+	bool removeClient(bool removeProject = true);
+	bool removeCollaborator(Collaborator* c, bool removeProject = true);
 	bool operator==(const Project& p2) const { return (this->ID) == (p2.ID); };
 	friend ostream & operator<<(ostream& out, const Project& p);
 	friend istream & operator>>(istream& in, Project& p);

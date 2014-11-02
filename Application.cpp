@@ -6,6 +6,8 @@ vector<Client*> Application::clients;
 vector<Collaborator*> Application::collaborators;
 vector<Task*> Application::tasks;
 
+Application::Application()
+{}
 
 Application::~Application()
 {
@@ -69,25 +71,16 @@ void Application::addCollaborator(Collaborator* c)
 }
 void Application::addTask(Task* t)
 {
-	for (size_t i = 0; i < collaborators.size(); ++i)
+	for (size_t i = 0; i < tasks.size(); ++i)
 	if (*tasks.at(i) == *t)
 		throw ApplicationExcept("Task already exists");
 	tasks.push_back(t);
 };
 
-bool Application::removeClient(Client* c){
-
-	for (size_t i = 0; i < clients.size(); ++i)
-	{
-		if (clients.at(i) == c)
-		{
-			clients.erase(clients.begin() + i);
-		}
-	}
-	return true;
-}
 bool Application::removeTask(Task* t)
 {
+	if (t == NULL)
+		throw ApplicationExcept("Invalid Task");
 	size_t pos = 0;
 	for (; pos < tasks.size(); pos++)
 	{
@@ -106,6 +99,62 @@ bool Application::removeTask(Task* t)
 	}
 	tasks.erase(tasks.begin() + pos);
 	delete t;
+	return true;
+}
+bool Application::removeProject(Project* p)
+{
+	p->removeTrace();
+	for (size_t i = 0; i < tasks.size(); i++)
+	{
+		if (*tasks.at(i)->getProject() == *p)
+		{
+			delete tasks.at(i);
+			tasks.erase(tasks.begin() + i);
+		}
+	}
+	for (size_t i = 0; i < projects.size(); i++)
+	{
+		if (*p == *projects.at(i))
+		{
+			projects.erase(projects.begin() + i);
+			delete p;
+		}
+	}
+	return false;
+}
+bool Application::removeClient(Client* c)
+{
+	if (c == NULL)
+		throw ApplicationExcept("Invalid client");
+	for (size_t i = 0; i < c->getProjects().size(); i++)
+		removeProject(c->getProjects().at(i));
+	for (size_t i = 0; i < clients.size(); i++)
+	{
+		if (*c == *clients.at(i))
+		{
+			clients.erase(clients.begin() + i);
+			delete c;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Application::removeCollaborator(Collaborator* c)
+{
+	if (c == NULL)
+		throw ApplicationExcept("Invalid collaborator being removed from application");
+	size_t i = 0;
+	for (; i < collaborators.size(); i++)
+	{
+		if (*c == *collaborators.at(i))
+			break;
+	}
+	if (i == collaborators.size())
+		throw ApplicationExcept("Collaborator being removed does not exist");
+	c->removeTrace();
+	collaborators.erase(collaborators.begin() + i);
+	delete c;
 	return true;
 }
 
@@ -158,7 +207,6 @@ void Application::writeFiles()
 	writeTasks(fout);
 	fout.close();
 }
-
 void Application::readProjects(ifstream& fin)
 {
 	fin.open("projects.txt");
@@ -247,6 +295,7 @@ void Application::readFiles()
 }
 void Application::tick()
 {
+	d += Date::toSeconds(7, 0, 0, 0, 0, 0);//avancar uma semana
 	for (size_t i = 0; i < projects.size(); ++i)
 		projects.at(i)->tick();
 }
