@@ -55,6 +55,9 @@ public:
 	string getName() const { return this->name; };
 	int getID() const { return this->ID; };
 	Project* getProject()const{ return this->project; };
+	vector<Task*> getDependants() const{ return dependants; };
+	vector<Task*> getDependencies() const{ return dependencies; };
+	vector<pair<Collaborator*, unsigned int> > getCollaborators() const{ return collaborators; };
 	int getPriority() const;
 	void setName(string nm){ name = nm; };
 	void setEffort(unsigned int ef){ effort = ef; };
@@ -68,17 +71,24 @@ public:
 	bool removeTraceOutsideProject();
 	bool removeDependency(Task* t, bool removeDependant = true);
 	bool removeDependant(Task* t, bool removeDependency = true);
-	int calculateEstimatedTime() const; //tempo estimado de realização da tarefa
-	int calculateTimeToCompletion() const; //tempo que falta para a conclosão da tarefa
-	bool isReady(); //uma tarefa é dada como concluida quando todas as tarefas de que depende já se encontram realizadas
+	double calculateEstimatedTime() const; //tempo estimado de realização da tarefa, sem contar com dependencias, em semanas
+	double calculateTimeToCompletion() const; //tempo que falta para a conclusão da tarefa, a contar com dependencias, em semanas
+	bool isReady()const; //uma tarefa é dada como concluida quando todas as tarefas de que depende já se encontram realizadas
 	double tick();//dia de trabalho.. retorna o custo daquele dia de trabalho
 	void connect(); 
 	//indica se a tarefa esta ou nao concluida
+	void complete();
 	bool isCompleted() const
 	{
-		return effort == 0;
-	} 
-	
+		return (effort <= 0);
+	};
+	bool delay(int i){ if (isCompleted()) return false; effort += i; return true; };
+	bool delay()
+	{ 
+		if (isCompleted()) 
+			return false; 
+		effort += rand() % 19 + 1;
+	};
 	bool operator==(Task& t2);
 	friend ostream & operator<<(ostream& out, const Task& t);
 	friend istream & operator>>(istream& in, Task& t);

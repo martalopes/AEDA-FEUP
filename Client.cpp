@@ -66,3 +66,10 @@ istream & operator>>(istream& in, Client& c)
 	}
 	return in;
 }
+double Client::getTotal() const 
+{ 
+	double sum = 0; 
+	for (size_t i = 0; i < projects.size(); i++) 
+		sum += projects.at(i)->getCost(); 
+	return sum;
+}

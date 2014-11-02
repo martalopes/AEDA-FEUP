@@ -60,12 +60,12 @@ bool Project::tick()
 		return true;
 	}
 bool Project::isCompleted()
-	{
+{
 		for(size_t i = 0; i< tasks.size(); ++i)
-				if(!tasks.at(i)->isCompleted())
+				if(!(tasks.at(i)->isCompleted()))
 					return false;
 			return true;
-	};
+}
 void Project::connect()
 {
 	client = Application::getClientPtr((int)client);
@@ -189,4 +189,35 @@ bool Project::removeTrace()
 	}
 	client->removeProject(this, false);
 	return true;
+}
+
+double Project::weeksToFinish() const
+{
+	if (tasks.size() == 0)
+		return 0;
+	double max = tasks.at(0)->calculateTimeToCompletion();
+	if (abs(max - (-1)) < 0.001)
+		return -1;
+	for (size_t i = 1; i < tasks.size(); i++)
+	{
+		double value = tasks.at(i)->calculateTimeToCompletion();
+		if (abs(value - (-1)) < 0.001)
+			return -1;
+		if (value > max)
+			max = value;
+	}
+	return max;
+}
+bool Project::isPastDeadline(const Date& currentdate)
+{ 
+	if (!(this->isCompleted())) 
+		return false; 
+	return (deadline < currentdate); 
+}
+Date Project::projectedFinishDate(const Date& currentdate) const
+{
+	double weeks = weeksToFinish();
+	if (abs(weeks - (-1)) < 0.001)
+		return Date(0);
+	else return currentdate + (int)(weeks * 7 * 24 * 3600);
 }

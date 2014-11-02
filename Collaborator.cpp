@@ -131,6 +131,9 @@ ostream & operator<<(ostream& out, const Collaborator& c)
 	out << c.tasks.size() << endl;
 	for (size_t i = 0; i < c.tasks.size(); i++)
 		out << c.tasks.at(i).first->getID() << " " << c.tasks.at(i).second << endl;
+	out << c.finishedtasks.size() << endl;
+	for (size_t i = 0; i < c.finishedtasks.size(); i++)
+		out << c.finishedtasks.at(i)->getID() << endl;
 	return out;
 }
 istream & operator>>(istream& in, Collaborator& c)
@@ -165,7 +168,24 @@ istream & operator>>(istream& in, Collaborator& c)
 		in.ignore();
 		c.tasks.push_back(make_pair((Task*)taskid, hours));
 	}
+	unsigned int numfinishedtasks = 0;
+	in >> numfinishedtasks;
+	in.ignore();
+	for (size_t i = 0; i < numfinishedtasks; i++)
+	{
+		unsigned long int taskid = 0;
+		in >> taskid;
+		in.ignore();
+		c.finishedtasks.push_back((Task*)taskid);
+	}
 	return in;
+}
+
+bool Collaborator::reassign(Task* t)
+{
+	if (!removeTask(t, false))
+		return false;
+	finishedtasks.push_back(t);
 }
 
 Collaborator* Collaborator::newRandomCollaborator(int i)

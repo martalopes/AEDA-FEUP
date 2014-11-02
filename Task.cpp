@@ -27,7 +27,7 @@ bool Task::addDependency(Task* t, bool addDependant)
 		return false;
 	for (size_t i = 0; i < dependencies.size(); ++i)
 	if (*dependencies.at(i) == *t)
-		throw TaskExcept("Dependency already exists in Task:", ID);
+		return false;
 	dependencies.push_back(t);
 	if (addDependant)
 		t->addDependant(this, false);
@@ -41,7 +41,7 @@ bool Task::addDependant(Task* t, bool addDependency)
 		return false;
 	for (size_t i = 0; i < dependants.size(); ++i)
 	if (*dependants.at(i) == *t)
-		throw TaskExcept("Dependant already exists in Task:", ID);
+		return false;
 	dependants.push_back(t);
 	if (addDependency)
 		t->addDependency(this, false);
@@ -54,7 +54,7 @@ bool Task::addCollaborator(Collaborator* c1, unsigned int hours, bool addTask)
 		if (*collaborators[i].first == *c1)
 		{
 			return false;
-			throw TaskExcept("Collaborator already exists");
+			//throw TaskExcept("Collaborator already exists");
 		}
 	}
 	collaborators.push_back(make_pair(c1, hours));
@@ -76,23 +76,39 @@ bool Task::removeCollaborator(Collaborator* c, bool removeTask)
 	}
 	return false;
 }
-int  Task::calculateEstimatedTime() const //tempo que demora a tarefa a ser completada, sem ter em conta dependencias
+double  Task::calculateEstimatedTime() const //tempo que demora a tarefa a ser completada, sem ter em conta dependencias
 {
+	if (isCompleted())
+		return 0; //se tarefa esta comcluida retornar 0
 	int sum = 0;
 	for (size_t i = 0; i < collaborators.size(); i++)
-		sum += collaborators.at(i).second;
+		sum += collaborators.at(i).second; //soma das horas que a tarefa é trabalhada por semana
 	if (sum == 0)
-		return INT_MAX;
-	else return int(double(effort) / sum + .5);
+		return -1;//tempo é 'infinito'
+	else return double(effort) / sum;
 };
-int Task::calculateTimeToCompletion() const //tempo que a tarefa vai demorar a ser completada, tendo em conta que as tarefas das quais depende terao de ser completadas primeiro
+double Task::calculateTimeToCompletion() const //tempo que a tarefa vai demorar a ser completada, tendo em conta que as tarefas das quais depende terao de ser completadas primeiro
 {
-	int sum = this->calculateEstimatedTime();
-	for (size_t i = 0; i < dependencies.size(); i++)
-		sum += dependencies.at(i)->calculateTimeToCompletion();
+	double sum = this->calculateEstimatedTime();
+	if (abs(sum - (-1)) < 0.001)
+		return -1;
+	if (dependencies.size() == 0)
+		return sum; // se a tarefa nao tem dependencias o tempo corresponde apenas ao tempo da propria tarefa
+	double max = dependencies.at(0)->calculateTimeToCompletion();
+	if (abs(max - (-1)) < 0.001)
+		return -1;
+	for (size_t i = 1; i < dependencies.size(); i++)
+	{
+		double value = dependencies.at(i)->calculateTimeToCompletion();
+		if (abs(value - (-1)) < 0.001)
+			return -1;
+		if (value > max)
+			max = value;
+	}
+	sum += max; //se tiver dependencias o tempo que demora a completar sera o tempo da propria tarefa mais o maximo de todas as tarefas das quais depende
 	return sum;
 };
-bool Task::isReady()
+bool Task::isReady() const
 {
 	for (size_t i = 0; i < dependencies.size(); ++i)
 	if (!dependencies.at(i)->isCompleted()) //uma tarefa pode ser realizada se todas as tarefas das quais depende estiverem completas
@@ -104,18 +120,26 @@ double Task::tick()			//semana de trabalho
 	if (!isReady())
 		return -1;
 	double sum = 0;
-	for (size_t i = 0; i < collaborators.size() && effort > 0; ++i)
+	for (size_t i = 0; i < collaborators.size(); ++i)
 	{
 		sum += collaborators.at(i).second * collaborators.at(i).first->getCost();
-		if (effort > 0) effort -= collaborators.at(i).second;
-		if (effort <= 0)
-			effort = 0;
+		effort -= collaborators.at(i).second; //retira ao esforco necessario para completar a tarefa as horas que trabalha cada colaborador
+		if (isCompleted()) // tarefa terminada
+		{
+			complete();//reassign collaborators
+			break;
+		}
 	}
-	if (effort == 0)		//tarefa terminada
-	for (size_t i = 0; i < collaborators.size(); ++i)
-		collaborators.at(i).first->removeTask(this); 	// remover tarefa aos colaboradores
-
-	return sum;		//retorna o custo total do dia
+	return sum;		//retorna o custo total da semana
+}
+void Task::complete()
+{
+	effort = 0;
+	for (size_t i = 0; i < collaborators.size(); i++)
+	{
+		collaborators.at(i).first->reassign(this);//retirar esta tarefa das tarefas ativas para cada colaborador que nela trabalha e adiciona la ao conjunto de tarefas terminadas
+	}
+	collaborators.clear();
 }
 void Task::connect()
 {

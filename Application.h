@@ -83,7 +83,8 @@ public:
 
 
 	void tick(); //guarda no vector de projectos o custo de cada projecto
-	void genApplication(); //função geradora de Applications 
+	void genApplication(); //função geradora de Applications
+	Date getDate() const;
 private:
 	static vector<Project*> projects;
 	static vector<Client*> clients;

@@ -89,6 +89,9 @@ public:
 	Client* getClient()	{ return this->client; };
 	double getCost() const	{ return this->cost; };
 	Date getDeadline()const { return deadline; };
+	bool isPastDeadline(const Date& currentdate);
+	double weeksToFinish() const;
+	Date projectedFinishDate(const Date& currentdate) const;
 	vector<Task*> getTasks() const { return this->tasks; };
 	vector<Collaborator*> getCollaborators() const { return this->collaborators; };
 	void setID(int ID) { this->ID = ID; };

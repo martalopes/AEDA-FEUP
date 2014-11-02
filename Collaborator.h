@@ -16,10 +16,10 @@
 
 using namespace std;
 
-#define PROGRAMMER_COST 1
-#define ARCHITECT_COST 2
-#define MANAGER_COST 3
-#define TESTER_COST 4
+#define PROGRAMMER_COST 35.71
+#define ARCHITECT_COST 44.88
+#define MANAGER_COST 40.54
+#define TESTER_COST 25.89
 
 class Task;
 class Project;
@@ -39,7 +39,7 @@ private:
 	int workinghours;// numero total de horas de trabalho;
 	vector<Project*> projects;
 	vector<pair<Task*, unsigned int> > tasks;
-	//vector<Task*> finishedtasks;
+	vector<Task*> finishedtasks;
 public:
 	class CollaboratorExcept
 	{
@@ -84,6 +84,8 @@ public:
 	int getMaxWeeklyHours() const { return this->maxweeklyhours; };
 	vector<Project*> getProjects() const { return this->projects; };
 	vector<pair<Task*, unsigned int> > getTasks() const { return this->tasks; };
+	vector<Task*> getFinishedTasks() const { return this->finishedtasks; };
+	bool reassign(Task* t);
 	virtual float getCost() const{ return 0; };
 	virtual string getTitle() const{ return "Collaborator"; };
 	void setID(int newID) { lastID = newID; };

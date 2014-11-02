@@ -103,6 +103,16 @@ bool Application::removeTask(Task* t)
 }
 bool Application::removeProject(Project* p)
 {
+	if (p == NULL)
+		throw ApplicationExcept("Invalid Project being removed from Application");
+	size_t j = 0;
+	for (; j < projects.size(); j++)
+	{
+		if (*p == *projects.at(j))
+			break;
+	}
+	if (j == projects.size())
+		throw ApplicationExcept("Project being removed does not exist");
 	p->removeTrace();
 	for (size_t i = 0; i < tasks.size(); i++)
 	{
@@ -125,7 +135,15 @@ bool Application::removeProject(Project* p)
 bool Application::removeClient(Client* c)
 {
 	if (c == NULL)
-		throw ApplicationExcept("Invalid client");
+		throw ApplicationExcept("Invalid client being removed from Application");
+	size_t j = 0;
+	for (; j < clients.size(); j++)
+	{
+		if (*c == *clients.at(j))
+			break;
+	}
+	if (j == clients.size())
+		throw ApplicationExcept("Client being removed does not exist");
 	for (size_t i = 0; i < c->getProjects().size(); i++)
 		removeProject(c->getProjects().at(i));
 	for (size_t i = 0; i < clients.size(); i++)
