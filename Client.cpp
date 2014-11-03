@@ -34,7 +34,11 @@ void Client::connect()
 {
 	for (size_t i = 0; i < projects.size(); i++)
 	{
+		if ((int)projects.at(i) == 0)
+			continue;
 		Project * ptr = Application::getProjectPtr((int)projects.at(i));
+		if (ptr == NULL)
+			throw ClientExcept("Error in clients.txt");
 		projects.at(i) = ptr;
 	}
 }
@@ -45,6 +49,7 @@ ostream & operator<<(ostream& out, const Client& c)
 	out << c.projects.size() << endl;
 	for (size_t i = 0; i < c.projects.size(); i++)
 		out << c.projects.at(i)->getID() << endl;
+	out << c.password << endl;
 	return out;
 }
 istream & operator>>(istream& in, Client& c)
@@ -64,6 +69,7 @@ istream & operator>>(istream& in, Client& c)
 		in.ignore();
 		c.projects.push_back((Project*)projectid);
 	}
+	getline(in, c.password);
 	return in;
 }
 double Client::getTotal() const 

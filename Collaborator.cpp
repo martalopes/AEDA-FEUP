@@ -2,32 +2,32 @@
 #include "Task.h"
 
 
-int Collaborator::lastID=0;
+int Collaborator::lastID = 0;
 
 bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
+{
+	for (size_t i = 0; i < this->tasks.size(); ++i)
 	{
-		for (size_t i = 0; i < this->tasks.size(); ++i)
+		if (*(tasks[i].first) == *t1)
 		{
-			if (*(tasks[i].first) == *t1)
-			{
-				throw CollaboratorExcept("Task already exists");
-			}
+			throw CollaboratorExcept("Task already exists");
 		}
-		if ((this->getWorkingHours() + hours) > this->maxweeklyhours)
-			return false;
-		tasks.push_back(make_pair(t1, hours));
-		/*size_t i = 0;
-		for (; i < projects.size(); i++)
-		if (*t1->getProject() == *projects.at(i))
-			break;
-		if (i == projects.size())
-			projects.push_back(t1->getProject());*/
-		addProject(t1->getProject());
-		if(addCollaborator)
-		t1->addCollaborator(this, hours, false);
-		workinghours += hours;
-		return true;
 	}
+	if ((this->getWorkingHours() + hours) > this->maxweeklyhours)
+		return false;
+	tasks.push_back(make_pair(t1, hours));
+	/*size_t i = 0;
+	for (; i < projects.size(); i++)
+	if (*t1->getProject() == *projects.at(i))
+	break;
+	if (i == projects.size())
+	projects.push_back(t1->getProject());*/
+	addProject(t1->getProject());
+	if (addCollaborator)
+		t1->addCollaborator(this, hours, false);
+	workinghours += hours;
+	return true;
+}
 bool Collaborator::removeTask(Task* t, bool removeCollaborator)
 {
 	if (t == NULL)
@@ -43,7 +43,7 @@ bool Collaborator::removeTask(Task* t, bool removeCollaborator)
 			break;
 		if (j == tasks.size())//colaborador nao tem mais tarefas do mesmo projecto
 			removeProject(t->getProject(), true);
-		if(removeCollaborator)
+		if (removeCollaborator)
 			return t->removeCollaborator(this, false);
 		return true;
 	}
@@ -95,13 +95,21 @@ void Collaborator::connect()
 {
 	for (size_t i = 0; i < projects.size(); i++)
 	{
+		if ((int)projects.at(i) == 0)
+			continue;
 		Project * ptr = Application::getProjectPtr((int)projects.at(i));
-			projects.at(i) = ptr;
+		if (ptr == NULL)
+			throw CollaboratorExcept("Error in collaborator.txt");
+		projects.at(i) = ptr;
 	}
 	for (size_t i = 0; i < tasks.size(); i++)
 	{
+		if ((int)tasks.at(i).first == 0)
+			continue;
 		Task* ptr = Application::getTaskPtr((int)tasks.at(i).first);
-			tasks.at(i).first = ptr;
+		if (ptr == NULL)
+			throw CollaboratorExcept("Error in collaborator.txt");
+		tasks.at(i).first = ptr;
 	}
 }
 
@@ -134,6 +142,7 @@ ostream & operator<<(ostream& out, const Collaborator& c)
 	out << c.finishedtasks.size() << endl;
 	for (size_t i = 0; i < c.finishedtasks.size(); i++)
 		out << c.finishedtasks.at(i)->getID() << endl;
+	out << c.password << endl;
 	return out;
 }
 istream & operator>>(istream& in, Collaborator& c)
@@ -178,6 +187,7 @@ istream & operator>>(istream& in, Collaborator& c)
 		in.ignore();
 		c.finishedtasks.push_back((Task*)taskid);
 	}
+	getline(in, c.password);
 	return in;
 }
 

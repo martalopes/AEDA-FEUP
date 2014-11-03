@@ -34,12 +34,13 @@ protected:
 	static int lastID;
 private:
 	int ID;
-	string name; 
+	string name;
 	int maxweeklyhours;// numero de horas de trabalho por semana;
 	int workinghours;// numero total de horas de trabalho;
 	vector<Project*> projects;
 	vector<pair<Task*, unsigned int> > tasks;
 	vector<Task*> finishedtasks;
+	string password;
 public:
 	class CollaboratorExcept
 	{
@@ -51,7 +52,7 @@ public:
 	class CollaboratorComparator
 	{
 	public:
-		virtual bool operator()(const Collaborator& t1, const Collaborator& t2)=0;
+		virtual bool operator()(const Collaborator& t1, const Collaborator& t2) = 0;
 	};
 	class CollaboratorComparatorAlphabetic : public CollaboratorComparator
 	{
@@ -101,15 +102,16 @@ public:
 		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getProjects().size() < t2.getProjects().size(); };
 		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getProjects().size() < t2->getProjects().size(); };
 	};
-	Collaborator():ID(0), maxweeklyhours(0),workinghours(0){};
-	Collaborator(string name, int weeklyhours) : name(name), maxweeklyhours(weeklyhours),ID(++lastID),workinghours(0)	{};
-	Collaborator(string name, int weeklyhours, int setID) : name(name), maxweeklyhours(weeklyhours), workinghours(0){ if (setID > lastID) lastID = setID; };
+	Collaborator() :ID(0), maxweeklyhours(0), workinghours(0), password("123"){};
+	Collaborator(string name, int weeklyhours) : name(name), maxweeklyhours(weeklyhours), ID(++lastID), workinghours(0), password("123"){};
+	Collaborator(string name, int weeklyhours, int setID) : name(name), maxweeklyhours(weeklyhours), workinghours(0), password("123"){ if (setID > lastID) lastID = setID; };
 	Collaborator(int i)
 	{
 		stringstream s;
 		s << "Collaborator " << i;
-		*this = Collaborator(s.str(), (6 + rand() % 4)*5);
+		*this = Collaborator(s.str(), (6 + rand() % 4) * 5);
 	};
+	bool verifyPassword(const string& password) const{ return this->password == password; };
 	//static int numCollaborators(){ return Collaborator::lastID; };
 	int getID() const { return this->ID; };
 	string getName() const { return this->name; };

@@ -423,18 +423,22 @@ void test3()
 //codigo de varias teclas
 
 
-enum states
-{
-	EXIT = -1, ESCAPEMENU, MAINMENU1, CLIENTMENU, COLLABORATORMENU, MANAGERMENU, 
-};
 int main()
 {
 	srand((unsigned int)time(NULL));
-	int state = MAINMENU1;
 	Application app;
-	//app.readFiles();
+	try{
+		app.readFiles();
+	}
+	catch (Application::ApplicationExcept& e)
+	{
+		cerr << e();
+		system("Pause");
+		return 1;
+	}
+	int state = 1;
 	menus(state, app);
-
+	app.writeFiles();
 
 
 	test3();
@@ -457,6 +461,6 @@ int main()
 	a.createMenus();
 	a.play();
 	a.writeFiles();*/
-	int x = 0;
 	system("pause");
+	return 0;
 }

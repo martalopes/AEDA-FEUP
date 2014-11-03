@@ -183,7 +183,9 @@ ostream & operator<<(ostream& out, const Task& t)
 	out << t.dependants.size() << endl;
 	for (size_t i = 0; i < t.dependants.size(); i++)
 		out << t.dependants.at(i)->getID() << endl;
+	if (t.project != NULL)
 	out << t.project->getID() << endl;
+	else out << 0 << endl;
 	return out;
 }
 istream & operator>>(istream& in, Task& t)

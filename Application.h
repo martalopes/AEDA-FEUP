@@ -91,8 +91,6 @@ private:
 	static vector<Collaborator*> collaborators;
 	static vector<Task*> tasks;
 	Date d;
-	Menu* menu;
-	vector<Menu*> menus;
 };
 
 

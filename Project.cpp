@@ -5,14 +5,14 @@
 int Project::lastID = 0;
 
 bool Project::ProjectComparatorClient::operator()(const Project& t1, const Project& t2) { return t1.getClient()->getID() < t2.getClient()->getID(); };
-bool Project::ProjectComparatorClient::operator()(const Project* t1, const Project* t2) { return t1->getClient()->getID()< t2->getClient()->getID(); };
+bool Project::ProjectComparatorClient::operator()(const Project* t1, const Project* t2) { return t1->getClient()->getID() < t2->getClient()->getID(); };
 
 Project::Project(int i)
 {
-		stringstream s1, s2;
-		s1 << "Project " << i;
-		s2 << "Type " << i;
-		*this = Project(s1.str(), s2.str(), Date() + Date::toSeconds(0, 6 + rand() % 10, 0, 0, 0, 0), 10000 + (rand() % 5000-2500));
+	stringstream s1, s2;
+	s1 << "Project " << i;
+	s2 << "Type " << i;
+	*this = Project(s1.str(), s2.str(), Date() + Date::toSeconds(0, 6 + rand() % 10, 0, 0, 0, 0), 10000 + (rand() % 5000 - 2500));
 }
 void Project::setClient(Client* c, bool addProject)
 {
@@ -49,38 +49,50 @@ void Project::addTask(Task * t, bool setProject)
 	if (setProject)
 		t->setProject(this, false);
 }
-bool Project::tick() 
+bool Project::tick()
+{
+	if (isCompleted())
+		return false;
+	for (size_t i = 0; i < tasks.size(); ++i)
 	{
-		if(isCompleted())
-			return false;
-		for (size_t i = 0; i < tasks.size(); ++i)
-			{
-				double value = tasks.at(i)->tick();
-				if(value >= 0)
-					cost += value;
-			}
-		return true;
+		double value = tasks.at(i)->tick();
+		if (value >= 0)
+			cost += value;
 	}
+	return true;
+}
 bool Project::isCompleted()
 {
-		for(size_t i = 0; i< tasks.size(); ++i)
-				if(!(tasks.at(i)->isCompleted()))
-					return false;
-			return true;
+	for (size_t i = 0; i < tasks.size(); ++i)
+	if (!(tasks.at(i)->isCompleted()))
+		return false;
+	return true;
 }
 void Project::connect()
 {
-	client = Application::getClientPtr((int)client);
-
+	if ((int)client != 0)
+	{
+		client = Application::getClientPtr((int)client);
+		if (client == NULL)
+			throw ProjectExcept("Error in projects.txt");
+	}
 	for (size_t i = 0; i < tasks.size(); i++)
 	{
+		if ((int)tasks.at(i) == 0)
+			continue;
 		Task* ptr = Application::getTaskPtr((int)tasks.at(i));
-			tasks.at(i) = ptr;
+		if (ptr == NULL)
+			throw ProjectExcept("Error in projects.txt");
+		tasks.at(i) = ptr;
 	}
 	for (size_t i = 0; i < collaborators.size(); i++)
 	{
+		if ((int)collaborators.at(i) == 0)
+			continue;
 		Collaborator* ptr = Application::getCollaboratorPtr((int)collaborators.at(i));
-			collaborators.at(i) = ptr;
+		if (ptr==NULL)
+			throw ProjectExcept("Error in projects.txt");
+		collaborators.at(i) = ptr;
 	}
 
 }
@@ -90,7 +102,9 @@ ostream & operator<<(ostream& out, const Project& p)
 	out << p.ID << endl;
 	out << p.name << endl;
 	out << p.type << endl;
-	out << p.client->getID() << endl;
+	if (p.client != NULL)
+		out << p.client->getID() << endl;
+	else out << 0 << endl;
 	out << p.cost << endl;
 	out << p.deadline.getTotalSeconds() << endl;
 	out << p.tasks.size() << endl;
@@ -112,14 +126,14 @@ istream & operator>>(istream& in, Project& p)
 	long unsigned int clientid;
 	in >> clientid;
 	in.ignore();
-	p.client = (Client*) clientid;
+	p.client = (Client*)clientid;
 	in >> p.cost;
 	in.ignore();
 
 	time_t totalseconds;
 	in >> totalseconds;
 	in.ignore();
-	p.deadline= Date(totalseconds);
+	p.deadline = Date(totalseconds);
 
 	unsigned int numtasks;
 	in >> numtasks;
@@ -129,7 +143,7 @@ istream & operator>>(istream& in, Project& p)
 		long unsigned int taskid;
 		in >> taskid;
 		in.ignore();
-		p.tasks.push_back((Task*) taskid);
+		p.tasks.push_back((Task*)taskid);
 	}
 	unsigned int numcollaborators;
 	in >> numcollaborators;
@@ -139,7 +153,7 @@ istream & operator>>(istream& in, Project& p)
 		long unsigned int collaboratorid;
 		in >> collaboratorid;
 		in.ignore();
-		p.collaborators.push_back((Collaborator*) collaboratorid);
+		p.collaborators.push_back((Collaborator*)collaboratorid);
 	}
 	return in;
 }
@@ -211,10 +225,10 @@ double Project::weeksToFinish() const
 	return max;
 }
 bool Project::isPastDeadline(const Date& currentdate)
-{ 
-	if (!(this->isCompleted())) 
-		return false; 
-	return (deadline < currentdate); 
+{
+	if (!(this->isCompleted()))
+		return false;
+	return (deadline < currentdate);
 }
 Date Project::projectedFinishDate(const Date& currentdate) const
 {

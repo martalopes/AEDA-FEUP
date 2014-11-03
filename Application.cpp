@@ -231,6 +231,8 @@ void Application::writeFiles()
 void Application::readProjects(ifstream& fin)
 {
 	fin.open("projects.txt");
+	if (!fin)
+		throw ApplicationExcept("projects.txt does not exist");
 	unsigned int numprojects = 0;
 	fin >> numprojects;
 	fin.ignore();
@@ -245,6 +247,8 @@ void Application::readProjects(ifstream& fin)
 void Application::readClients(ifstream& fin)
 {
 	fin.open("clients.txt");
+	if (!fin)
+		throw ApplicationExcept("clients.txt does not exist");
 	unsigned int numclients = 0;
 	fin >> numclients;
 	fin.ignore();
@@ -259,6 +263,8 @@ void Application::readClients(ifstream& fin)
 void Application::readCollaborators(ifstream& fin)
 {
 	fin.open("collaborators.txt");
+	if (!fin)
+		throw ApplicationExcept("collaborators.txt does not exist");
 	unsigned int numcollaborators = 0;
 	fin >> numcollaborators;
 	fin.ignore();
@@ -275,6 +281,8 @@ void Application::readCollaborators(ifstream& fin)
 void Application::readTasks(ifstream& fin)
 {
 	fin.open("tasks.txt");
+	if (!fin)
+		throw ApplicationExcept("tasks.txt does not exist");
 	unsigned int numtasks = 0;
 	fin >> numtasks;
 	fin.ignore();
@@ -288,21 +296,49 @@ void Application::readTasks(ifstream& fin)
 }
 void Application::connect()
 {
-	for (size_t i = 0; i < projects.size(); i++)
-	{
-		projects.at(i)->connect();
+	try{
+
+		for (size_t i = 0; i < projects.size(); i++)
+		{
+			projects.at(i)->connect();
+		}
 	}
-	for (size_t i = 0; i < clients.size(); i++)
+	catch (Project::ProjectExcept& e)
 	{
-		clients.at(i)->connect();
+		throw ApplicationExcept(e());
 	}
-	for (size_t i = 0; i < collaborators.size(); i++)
-	{
-		collaborators.at(i)->connect();
+	try{
+
+		for (size_t i = 0; i < clients.size(); i++)
+		{
+			clients.at(i)->connect();
+		}
 	}
-	for (size_t i = 0; i < tasks.size(); i++)
+	catch (Client::ClientExcept& e)
 	{
-		tasks.at(i)->connect();
+		throw ApplicationExcept(e());
+	}
+	try{
+
+		for (size_t i = 0; i < collaborators.size(); i++)
+		{
+			collaborators.at(i)->connect();
+		}
+	}
+	catch (Collaborator::CollaboratorExcept& e)
+	{
+		throw ApplicationExcept(e());
+	}
+	try
+	{
+		for (size_t i = 0; i < tasks.size(); i++)
+		{
+			tasks.at(i)->connect();
+		}
+	}
+	catch (Task::TaskExcept& e)
+	{
+		throw ApplicationExcept(e());
 	}
 }
 void Application::readFiles()
@@ -377,10 +413,10 @@ void Application::createMenus()
 	Menu* menu2 = new Menu(CLIENTLOGIN, "Client Login", "Please login", MAINMENU, {});
 	Menu* menu3 = new Menu(COLLABORATORLOGIN, "Collaborator Login", "Please login", MAINMENU, {});
 	Menu* menu4 = new Menu(ADMINLOGIN, "Admin login", "Please login", MAINMENU, {});
-	menu = menu1;
+	//menu = menu1;
 }
 
-void Application::play() 
-{ 
-	while (menu != NULL) menu = menu->execute(); 
+void Application::play()
+{
+	//while (menu != NULL) menu = menu->execute(); 
 }
