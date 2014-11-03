@@ -120,6 +120,7 @@ bool Application::removeProject(Project* p)
 		{
 			delete tasks.at(i);
 			tasks.erase(tasks.begin() + i);
+			i--;
 		}
 	}
 	for (size_t i = 0; i < projects.size(); i++)
@@ -128,6 +129,7 @@ bool Application::removeProject(Project* p)
 		{
 			projects.erase(projects.begin() + i);
 			delete p;
+			i--;
 		}
 	}
 	return false;
@@ -152,6 +154,7 @@ bool Application::removeClient(Client* c)
 		{
 			clients.erase(clients.begin() + i);
 			delete c;
+			i--;
 			return true;
 		}
 	}

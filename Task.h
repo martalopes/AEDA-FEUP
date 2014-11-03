@@ -61,6 +61,7 @@ public:
 	int getPriority() const;
 	void setName(string nm){ name = nm; };
 	void setEffort(unsigned int ef){ effort = ef; };
+	int getEffort()const { return this->effort; };
 	void setProject(Project* p, bool addTask = true);
 	bool addDependency(Task* t, bool addDependant = true);
 	bool addDependant(Task* t, bool addDependency = true);
@@ -109,17 +110,37 @@ public:
 	{
 	public:
 		bool operator()(const Task& t1, const Task& t2) { return t1.name < t2.name; };
+		bool operator()(const Task* t1, const Task* t2) { return t1->name < t2->name; };
 	};
 	class TaskComparatorPriority : public TaskComparator
 	{
 	public:
 		bool operator()(const Task& t1, const Task& t2) { return t1.getPriority() < t2.getPriority(); };
+		bool operator()(const Task* t1, const Task* t2) { return t1->getPriority() < t2->getPriority(); };
 	};
 	class TaskComparatorID : public TaskComparator
 	{
 	public:
 		bool operator()(const Task& t1, const Task& t2) { return t1.getID() < t2.getID(); };
+		bool operator()(const Task* t1, const Task* t2) { return t1->getID() < t2->getID(); };
 	};
-	
+	class TaskComparatorEffort : public TaskComparator
+	{
+	public:
+		bool operator()(const Task& t1, const Task& t2) { return t1.getEffort() < t2.getEffort(); };
+		bool operator()(const Task* t1, const Task* t2) { return t1->getEffort() < t2->getEffort(); };
+	};
+	class TaskComparatorEstimatedTime : public TaskComparator
+	{
+	public:
+		bool operator()(const Task& t1, const Task& t2) { return t1.calculateEstimatedTime() < t2.calculateEstimatedTime(); };
+		bool operator()(const Task* t1, const Task* t2) { return t1->calculateEstimatedTime() < t2->calculateEstimatedTime(); };
+	};
+	class TaskComparatorTimeToCompletion : public TaskComparator
+	{
+	public:
+		bool operator()(const Task& t1, const Task& t2) { return t1.calculateTimeToCompletion() < t2.calculateTimeToCompletion(); };
+		bool operator()(const Task* t1, const Task* t2) { return t1->calculateTimeToCompletion() < t2->calculateTimeToCompletion(); };
+	};
 };
 #endif

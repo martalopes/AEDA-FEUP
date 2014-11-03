@@ -34,21 +34,21 @@ class Application
 public:
 	//class de excepção associada a Aplicações 
 	class ApplicationExcept
-		{
-			string description;
-		public:
-			ApplicationExcept(string description) :description(description){};
-			string operator()(){ return description; };
-		};
-	Application();  
+	{
+		string description;
+	public:
+		ApplicationExcept(string description) :description(description){};
+		string operator()(){ return description; };
+	};
+	Application();
 	~Application();
-	vector<Project*> getProjects() const {return projects;};
-	vector<Client*> getClients() const {return clients;};
-	vector<Collaborator*> getCollaborators() const {return collaborators;};
-	vector<Task*> getTasks() const {return tasks;};
+	vector<Project*> getProjects() const { return projects; };
+	vector<Client*> getClients() const { return clients; };
+	vector<Collaborator*> getCollaborators() const { return collaborators; };
+	vector<Task*> getTasks() const { return tasks; };
 	static Project* getProjectPtr(int ID);
 	static Client* getClientPtr(int ID);
-	static Collaborator* getCollaboratorPtr(int ID) ;
+	static Collaborator* getCollaboratorPtr(int ID);
 	static Task* getTaskPtr(int ID);
 	static void addProject(Project* p);
 	static void addClient(Client* c);
@@ -62,7 +62,7 @@ public:
 	bool removeCollaborator(Collaborator* c);
 
 
-					/*escrita*/
+	/*escrita*/
 
 	void writeFiles(); //função que escreve nos ficheiros 
 	void writeProjects(ofstream& fout)const;
@@ -70,7 +70,7 @@ public:
 	void writeCollaborators(ofstream& fout)const;
 	void writeTasks(ofstream& fout)const;
 
-					/*leitura*/
+	/*leitura*/
 
 	void readFiles(); //função que lê dos ficheiros
 	void readProjects(ifstream& fin);
@@ -84,7 +84,7 @@ public:
 
 	void tick(); //guarda no vector de projectos o custo de cada projecto
 	void genApplication(); //função geradora de Applications
-	Date getDate() const;
+	Date getDate() const{ return d; };
 private:
 	static vector<Project*> projects;
 	static vector<Client*> clients;

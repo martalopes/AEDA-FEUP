@@ -12,6 +12,7 @@
 #include "Collaborator.h"
 #include "Task.h"
 #include "Date.h"
+#include "Application.h"
 
 using namespace std;
 
@@ -30,9 +31,9 @@ using namespace std;
 ////usado para guardar o numero de '\n' ate ao fim do ecra atual
 //int end_of_screen = 24;
 //int current_color = 7;
-
+class Application;
 enum ids {MAINMENU=1, CLIENTLOGIN, COLLABORATORLOGIN, ADMINLOGIN};
-
+void menus(int& state, Application& app);
 class Menu
 {
 private:

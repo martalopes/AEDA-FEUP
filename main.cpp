@@ -7,11 +7,15 @@
 #include <iostream>
 #include <ctime>
 #include <assert.h>
+#include <windows.h>
+#include <conio.h>
+#include <algorithm>
 
 using namespace std;
 
 #define ASSERT_EQUAL_DELTA(arg1, arg2, delta) assert(abs(arg1-arg2) < delta)
 #define ASSERT_EQUAL(arg1,arg2) assert(arg1==arg2)
+
 void test()
 {
 	Application a;
@@ -49,7 +53,7 @@ void test()
 	t2->addCollaborator(w1, 15);
 
 	t3->addCollaborator(w2, 20);
-	cout << t2->calculateTimeToCompletion();
+	//cout << t2->calculateTimeToCompletion();
 	int x2 = 0;
 }
 
@@ -329,18 +333,111 @@ void test2()
 		ASSERT_EQUAL(e(), "Project being removed does not exist");
 	}
 	ASSERT_EQUAL(a.getProjects().size(), 1);
-	//ASSERT_EQUAL(a.getTasks().size(), 0);
+	ASSERT_EQUAL(a.getTasks().size(), 0);
 	ASSERT_EQUAL(w1->getProjects().size(), 0);
 	ASSERT_EQUAL(w2->getProjects().size(), 0);
 	ASSERT_EQUAL(w1->getTasks().size(), 0);
 	ASSERT_EQUAL(w2->getTasks().size(), 0);
-	int i = 0;
 }
+void test3()
+{
+	Application a;
+	Client* c1 = new Client("Client 1");
+	a.addClient(c1);
+	Client* c2 = new Client("Client 2");
+	a.addClient(c2);
+	Programmer* w1 = new Programmer("Programmer 1", 1000);
+	a.addCollaborator(w1);
+	Tester* w2 = new Tester("Tester 1", 1000);
+	a.addCollaborator(w2);
+	Manager* w3 = new Manager("Manager 1", 1000);
+	a.addCollaborator(w3);
+	Architect* w4 = new Architect("Architect 1", 1000);
+	a.addCollaborator(w4);
 
+	Project* p1 = new Project("Project 1", "Description of Project 1", Date(1, 11, 2014, 12, 12, 3), 0);
+	a.addProject(p1);
+	Project* p2 = new Project("Project 2", "Description of Project 2", Date(1, 10, 2014, 12, 12, 3), 0);
+	a.addProject(p2);
+	c1->addProject(p1);
+	c2->addProject(p2);
+	Task* t1 = new Task("Task 1", "Description of Task 1", 26);
+	Task* t2 = new Task("Task 2", "Description of Task 2", 55);
+	Task* t3 = new Task("Task 3", "Description of Task 3", 148);
+	Task* t4 = new Task("Task 4", "Description of Task 4", 156);
+	Task* t5 = new Task("Task 5", "Description of Task 5", 91);
+	Task* t6 = new Task("Task 6", "Description of Task 6", 171);
+	a.addTask(t1);
+	a.addTask(t2);
+	a.addTask(t3);
+	a.addTask(t4);
+	a.addTask(t5);
+	a.addTask(t6);
+	p1->addTask(t1);
+	p1->addTask(t2);
+	p1->addTask(t3);
+	p1->addTask(t4);
+	p1->addTask(t5);
+	p1->addTask(t6);
+	t1->addCollaborator(w1, 6);
+	t1->addCollaborator(w2, 8);
+
+	t2->addCollaborator(w1, 7);
+
+	t3->addCollaborator(w2, 15);
+	t3->addCollaborator(w4, 17);
+
+	t4->addCollaborator(w1, 10);
+
+	t5->addCollaborator(w2, 13);
+
+	t6->addCollaborator(w1, 3);
+	t6->addCollaborator(w3, 20);
+	t6->addCollaborator(w2, 7);
+
+	t1->addDependant(t4);
+	t2->addDependant(t4);
+	t3->addDependant(t4);
+
+	t2->addDependant(t5);
+	t3->addDependant(t5);
+
+	t5->addDependant(t4);
+
+	t4->addDependant(t6);
+	t5->addDependant(t6);
+	vector<Task*> v_tasks = a.getTasks();
+	for (size_t i = 0; i < v_tasks.size(); i++)
+	{
+		cout << v_tasks.at(i)->getID() << " ";
+	}
+	cout << endl;
+	sort(v_tasks.begin(), v_tasks.end(), Task::TaskComparatorEffort());
+	for (size_t i = 0; i < v_tasks.size(); i++)
+	{
+		cout << v_tasks.at(i)->getID() << " ";
+	}
+
+
+}
+//codigo de varias teclas
+
+
+enum states
+{
+	EXIT = -1, ESCAPEMENU, MAINMENU1, CLIENTMENU, COLLABORATORMENU, MANAGERMENU, 
+};
 int main()
 {
 	srand((unsigned int)time(NULL));
-	test2();
+	int state = MAINMENU1;
+	Application app;
+	//app.readFiles();
+	menus(state, app);
+
+
+
+	test3();
 	//Application a;
 	/*if (0)
 	{

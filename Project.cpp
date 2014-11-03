@@ -4,6 +4,8 @@
 
 int Project::lastID = 0;
 
+bool Project::ProjectComparatorClient::operator()(const Project& t1, const Project& t2) { return t1.getClient()->getID() < t2.getClient()->getID(); };
+bool Project::ProjectComparatorClient::operator()(const Project* t1, const Project* t2) { return t1->getClient()->getID()< t2->getClient()->getID(); };
 
 Project::Project(int i)
 {

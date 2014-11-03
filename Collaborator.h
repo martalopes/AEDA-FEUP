@@ -57,16 +57,49 @@ public:
 	{
 	public:
 		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.name < t2.name; };
+		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->name < t2->name; };
 	};
 	class CollaboratorComparatorCost : public CollaboratorComparator
 	{
 	public:
 		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.workinghours < t2.workinghours; };
+		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->workinghours < t2->workinghours; };
 	};
 	class CollaboratorComparatorID : public CollaboratorComparator
 	{
 	public:
 		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getID() < t2.getID(); };
+		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getID() < t2->getID(); };
+	};
+	class CollaboratorComparatorWorkinghours : public CollaboratorComparator
+	{
+	public:
+		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getWorkingHours() < t2.getWorkingHours(); };
+		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getWorkingHours() < t2->getWorkingHours(); };
+	};
+	class CollaboratorComparatorMaxWeeklyHours : public CollaboratorComparator
+	{
+	public:
+		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getMaxWeeklyHours() < t2.getMaxWeeklyHours(); };
+		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getMaxWeeklyHours() < t2->getMaxWeeklyHours(); };
+	};
+	class CollaboratorComparatorNumTasks : public CollaboratorComparator
+	{
+	public:
+		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getTasks().size() < t2.getTasks().size(); };
+		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getTasks().size() < t2->getTasks().size(); };
+	};
+	class CollaboratorComparatorExperience : public CollaboratorComparator
+	{
+	public:
+		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getFinishedTasks().size() < t2.getFinishedTasks().size(); };
+		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getFinishedTasks().size() < t2->getFinishedTasks().size(); };
+	};
+	class CollaboratorComparatorNumProjects : public CollaboratorComparator
+	{
+	public:
+		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getProjects().size() < t2.getProjects().size(); };
+		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getProjects().size() < t2->getProjects().size(); };
 	};
 	Collaborator():ID(0), maxweeklyhours(0),workinghours(0){};
 	Collaborator(string name, int weeklyhours) : name(name), maxweeklyhours(weeklyhours),ID(++lastID),workinghours(0)	{};
