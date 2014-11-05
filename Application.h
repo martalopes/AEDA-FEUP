@@ -7,8 +7,7 @@
 #include "Collaborator.h"
 #include "Task.h"
 #include "Date.h"
-#include "Menu.h"
-#include "Utils.h"
+
 
 #include <string>
 #include <utility>
@@ -24,7 +23,6 @@
 
 using namespace std;
 
-class Menu;
 
 class Application
 {
@@ -43,6 +41,7 @@ public:
 	};
 	Application();
 	~Application();
+	static Application* Instance(){};
 	static vector<Project*> getProjects()  { return projects; };
 	static vector<Client*> getClients()  { return clients; };
 	static vector<Collaborator*> getCollaborators()  { return collaborators; };

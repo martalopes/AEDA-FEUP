@@ -420,7 +420,6 @@ void test3()
 
 
 }
-//codigo de varias teclas
 
 
 int main()
@@ -435,8 +434,8 @@ int main()
 	}
 	catch (Application::ApplicationExcept& e)
 	{
-		cerr << e();
-		system("Pause");
+		cerr << e()<< endl;
+		cin.get();
 		return 1;
 	}
 	int state = 1;
@@ -446,28 +445,9 @@ int main()
 	}
 	catch (Application::ApplicationExcept& e)
 	{
-		cerr << e();
-		system("Pause");
+		cerr << e()<<endl;
+		cin.get();
 		return 1;
 	}
-	//Application a;
-	/*if (0)
-	{
-		a.genApplication();
-		a.writeFiles();
-		return 0;
-	}*/
-	//string cmd;
-	//getline(cin,cmd);
-	//if (cmd == "gen")
-	//a.genApplication();
-	//else if (cmd == "read")
-
-
-
-	/*a.readFiles();
-	a.createMenus();
-	a.play();
-	a.writeFiles();*/
 	return 0;
 }

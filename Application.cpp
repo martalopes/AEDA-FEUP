@@ -6,6 +6,8 @@ vector<Client*> Application::clients;
 vector<Collaborator*> Application::collaborators;
 vector<Task*> Application::tasks;
 Date Application::d;
+
+
 Application::Application()
 {}
 

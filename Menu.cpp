@@ -7,8 +7,6 @@
 #include <algorithm>
 
 
-vector<Menu*> Menu::menus;
-
 const int UP = 72;
 const int DOWN = 80;
 const int LEFT = 75;
@@ -113,72 +111,6 @@ void changecolor(string color)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), current_color);
 }
 
-Menu* Menu::execute()
-{
-	cout << name << el;
-	cout << description << el;
-	for (size_t i = 0; i < next.size(); ++i)
-		cout << i + 1 << ". " << getMenuPtr(next.at(i))->name << el;
-	int response = -1;
-	do
-	{
-		while (!(cin >> response))
-		{
-			cin.clear();
-			cin.ignore();
-		}
-	} while (response < 0 || response >= next.size());
-	return getMenuPtr(next.at(response));
-}
-
-//void menu(){
-//	
-//	char c;
-//	do {
-//		system("CLS");
-//		
-//		cout << "MENU:" << el;
-//		cout << "[1] Client " << el;
-//		cout << "[2] Colaborator " << el;
-//		cout << "[3] Manager " << el;
-//		cout << "[4] Admin " << el;
-//		cout << "[5] Go Back " << el;
-//		cin >> c;
-//	} while (c != '1' && c != '2' && c != '3' && c != '4' && c != '5');
-//
-//	if (c == '1')
-//		
-//	if (c == '2')
-//
-//	if (c == '3')
-//
-//	if (c == '4')
-//
-//	if (c == '5')
-//		menu();
-//}
-
-//
-
-
-//void genericmenu(int &state, Application &app, string name, string text, vector<string> options, vector<int> results)
-//{
-//	bool more = true;//falso termina a funcao
-//	cout >> app.getDate().printDate2() << el;
-//	int input;
-//	while (more)
-//	{
-//		system("CLS");
-//		cout <<  app.getDate().printDate2()<<el;
-//		cout <<  name << el  << text << el;
-//		for (int i = 0; i < options.size(); i++)
-//		 cout << "["<< i+1 << "] - " << options[i] << el;
-//		do
-//		{
-//
-//		} while ()
-//	}
-//}
 void genericmenu(int &state, Application &app, string name, string text, vector<string> options, vector<int> results)
 {
 	bool more = true;//falso termina a funcao
@@ -397,7 +329,6 @@ void createprojectmenu(int& state, Application& app)
 	string deadline;
 	go_end_of_screen();
 	ClearScreen();
-	//system("CLS");
 	cout << el << el >> "Please enter Project name" << el << el << el;
 	cout << "                   >  ";
 	getline(cin, name);
