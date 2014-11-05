@@ -6,12 +6,24 @@ vector<Client*> Application::clients;
 vector<Collaborator*> Application::collaborators;
 vector<Task*> Application::tasks;
 Date Application::d;
+Application* Application::instance = NULL;
 
+Application::ApplicationExcept::ApplicationExcept(string description) : description(description){};
+string Application::ApplicationExcept::operator()(){ return description; };
 
+Application* Application::Instance()
+{
+	if (instance == NULL)
+		instance = new Application();
+	return instance;
+}
 Application::Application()
 {}
-
 Application::~Application()
+{
+	clear();
+}
+void Application::clear()
 {
 	for (size_t i = 0; i < projects.size(); i++)
 		delete projects.at(i);
@@ -21,7 +33,18 @@ Application::~Application()
 		delete collaborators.at(i);
 	for (size_t i = 0; i < tasks.size(); i++)
 		delete tasks.at(i);
+	projects.clear();
+	clients.clear();
+	collaborators.clear();
+	tasks.clear();
 }
+vector<Project*> Application::getProjects()  { return projects; };
+vector<Client*> Application::getClients()  { return clients; };
+//
+//template<class T*>
+//T* binary_searchID(vector<T*> v, int ID)
+
+
 Project* Application::getProjectPtr(int ID) /////////////////////******
 {
 	for (size_t i = 0; i < projects.size(); ++i)
@@ -134,7 +157,7 @@ bool Application::removeProject(Project* p)
 			i--;
 		}
 	}
-	return false;
+	return true;
 }
 bool Application::removeClient(Client* c)
 {
@@ -345,6 +368,7 @@ void Application::connect()
 }
 void Application::readFiles()
 {
+	clear();
 	ifstream fin;
 	readProjects(fin);
 	readClients(fin);
@@ -359,6 +383,7 @@ void Application::tick()
 		projects.at(i)->tick();
 }
 void Application::genApplication(){
+	clear();
 	int numprojects = NUM_PROJECTS;
 	int numclients = NUM_CLIENTS;
 	int numcollaborators = NUM_COLLABORATOR;
@@ -409,3 +434,13 @@ void Application::genApplication(){
 	}
 	int i = 0;
 }
+
+
+
+vector<Collaborator*> Application::getCollaborators() 
+{ 
+	return collaborators; 
+}
+vector<Task*> Application::getTasks() 
+{ return tasks; }
+Date Application::getDate() { return d; }

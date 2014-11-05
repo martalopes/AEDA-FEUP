@@ -15,6 +15,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <fstream>
+#include <algorithm>
 
 #define NUM_PROJECTS 10
 #define NUM_CLIENTS 5
@@ -31,31 +32,77 @@ class Application
 	friend class Collaborator;
 	friend class Project;
 public:
-	//class de excepção associada a Aplicações 
+	///class de excepção associada a Aplicações 
 	class ApplicationExcept
 	{
 		string description;
 	public:
-		ApplicationExcept(string description) :description(description){};
-		string operator()(){ return description; };
+		ApplicationExcept(string description);
+		string operator()();
 	};
+protected:
+	///construtor da classe não é acessivel fora da classe - apenas existirá um objeto da classe
 	Application();
+public:
+	/// apenas pode existir um objeto da classe
+	/// se ainda nao tiver sido criado um objeto da classe, é criado um, senao retorna um apontador para esse objeto
+	/// @return apontador para aplicacao
+	static Application* Instance();
+	
 	~Application();
-	static Application* Instance(){};
-	static vector<Project*> getProjects()  { return projects; };
-	static vector<Client*> getClients()  { return clients; };
-	static vector<Collaborator*> getCollaborators()  { return collaborators; };
-	static vector<Task*> getTasks()  { return tasks; };
+	/// elimina todos os dados da aplicacao, permitindo a recuperacao da memoria ocupada por eles
+	static void clear();
+	static vector<Project*> getProjects();
+	static vector<Client*> getClients();
+	static vector<Collaborator*> getCollaborators();
+	static vector<Task*> getTasks();
+	/// obter um projeto a partir do seu ID
+	/// @throw projeto nao existe
+	/// @param ID do projeto
+	/// @return apontador para o projeto
 	static Project* getProjectPtr(int ID);
+
+	/// obter um cliente a partir do seu ID
+	/// @throw cliente nao existe
+	/// @param ID do cliente
+	/// @return apontador para o cliente
 	static Client* getClientPtr(int ID);
+
+	/// obter um colaborador a partir do seu ID
+	/// @throw colaborador nao existe
+	/// @param ID do colaborador
+	/// @return apontador para o colaborador
 	static Collaborator* getCollaboratorPtr(int ID);
+
+	/// obter uma tarefa a partir do seu ID
+	/// @throw tarefa nao existe
+	/// @param ID da tarefa
+	/// @return apontador para a tarefa
 	static Task* getTaskPtr(int ID);
+
+	/// adicionar projeto a aplicacao
+	/// @throw projeto ja existe
+	/// @param apontador para o projeto
 	static void addProject(Project* p);
+
+	/// adicionar cliente a aplicacao
+	/// @throw cliente ja existe
+	/// @param apontador para o cliente
 	static void addClient(Client* c);
+
+	/// adicionar colaborador a aplicacao
+	/// @throw colaborador ja existe
+	/// @param apontador para o colaborador
 	static void addCollaborator(Collaborator* c);
+
+	/// adicionar tarefa a aplicacao
+	/// @throw tarefa ja existe
+	/// @param apontador para a tarefa
 	static void addTask(Task* t);
-
-
+	
+	/// remove projeto da aplicacao
+	/// @throw 
+	/// @param apontador para a tarefa
 	static bool removeProject(Project* p);
 	static bool removeClient(Client* c);
 	static bool removeTask(Task* t);
@@ -81,13 +128,14 @@ public:
 
 	static void tick(); //guarda no vector de projectos o custo de cada projecto
 	static void genApplication(); //função geradora de Applications
-	static Date getDate() { return d; };
+	static Date getDate();
 private:
 	static vector<Project*> projects;
 	static vector<Client*> clients;
 	static vector<Collaborator*> collaborators;
 	static vector<Task*> tasks;
 	static Date d;
+	static Application* instance;
 };
 
 

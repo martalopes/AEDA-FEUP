@@ -3,6 +3,9 @@
 #include "Collaborator.h"
 
 int Project::lastID = 0;
+Project::Project() : ID(0), client(NULL), cost(0) {};
+Project::Project(string name, string type, Date deadline, double cost) : deadline(deadline), name(name), type(type), ID(++lastID), cost(cost), client(NULL){};
+Project::Project(string name, string type, Date deadline, double cost, int setID) : name(name), type(type), ID(++lastID), deadline(deadline), cost(cost), client(NULL){ if (setID > lastID) lastID = setID; };
 
 Project::Project(int i)
 {
@@ -25,6 +28,8 @@ bool Project::setClient(Client* c, bool addProject)
 }
 bool Project::addCollaborator(Collaborator* c, bool addProject)
 {
+	if (c == NULL)
+		throw ProjectExcept("Invalid Collaborator being added to Project");
 	for (size_t i = 0; i < this->collaborators.size(); ++i)
 	{
 		if (*collaborators.at(i) == *c)
@@ -267,3 +272,56 @@ vector<Collaborator*> Project::calculateCollaborators()const
 	}
 	return out;
 }
+
+int  Project::getID() const		{ return this->ID; }
+int  Project::getLastID()  { return lastID; }
+string  Project::getName() const	{ return this->name; }
+string  Project::getType() const  { return this->type; }
+Client*  Project::getClient()const{ return this->client; }
+double  Project::getCost() const	{ return this->cost; }
+Date  Project::getDeadline()const { return deadline; }
+void  Project::setDeadline(const Date& d){ deadline = d; }
+vector<Task*> Project::getTasks() const { return this->tasks; }
+vector<Collaborator*> Project::getCollaborators() const { return this->collaborators; }
+void Project::setID(int ID) { this->ID = ID; }
+void Project::setLastID(int lID) { lastID = lID;}
+void Project::setName(string newname){ name = newname; }
+void Project::setType(string newtype){ type = newtype; }
+bool Project::operator==(const Project& p2) const { return (this->ID) == (p2.ID); }
+void Project::updateCollaborators(){ collaborators = calculateCollaborators(); }
+Project::ProjectExcept::ProjectExcept(string description) :description(description){}
+string Project::ProjectExcept::operator()(){ return description; }
+
+
+bool Project::ProjectComparatorAlphabetic ::operator()(const Project& t1, const Project& t2) { return t1.name < t2.name; }
+bool Project::ProjectComparatorAlphabetic ::operator()(const Project* t1, const Project* t2) { return t1->name < t2->name; }
+string Project::ProjectComparatorAlphabetic::getAbbreviation() const{ return "Alph"; }
+
+bool Project::ProjectComparatorCost ::operator()(const Project& t1, const Project& t2) { return t1.cost < t2.cost; }
+bool Project::ProjectComparatorCost ::operator()(const Project* t1, const Project* t2) { return t1->cost < t2->cost; }
+string Project::ProjectComparatorCost::getAbbreviation() const{ return "Cost"; }
+
+bool Project::ProjectComparatorID ::operator()(const Project& t1, const Project& t2) { return t1.getID() < t2.getID(); }
+bool Project::ProjectComparatorID ::operator()(const Project* t1, const Project* t2) { return t1->getID() < t2->getID(); }
+string Project::ProjectComparatorID::getAbbreviation() const{ return "ID"; }
+
+bool Project::ProjectComparatorNumTasks ::operator()(const Project& t1, const Project& t2) { return t1.getTasks().size() < t2.getTasks().size(); }
+bool Project::ProjectComparatorNumTasks ::operator()(const Project* t1, const Project* t2) { return t1->getTasks().size() < t2->getTasks().size(); }
+string Project::ProjectComparatorNumTasks::getAbbreviation() const{ return "N Tasks"; }
+
+bool Project::ProjectComparatorNumCollaborators ::operator()(const Project& t1, const Project& t2) { return t1.getCollaborators().size() < t2.getCollaborators().size(); }
+bool Project::ProjectComparatorNumCollaborators ::operator()(const Project* t1, const Project* t2) { return t1->getCollaborators().size() < t2->getCollaborators().size(); }
+string  Project::ProjectComparatorNumCollaborators::getAbbreviation() const{ return "N. Col"; }
+
+bool Project::ProjectComparatorType::operator()(const Project& t1, const Project& t2) { return t1.getType() < t2.getType(); }
+bool Project::ProjectComparatorType::operator()(const Project* t1, const Project* t2) { return t1->getType() < t2->getType(); }
+string  Project::ProjectComparatorType::getAbbreviation() const{ return "Type"; }
+
+bool Project::ProjectComparatorDeadline :: operator()(const Project& t1, const Project& t2) { return t1.getDeadline() < t2.getDeadline(); }
+bool Project::ProjectComparatorDeadline ::operator()(const Project* t1, const Project* t2) { return t1->getDeadline() < t2->getDeadline(); }
+string Project::ProjectComparatorDeadline::getAbbreviation() const{ return "Deadline"; }
+
+bool Project::ProjectComparatorTimeToFinish ::operator()(const Project& t1, const Project& t2) { return t1.weeksToFinish() < t2.weeksToFinish(); }
+bool Project::ProjectComparatorTimeToFinish ::operator()(const Project* t1, const Project* t2) { return t1->weeksToFinish() < t2->weeksToFinish(); }
+string Project::ProjectComparatorTimeToFinish::getAbbreviation() const{ return "Est finish"; }
+

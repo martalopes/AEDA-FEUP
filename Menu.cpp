@@ -1473,7 +1473,12 @@ void projectcommand(int& state)
 	}
 	if (tokens.at(0) == "delete")
 	{
-		Application::removeProject(currentproject);
+		try { Application::removeProject(currentproject); }
+		catch (Application::ApplicationExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
 		currentproject = NULL;
 		state = ADMINSELECTPROJECT;
 		go_end_of_screen();
@@ -1650,7 +1655,12 @@ void clientcommand(int& state)
 	}
 	if (tokens.at(0) == "delete")
 	{
-		Application::removeClient(currentclient);
+		try { Application::removeClient(currentclient); }
+		catch (Application::ApplicationExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
 		currentclient = NULL;
 		state = ADMINSELECTCLIENT;
 		go_end_of_screen();
@@ -1748,7 +1758,12 @@ void collaboratorcommand(int& state)
 	}
 	if (tokens.at(0) == "delete")
 	{
-		Application::removeCollaborator(currentcollaborator);
+		try { Application::removeCollaborator(currentcollaborator); }
+		catch (Application::ApplicationExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
 		currentcollaborator = NULL;
 		state = ADMINSELECTCOLLABORATOR;
 		go_end_of_screen();

@@ -2,6 +2,24 @@
 
 int Client::lastID = 0;
 
+Client::Client() :ID(0){}
+Client::Client(string name) :name(name), ID(++lastID){}
+Client::Client(string name, int setID) :name(name), ID(setID) { if (setID > lastID) lastID = setID; }
+
+Client::Client(int i)
+{
+	stringstream s1, s2;
+	s1 << "Name " << i;
+	*this = Client(s1.str());
+}
+
+string Client::getName() const { return this->name; }
+vector<Project*> Client::getProjects() const { return this->projects; }
+int Client::getID()const { return ID; }
+void Client::setName(string name) { this->name = name; }
+bool Client::operator==(const Client& c2) const { return this->ID == c2.ID; }
+Client::ClientExcept::ClientExcept(string description) :description(description){}
+string  Client::ClientExcept::operator()(){ return description; }
 
 bool Client::addProject(Project* proj, bool setClient)
 	{
@@ -87,3 +105,19 @@ string Client::toString() const
 {
 	return normalize(to_string(ID), name, 30);
 };
+
+bool Client::ClientComparatorID ::operator()(const Client& c1, const Client& c2){ return c1.getID() < c2.getID(); }
+bool Client::ClientComparatorID ::operator()(const Client* c1, const Client* c2){ return c1->getID() < c2->getID(); }
+string Client::ClientComparatorID::getAbbreviation() const { return "ID"; }
+
+bool  Client::ClientComparatorAlphabetic ::operator()(const Client& c1, const Client& c2){ return c1.getName() < c2.getName(); }
+bool Client::ClientComparatorAlphabetic ::operator()(const Client* c1, const Client* c2){ return c1->getName() < c2->getName(); }
+string Client::ClientComparatorAlphabetic::getAbbreviation() const { return "Alph"; }
+
+bool Client::ClientComparatorNumProjects ::operator()(const Client& c1, const Client& c2){ return c1.getProjects().size() < c2.getProjects().size(); }
+bool Client::ClientComparatorNumProjects ::operator()(const Client* c1, const Client* c2){ return c1->getProjects().size() < c2->getProjects().size(); }
+string Client::ClientComparatorNumProjects::getAbbreviation() const { return "N Proj"; }
+
+bool Client::ClientComparatorTotal ::operator()(const Client& c1, const Client& c2){ return c1.getTotal() < c2.getTotal(); }
+bool Client::ClientComparatorTotal ::operator()(const Client* c1, const Client* c2){ return c1->getTotal() < c2->getTotal(); }
+string Client::ClientComparatorTotal::getAbbreviation() const { return "Total"; }

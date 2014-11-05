@@ -3,6 +3,32 @@
 
 
 int Collaborator::lastID = 0;
+Collaborator::Collaborator() :ID(0), maxweeklyhours(0), workinghours(0){}
+Collaborator::Collaborator(string name, int maxweeklyhours) : name(name), maxweeklyhours(maxweeklyhours), ID(++lastID), workinghours(0){}
+Collaborator::Collaborator(string name, int maxweeklyhours, int setID) : name(name), maxweeklyhours(maxweeklyhours), workinghours(0){ if (setID > lastID) lastID = setID; }
+
+Collaborator::Collaborator(int i)
+{
+	stringstream s;
+	s << "Collaborator " << i;
+	*this = Collaborator(s.str(), (6 + rand() % 4) * 5);
+}
+
+int Collaborator::getID() const { return this->ID; }
+string Collaborator::getName() const { return this->name; }
+int Collaborator::getWorkingHours() const { return  this->workinghours; }
+int Collaborator::getMaxWeeklyHours() const { return this->maxweeklyhours; }
+vector<Project*> Collaborator::getProjects() const { return this->projects; }
+vector<pair<Task*, unsigned int> > Collaborator::getTasks() const { return this->tasks; }
+vector<Task*> Collaborator::getFinishedTasks() const { return this->finishedtasks; }
+double  Collaborator::getCost() const{ return 0; }
+string  Collaborator::getTitle() const{ return "Collaborator"; }
+void Collaborator::setName(string newname){ this->name = newname; }
+void Collaborator::setWeeklyHours(int newhours) { this->maxweeklyhours = newhours; }
+bool Collaborator::operator==(const Collaborator& c2)const{ return this->ID == c2.ID; }
+void Collaborator::updateProjects() { projects = calculateProjects(); }
+
+
 
 bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
 {
@@ -282,3 +308,10 @@ vector<Project*> Collaborator::calculateProjects()const
 	}
 	return out;
 }
+
+Collaborator::CollaboratorExcept::CollaboratorExcept(string description) :description(description){}
+string  Collaborator::CollaboratorExcept::operator()(){ return description; }
+
+bool Collaborator::CollaboratorComparatorAlphabetic ::operator()(const Collaborator& t1, const Collaborator& t2) { return t1.name < t2.name; }
+bool Collaborator::CollaboratorComparatorAlphabetic ::operator()(const Collaborator* t1, const Collaborator* t2) { return t1->name < t2->name; }
+string Collaborator::CollaboratorComparatorAlphabetic::getAbbreviation() const{ return "Alph"; }

@@ -41,29 +41,25 @@ private:
 	vector<Task*> finishedtasks;
 public:
 	
-	Collaborator() :ID(0), maxweeklyhours(0), workinghours(0){};
-	Collaborator(string name, int maxweeklyhours) : name(name), maxweeklyhours(maxweeklyhours), ID(++lastID), workinghours(0){};
-	Collaborator(string name, int maxweeklyhours, int setID) : name(name), maxweeklyhours(maxweeklyhours), workinghours(0){ if (setID > lastID) lastID = setID; };
-	Collaborator(int i)
-	{
-		stringstream s;
-		s << "Collaborator " << i;
-		*this = Collaborator(s.str(), (6 + rand() % 4) * 5);
-	};
-	int getID() const { return this->ID; };
-	string getName() const { return this->name; };
-	int getWorkingHours() const { return  this->workinghours; };
-	int getMaxWeeklyHours() const { return this->maxweeklyhours; };
-	vector<Project*> getProjects() const { return this->projects; };
-	vector<pair<Task*, unsigned int> > getTasks() const { return this->tasks; };
-	vector<Task*> getFinishedTasks() const { return this->finishedtasks; };
+	Collaborator();
+	Collaborator(string name, int maxweeklyhours);
+	Collaborator(string name, int maxweeklyhours, int setID);
+	Collaborator(int i);
+
+	int getID() const;
+	string getName() const;
+	int getWorkingHours() const;
+	int getMaxWeeklyHours() const;
+	vector<Project*> getProjects() const;
+	vector<pair<Task*, unsigned int> > getTasks() const;
+	vector<Task*> getFinishedTasks() const;
 	bool reassign(Task* t);
-	virtual float getCost() const{ return 0; };
-	virtual string getTitle() const{ return "Collaborator"; };
+	virtual double getCost()const;
+	virtual string getTitle()const;
 	string toString() const;
-	void setID(int newID) { lastID = newID; };
-	void setName(string newname){ this->name = newname; };
-	void setWeeklyHours(int newhours) { this->maxweeklyhours = newhours; };
+	void setID(int newID);
+	void setName(string newname);
+	void setWeeklyHours(int newhours);
 	bool addTask(Task* t1, unsigned int hours, bool addCollaborator=true);
 	bool removeTask(Task* t, bool removeCollaborator = true);
 	bool removeProject(Project* p, bool removeCollaborator = true);
@@ -73,17 +69,17 @@ public:
 	static Collaborator* newRandomCollaborator(int i);
 	static Collaborator* newCollaboratorTitle(string title);
 	void connect();
-	bool operator==(const Collaborator& c2)const{ return this->ID == c2.ID; };
+	bool operator==(const Collaborator& c2)const;
 	friend ostream & operator<<(ostream& out, const Collaborator& c);
 	friend istream & operator>>(istream& in, Collaborator& c);
-	void updateProjects() { projects = calculateProjects(); };
+	void updateProjects();
 	
 	class CollaboratorExcept
 	{
 		string description;
 	public:
-		CollaboratorExcept(string description) :description(description){};
-		string operator()(){ return description; };
+		CollaboratorExcept(string description);
+		string operator()();
 	};
 	class CollaboratorComparator
 	{
@@ -95,9 +91,9 @@ public:
 	class CollaboratorComparatorAlphabetic : public CollaboratorComparator
 	{
 	public:
-		bool operator()(const Collaborator& t1, const Collaborator& t2) { return t1.name < t2.name; };
-		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->name < t2->name; };
-		string getAbbreviation() const{ return "Alph"; };
+		bool operator()(const Collaborator& t1, const Collaborator& t2) ;
+		bool operator()(const Collaborator* t1, const Collaborator* t2) ;
+		string getAbbreviation() const;
 	};
 	class CollaboratorComparatorCost : public CollaboratorComparator
 	{
