@@ -2180,8 +2180,10 @@ void taskinfo(int& state, Application& app)
 	else cout >> normalize("Project: ", "None", 50) << el;
 	double timetocompletion = currenttask->calculateTimeToCompletion();
 	if (abs(timetocompletion - (-1)) < .1)
-		cout >> normalize("Estimated time of completion:", "None", 50) << el;
-	else cout >> normalize("Estimated time of completion:", currenttask->getDateOfCompletion(app.getDate()).printDate2(), 50) << el;
+		cout >> normalize("Est time of completion:", "None", 50) << el;
+	else if (currenttask->isCompleted())
+		cout >> normalize("Est time of completion:", "Done", 50) << el;
+	else cout >> normalize("Est time of completion:", currenttask->getDateOfCompletion(app.getDate()).printDate2(), 50) << el;
 	cout << el >> normalize("Collaborators:", "hours:", 40) << el << el;
 	for (size_t i = 0; i < currenttask->getCollaborators().size(); i++)
 	{
