@@ -189,7 +189,7 @@ void genericmenu(int &state, Application &app, string name, string text, vector<
 		go_end_of_screen();
 		ClearScreen();
 		change = false;
-		cout << el >> name << el << el >> text << el << el << el << el;
+		cout << el >> name << el << el >> text << el << el << el;
 		if (options.size() < 5)
 			cout << el;
 		if (options.size() < 4)
@@ -382,7 +382,7 @@ void genericmenu(int &state, Application &app, string name, string text, vector<
 enum states
 {
 	EXIT = -1, ESCAPEMENU, MAINMENU1, CLIENTLOGINMENU, TASKMENU, COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, VIEWPROJECTINFO, COLLABORATORLOGINMENU, PERSONALINFOMENU, COLLABORATORMENU, MANAGERLOGINMENU, ADMINLOGINMENU, CLIENTMENU, NEWPROJECTMENU, PROJECTLISTMENU, PROJECTINFO,
-	ADMINMENU, ADMINCLIENTMENU, ADMINSELECTCLIENT, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ADMINCREATECLIENT, ADMINCREATEPROJECT, ADMINSELECTPROJECT, ADMINCREATETASK, ADMINSELECTTASK, ADMINCREATECOLLABORATOR, ADMINSELECTCOLLABORATOR, ADMINEDITCLIENT, ADMINEDITPROJECT, ADMINEDITTASK, ADMINEDITCOLLABORATOR
+	ADMINMENU, ADMINCLIENTMENU, ADMINSELECTCLIENT, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ADMINCREATECLIENT, ADMINCREATEPROJECT, ADMINSELECTPROJECT, ADMINCREATETASK, ADMINSELECTTASK, ADMINCREATECOLLABORATOR, ADMINSELECTCOLLABORATOR, ADMINEDITCLIENT, ADMINEDITPROJECT, ADMINEDITTASK, ADMINEDITCOLLABORATOR, TICK
 };
 
 static Client* currentclient = NULL;
@@ -572,71 +572,71 @@ void createcollaboratormenu(int& state, Application& app)
 	}
 	state = ADMINCOLLABORATORMENU;
 }
-void clientlogin(int& state, Application& app)
-{
-	string ID;
-	string password;
-	int id;
-	do
-	{
-		system("CLS");
-		cout << el << el >> "Please enter Client ID" << el << el << el;
-		cout << "                   >  ";
-		getline(cin, ID);
-		if (ID == "")
-		{
-			state = MAINMENU1; return;
-		}
-		stringstream s;
-		s << ID;
-		s >> id;
-	} while ((currentclient = Application::getClientPtr(id)) == NULL);
-	do
-	{
-		system("CLS");
-		cout << el << el >> "Please enter Client ID" << el << el << el;
-		cout << "                   >  " << currentclient->getID();
-		cout << el << el >> "Please enter password" << el << el << el;
-		cout << "                   >  ";
-		getline(cin, password);
-		if (password == "")
-			return;
-	} while (!currentclient->verifyPassword(password));
-	state = CLIENTMENU;
-}
+//void clientlogin(int& state, Application& app)
+//{
+//	string ID;
+//	string password;
+//	int id;
+//	do
+//	{
+//		system("CLS");
+//		cout << el << el >> "Please enter Client ID" << el << el << el;
+//		cout << "                   >  ";
+//		getline(cin, ID);
+//		if (ID == "")
+//		{
+//			state = MAINMENU1; return;
+//		}
+//		stringstream s;
+//		s << ID;
+//		s >> id;
+//	} while ((currentclient = Application::getClientPtr(id)) == NULL);
+//	do
+//	{
+//		system("CLS");
+//		cout << el << el >> "Please enter Client ID" << el << el << el;
+//		cout << "                   >  " << currentclient->getID();
+//		cout << el << el >> "Please enter password" << el << el << el;
+//		cout << "                   >  ";
+//		getline(cin, password);
+//		if (password == "")
+//			return;
+//	} while (!currentclient->verifyPassword(password));
+//	state = CLIENTMENU;
+//}
 
-void collaboratorlogin(int& state, Application& app)
-{
-	string ID;
-	string password;
-	int id;
-	do
-	{
-		system("CLS");
-		cout << el << el >> "Please enter Collaborator ID" << el << el << el;
-		cout << "                   >  ";
-		getline(cin, ID);
-		if (ID == "")
-		{
-			state = MAINMENU1; return;
-		}
-		stringstream s;
-		s << ID;
-		s >> id;
-	} while ((currentcollaborator = Application::getCollaboratorPtr(id)) == NULL);
-	do
-	{
-		system("CLS");
-		cout << el << el >> "Please enter Collaborator ID" << el << el << el;
-		cout << "                   >  " << currentcollaborator->getID();
-		cout << el << el >> "Please enter password" << el << el << el;
-		cout << "                   >  ";
-		getline(cin, password);
-		if (password == "")
-			return;
-	} while (!currentcollaborator->verifyPassword(password));
-	state = COLLABORATORMENU;
-}
+//void collaboratorlogin(int& state, Application& app)
+//{
+//	string ID;
+//	string password;
+//	int id;
+//	do
+//	{
+//		system("CLS");
+//		cout << el << el >> "Please enter Collaborator ID" << el << el << el;
+//		cout << "                   >  ";
+//		getline(cin, ID);
+//		if (ID == "")
+//		{
+//			state = MAINMENU1; return;
+//		}
+//		stringstream s;
+//		s << ID;
+//		s >> id;
+//	} while ((currentcollaborator = Application::getCollaboratorPtr(id)) == NULL);
+//	do
+//	{
+//		system("CLS");
+//		cout << el << el >> "Please enter Collaborator ID" << el << el << el;
+//		cout << "                   >  " << currentcollaborator->getID();
+//		cout << el << el >> "Please enter password" << el << el << el;
+//		cout << "                   >  ";
+//		getline(cin, password);
+//		if (password == "")
+//			return;
+//	} while (!currentcollaborator->verifyPassword(password));
+//	state = COLLABORATORMENU;
+//}
 
 void personalinfo(int& state, Application& app)
 {
@@ -1676,12 +1676,18 @@ void projectinfo(int &state, Application& app)
 	else cout >> normalize("Client:", currentproject->getClient()->getName(), 50) << el;
 	cout >> normalize("Cost:", to_string(currentproject->getCost()) + '$', 50) << el;
 	cout >> normalize("Deadline:", currentproject->getDeadline().printDate2(), 50) << el;
+	string s;
 	if (currentproject->isCompleted())
-		cout >> "The project is completed" << el;
-	else{
+		s = "Completed";
+	else if (currentproject->isPastDeadline(app.getDate()))
+		s = "Late";
+	else s = "On time";
+	cout >> normalize("Status:", s, 50) << el;
+	if (!currentproject->isCompleted())
+	{
 		double timetoconclusion = currentproject->weeksToFinish();
 		if (abs(timetoconclusion - (-1)) < .1)
-			cout >> "The project has no estimated time of conclusion" << el;
+			cout >> normalize("Time of conclusion", "None", 50) << el;
 		else cout >> normalize("Time of conclusion", currentproject->projectedFinishDate(app.getDate()).printDate2(), 50) << el;
 	}
 	cout << el >> normalize("Collaborators:", "Tasks:", 40) << el << el;
@@ -1779,15 +1785,14 @@ void clientinfo(int &state, Application& app)
 {
 	ClearScreen();
 	cout << el << el >> normalize("ID of Client: ", to_string(currentclient->getID()), 50) << el;
-	cout >> normalize("Client Name: ", currentclient->getName(), 50) << el << el;
-	cout >> normalize("Total: ", to_string(currentclient->getTotal()) + '$', 50);
+	cout >> normalize("Client Name: ", currentclient->getName(), 50) << el;
+	cout >> normalize("Total: ", to_string(currentclient->getTotal()) + '$', 50) << el;
 	cout >> "Projects:" << el << el;
 	if (currentclient->getProjects().size() == 0)
 		cout >> "None" << el;
-
 	for (size_t i = 0; i < currentclient->getProjects().size(); i++)
 	{
-		cout >> normalize(to_string(currentclient->getProjects().at(i)->getID()) + " - ", currentclient->getProjects().at(i)->getName(), 25) << el;
+		cout >> normalize(to_string(currentclient->getProjects().at(i)->getID()) + " - ", currentclient->getProjects().at(i)->getName(), 50) << el;
 	}
 	cout << el << el;
 	cout << "                   >  ";
@@ -2050,272 +2055,333 @@ void taskcommand(int& state)
 			cin.get();
 		}
 	}
-		if (tokens.at(0) == "removeDependency")
-		if (tokens.size() > 1)
-		{
-			stringstream s;
-			int ID = 0;
-			s << tokens.at(1);
-			s >> ID;
-
-			try{
-				if (!currenttask->removeDependency(Application::getTaskPtr(ID)))
-				{
-					cout << el >> "Dependency could not be removed";
-					cin.get();
-				}
-			}
-			catch (Task::TaskExcept& e)
-			{
-				cout << el >> e();
-				cin.get();
-			}
-		}
-		if (tokens.at(0) == "addDependant")
-		if (tokens.size() > 1)
-		{
-			stringstream s;
-			int ID = 0;
-			s << tokens.at(1);
-			s >> ID;
-			try{
-				if (!currenttask->addDependant(Application::getTaskPtr(ID)))
-				{
-					cout << el >> "Dependant could not be added";
-					cin.get();
-				}
-			}
-			catch (Task::TaskExcept& e)
-			{
-				cout << el >> e();
-				cin.get();
-			}
-		}
-		if (tokens.at(0) == "removeDependant")
-		if (tokens.size() > 1)
-		{
-			stringstream s;
-			int ID = 0;
-			s << tokens.at(1);
-			s >> ID;
-
-			try{
-				if (!currenttask->removeDependency(Application::getTaskPtr(ID)))
-				{
-					cout << el >> "Dependant could not be removed";
-					cin.get();
-				}
-			}
-			catch (Task::TaskExcept& e)
-			{
-				cout << el >> e();
-				cin.get();
-			}
-		}
-		if (tokens.at(0) == "setEffort")
-		if (tokens.size() > 1)
-		{
-			stringstream s;
-			int effort = 0;
-			s << tokens.at(1);
-			s >> effort;
-			if (effort >= 0)
-				currenttask->setEffort(effort);
-		}
-		if (tokens.at(0) == "setProject")
-		if (tokens.size() > 1)
-		{
-			stringstream s;
-			int ID = 0;
-			s << tokens.at(1);
-			s >> ID;
-			try{
-				if (!currenttask->setProject(Application::getProjectPtr(ID)))
-				{
-					cout << el >> "Task already has a Project";
-					cin.get();
-				}
-			}
-			catch (Task::TaskExcept& e)
-			{
-				cout << el >> e();
-				cin.get();
-			}
-		}
-		if (tokens.at(0) == "removeProject")
-		{
-			try{
-				if (!currenttask->removeProject())
-				{
-					cout << el >> "Task has no Project";
-					cin.get();
-				}
-			}
-			catch (Task::TaskExcept& e)
-			{
-				cout << el >> e();
-				cin.get();
-			}
-		}
-		/*for (size_t i = 0; i < tokens.size(); i++)
-		{
-		cout << tokens[i] << " ";
-		}*/
-
-	}
-	void taskinfo(int& state, Application& app)
+	if (tokens.at(0) == "removeDependency")
+	if (tokens.size() > 1)
 	{
-		ClearScreen();
-		cout << el << el >> normalize("ID of Task: ", to_string(currenttask->getID()), 50) << el;
-		cout >> normalize("Task Name: ", currenttask->getName(), 50) << el;
-		cout >> normalize("Task Description: ", currenttask->getDescription(), 50) << el;
-		cout >> normalize("Remaining effort: ", to_string(currenttask->getEffort()) + " hours", 50) << el;
-		if (currenttask->getProject() != NULL)
-			cout >> normalize("Project: ", currenttask->getProject()->getName(), 50) << el;
-		else cout >> normalize("Project: ", "None", 50) << el;
-		double timetocompletion = currenttask->calculateTimeToCompletion();
-		if (abs(timetocompletion - (-1)) < .1)
-			cout >> normalize("Estimated time of completion:", "None", 50) << el;
-		else cout >> normalize("Estimated time of completion:", currenttask->getDateOfCompletion(app.getDate()).printDate2(), 50) << el;
-		cout << el >> normalize("Collaborators:", "hours:", 40) << el << el;
-		for (size_t i = 0; i < currenttask->getCollaborators().size(); i++)
-		{
-			cout >> normalize(currenttask->getCollaborators().at(i).first->getName(), to_string(currenttask->getCollaborators().at(i).second), 50) << el;
-		}
-		cout << el;
-		cout >> "Dependencies:" << el << el;
-		if (currenttask->getDependencies().size() == 0)
-			cout >> "none" << el;
-		for (size_t i = 0; i < currenttask->getDependencies().size(); i++)
-		{
-			cout >> currenttask->getDependencies().at(i)->getName() << el;
-		}
-		cout << el;
-		cout >> "Dependants:" << el << el;
-		if (currenttask->getDependants().size() == 0)
-			cout >> "none" << el;
-		for (size_t i = 0; i < currenttask->getDependants().size(); i++)
-		{
-			cout >> currenttask->getDependants().at(i)->getName() << el;
-		}
-		cout << el << el;
-		cout << "                   >  ";
-		taskcommand(state);
-		ClearScreen();
-		//state = ADMINSELECTTASK;
-	}
-	void menus(int& state, Application& app)
-	{
-		while (state != EXIT)
-		{
-			switch (state)
+		stringstream s;
+		int ID = 0;
+		s << tokens.at(1);
+		s >> ID;
+
+		try{
+			if (!currenttask->removeDependency(Application::getTaskPtr(ID)))
 			{
-			case MAINMENU1:
-				state = ADMINMENU;
-				break;
-				genericmenu(state, app, "", "Please select an Option:", { "Client Login", "Collaborator Login", "Manager Login", "Admin Login", "Quit" }, { CLIENTLOGINMENU, COLLABORATORLOGINMENU, MANAGERLOGINMENU, ADMINLOGINMENU, ESCAPEMENU });
-				break;
-			case ESCAPEMENU:
-				genericmenu(state, app, "", "Are you sure you want to Exit this Application?", { "No", "Yes" }, { MAINMENU1, EXIT });
-				break;
-			case CLIENTLOGINMENU:
-				clientlogin(state, app);
-				break;
-			case CLIENTMENU:
-				genericmenu(state, app, "", "Please select an option:", { "Create new Project", "List of Projects", "Back" }, { NEWPROJECTMENU, PROJECTLISTMENU, MAINMENU1 });
-				break;
-			case COLLABORATORLOGINMENU:
-				collaboratorlogin(state, app);
-				break;
-			case COLLABORATORMENU:
-				genericmenu(state, app, "", "Please select an option:", { "View personal information", "View Project information", "Back" }, { PERSONALINFOMENU, VIEWPROJECTINFO, MAINMENU1 });
-				break;
-			case PERSONALINFOMENU:
-				personalinfo(state, app);
-				break;
-			case VIEWPROJECTINFO:
-				genericmenu(state, app, "", "Please select an option:", { "List of projects by date", "List of projects by type", "List of projects by name", "Back" }, { COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, MAINMENU1 });
-				break;
-			case COLPROJBYDATE:
-				colprojdate(state, app);
-				break;
-			case COLPROJBYTYPE:
-				colprojtype(state, app);
-				break;
-			case COLPROJBYNAME:
-				colprojname(state, app);
-				break;
-			case NEWPROJECTMENU:
-				createprojectmenu(state, app);
-				break;
-			case PROJECTLISTMENU:
-				clientprojectlist(state, app);
-				break;
-			case PROJECTINFO:
-				projectinfo(state, app);
-				break;
-			case ADMINMENU:
-				currentclient = NULL;
-				currentproject = NULL;
-				currenttask = NULL;
-				currentcollaborator = NULL;
-				genericmenu(state, app, "Admin", "Please select an Option:", { "Clients", "Projects", "Tasks", "Collaborators", "Quit" }, { ADMINCLIENTMENU, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ESCAPEMENU });
-				break;
-			case ADMINCLIENTMENU:
-				genericmenu(state, app, "Admin", "Clients", { "New", "Existing", "Back" }, { ADMINCREATECLIENT, ADMINSELECTCLIENT, ADMINMENU });
-				break;
-			case ADMINPROJECTMENU:
-				genericmenu(state, app, "Admin", "Projects", { "New", "Existing", "Back" }, { ADMINCREATEPROJECT, ADMINSELECTPROJECT, ADMINMENU });
-				break;
-			case ADMINTASKMENU:
-				genericmenu(state, app, "Admin", "Tasks", { "New", "Existing", "Back" }, { ADMINCREATETASK, ADMINSELECTTASK, ADMINMENU });
-				break;
-			case ADMINCOLLABORATORMENU:
-				genericmenu(state, app, "Admin", "Collaborators", { "New", "Existing", "Back" }, { ADMINCREATECOLLABORATOR, ADMINSELECTCOLLABORATOR, ADMINMENU });
-				break;
-			case ADMINSELECTCLIENT:
-				fullclientlist(state, app);
-				break;
-			case ADMINSELECTPROJECT:
-				fullprojectlist(state, app);
-				break;
-			case ADMINSELECTTASK:
-				fulltasklist(state, app);
-				break;
-			case ADMINSELECTCOLLABORATOR:
-				fullcollaboratorlist(state, app);
-				break;
-			case ADMINCREATECLIENT:
-				createclientmenu(state, app);
-				break;
-			case ADMINCREATECOLLABORATOR:
-				createcollaboratormenu(state, app);
-				break;
-			case ADMINCREATEPROJECT:
-				createprojectmenu(state, app);
-				break;
-			case ADMINCREATETASK:
-				createTaskmenu(state, app);
-				break;
-			case ADMINEDITPROJECT:
-				projectinfo(state, app);
-				break;
-			case ADMINEDITCOLLABORATOR:
-				collaboratorinfo(state, app);
-				break;
-			case ADMINEDITCLIENT:
-				clientinfo(state, app);
-				break;
-			case ADMINEDITTASK:
-				taskinfo(state, app);
-				break;
-			default:
-				state = EXIT;
-				break;
+				cout << el >> "Dependency could not be removed";
+				cin.get();
 			}
 		}
+		catch (Task::TaskExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
 	}
-	//enum states2
-	//{
-	//	EXIT = -1, ESCAPEMENU, MAINMENU1, CLIENTLOGINMENU, COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, VIEWPROJECTINFO, COLLABORATORLOGINMENU, PERSONALINFOMENU, COLLABORATORMENU, MANAGERLOGINMENU, ADMINLOGINMENU, CLIENTMENU, NEWPROJECTMENU, PROJECTLISTMENU, PROJECTINFO
-	//};
+	if (tokens.at(0) == "addDependant")
+	if (tokens.size() > 1)
+	{
+		stringstream s;
+		int ID = 0;
+		s << tokens.at(1);
+		s >> ID;
+		try{
+			if (!currenttask->addDependant(Application::getTaskPtr(ID)))
+			{
+				cout << el >> "Dependant could not be added";
+				cin.get();
+			}
+		}
+		catch (Task::TaskExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
+	}
+	if (tokens.at(0) == "removeDependant")
+	if (tokens.size() > 1)
+	{
+		stringstream s;
+		int ID = 0;
+		s << tokens.at(1);
+		s >> ID;
+
+		try{
+			if (!currenttask->removeDependency(Application::getTaskPtr(ID)))
+			{
+				cout << el >> "Dependant could not be removed";
+				cin.get();
+			}
+		}
+		catch (Task::TaskExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
+	}
+	if (tokens.at(0) == "setEffort")
+	if (tokens.size() > 1)
+	{
+		stringstream s;
+		int effort = 0;
+		s << tokens.at(1);
+		s >> effort;
+		if (effort >= 0)
+			currenttask->setEffort(effort);
+	}
+	if (tokens.at(0) == "setProject")
+	if (tokens.size() > 1)
+	{
+		stringstream s;
+		int ID = 0;
+		s << tokens.at(1);
+		s >> ID;
+		try{
+			if (!currenttask->setProject(Application::getProjectPtr(ID)))
+			{
+				cout << el >> "Task already has a Project";
+				cin.get();
+			}
+		}
+		catch (Task::TaskExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
+	}
+	if (tokens.at(0) == "removeProject")
+	{
+		try{
+			if (!currenttask->removeProject())
+			{
+				cout << el >> "Task has no Project";
+				cin.get();
+			}
+		}
+		catch (Task::TaskExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
+	}
+	/*for (size_t i = 0; i < tokens.size(); i++)
+	{
+	cout << tokens[i] << " ";
+	}*/
+
+}
+void taskinfo(int& state, Application& app)
+{
+	ClearScreen();
+	cout << el << el >> normalize("ID of Task: ", to_string(currenttask->getID()), 50) << el;
+	cout >> normalize("Task Name: ", currenttask->getName(), 50) << el;
+	cout >> normalize("Task Description: ", currenttask->getDescription(), 50) << el;
+	cout >> normalize("Remaining effort: ", to_string(currenttask->getEffort()) + " hours", 50) << el;
+	if (currenttask->getProject() != NULL)
+		cout >> normalize("Project: ", currenttask->getProject()->getName(), 50) << el;
+	else cout >> normalize("Project: ", "None", 50) << el;
+	double timetocompletion = currenttask->calculateTimeToCompletion();
+	if (abs(timetocompletion - (-1)) < .1)
+		cout >> normalize("Estimated time of completion:", "None", 50) << el;
+	else cout >> normalize("Estimated time of completion:", currenttask->getDateOfCompletion(app.getDate()).printDate2(), 50) << el;
+	cout << el >> normalize("Collaborators:", "hours:", 40) << el << el;
+	for (size_t i = 0; i < currenttask->getCollaborators().size(); i++)
+	{
+		cout >> normalize(currenttask->getCollaborators().at(i).first->getName(), to_string(currenttask->getCollaborators().at(i).second), 50) << el;
+	}
+	cout << el;
+	cout >> "Dependencies:" << el << el;
+	if (currenttask->getDependencies().size() == 0)
+		cout >> "none" << el;
+	for (size_t i = 0; i < currenttask->getDependencies().size(); i++)
+	{
+		cout >> currenttask->getDependencies().at(i)->getName() << el;
+	}
+	cout << el;
+	cout >> "Dependants:" << el << el;
+	if (currenttask->getDependants().size() == 0)
+		cout >> "none" << el;
+	for (size_t i = 0; i < currenttask->getDependants().size(); i++)
+	{
+		cout >> currenttask->getDependants().at(i)->getName() << el;
+	}
+	cout << el << el;
+	cout << "                   >  ";
+	taskcommand(state);
+	ClearScreen();
+	//state = ADMINSELECTTASK;
+}
+
+void tickmenu(int& state, Application& app)
+{
+		bool more = true;//falso termina a funcao
+		bool change = false; //indica se é preciso voltar imprimir o ecra
+		vector<int> results = { TICK, ADMINMENU };
+		vector<string> options = { "Tick", "Back" };
+		Cursor cursor1(results.size() - 1);
+		while (more)
+		{
+			go_end_of_screen();
+			ClearScreen();
+			change = false;
+			cout << el  << el << el >> "Sim" << el << el;
+			cout >> app.getDate().printDate2() + " -> " + (app.getDate() + Date::toSeconds(7, 0, 0, 0, 0, 0)).printDate2();
+			if (options.size() < 5)
+				cout << el;
+			if (options.size() < 4)
+				cout << el;
+			if (options.size() < 3)
+				cout << el << el;
+			cout << el << el;
+			for (int i = 0; i < options.size(); i++)
+			if (cursor1.getPosition() == i)
+			{
+				changecolor("black");
+				if(i==0) cout >> ">> " + options[i]+ " <<" << el << el << el;
+				else cout >> "> " + options[i] << el << el << el;
+				changecolor("white");
+			}
+			else cout >> options[i] << el << el << el;
+			go_end_of_screen();
+			cout >> app.getDate().printDate2() << "                                  ";
+			while (!change)
+			{
+				char input = _getch();
+				if (input == UP || input == LEFT)
+					change = cursor1.dec();
+				else if (input == DOWN || input == RIGHT)
+					change = cursor1.inc();
+				else if (input == ESCAPE || input == BACKSPACE)
+				{
+					change = true;
+					more = false;
+					state = results[results.size() - 1];
+				}
+				else if (input == ENTER || input == SPACE)
+				{
+					change = true;
+					more = false;
+					if (results[cursor1.getPosition()] == TICK)
+						app.tick();
+					else state = results[cursor1.getPosition()];
+				}
+			}
+			ClearScreen();
+		}
+}
+void menus(int& state, Application& app)
+{
+	while (state != EXIT)
+	{
+		switch (state)
+		{
+		case MAINMENU1:
+			state = ADMINMENU;
+			break;
+			genericmenu(state, app, "", "Please select an Option:", { "Client Login", "Collaborator Login", "Manager Login", "Admin Login", "Quit" }, { CLIENTLOGINMENU, COLLABORATORLOGINMENU, MANAGERLOGINMENU, ADMINLOGINMENU, ESCAPEMENU });
+			break;
+		case ESCAPEMENU:
+			genericmenu(state, app, "", "Are you sure you want to Exit this Application?", { "No", "Yes" }, { MAINMENU1, EXIT });
+			break;
+		case CLIENTLOGINMENU:
+			//clientlogin(state, app);
+			break;
+		case CLIENTMENU:
+			genericmenu(state, app, "", "Please select an option:", { "Create new Project", "List of Projects", "Back" }, { NEWPROJECTMENU, PROJECTLISTMENU, MAINMENU1 });
+			break;
+		case COLLABORATORLOGINMENU:
+			//collaboratorlogin(state, app);
+			break;
+		case COLLABORATORMENU:
+			genericmenu(state, app, "", "Please select an option:", { "View personal information", "View Project information", "Back" }, { PERSONALINFOMENU, VIEWPROJECTINFO, MAINMENU1 });
+			break;
+		case PERSONALINFOMENU:
+			personalinfo(state, app);
+			break;
+		case VIEWPROJECTINFO:
+			genericmenu(state, app, "", "Please select an option:", { "List of projects by date", "List of projects by type", "List of projects by name", "Back" }, { COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, MAINMENU1 });
+			break;
+		case COLPROJBYDATE:
+			colprojdate(state, app);
+			break;
+		case COLPROJBYTYPE:
+			colprojtype(state, app);
+			break;
+		case COLPROJBYNAME:
+			colprojname(state, app);
+			break;
+		case NEWPROJECTMENU:
+			createprojectmenu(state, app);
+			break;
+		case PROJECTLISTMENU:
+			clientprojectlist(state, app);
+			break;
+		case PROJECTINFO:
+			projectinfo(state, app);
+			break;
+		case ADMINMENU:
+			currentclient = NULL;
+			currentproject = NULL;
+			currenttask = NULL;
+			currentcollaborator = NULL;
+			genericmenu(state, app, "Admin", "Please select an Option:", { "Sim", "Clients", "Projects", "Tasks", "Collaborators", "Quit" }, { TICK, ADMINCLIENTMENU, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ESCAPEMENU });
+			break;
+		case TICK:
+			tickmenu(state, app);
+			break;
+		case ADMINCLIENTMENU:
+			genericmenu(state, app, "Admin", "Clients", { "New", "Existing", "Back" }, { ADMINCREATECLIENT, ADMINSELECTCLIENT, ADMINMENU });
+			break;
+		case ADMINPROJECTMENU:
+			genericmenu(state, app, "Admin", "Projects", { "New", "Existing", "Back" }, { ADMINCREATEPROJECT, ADMINSELECTPROJECT, ADMINMENU });
+			break;
+		case ADMINTASKMENU:
+			genericmenu(state, app, "Admin", "Tasks", { "New", "Existing", "Back" }, { ADMINCREATETASK, ADMINSELECTTASK, ADMINMENU });
+			break;
+		case ADMINCOLLABORATORMENU:
+			genericmenu(state, app, "Admin", "Collaborators", { "New", "Existing", "Back" }, { ADMINCREATECOLLABORATOR, ADMINSELECTCOLLABORATOR, ADMINMENU });
+			break;
+		case ADMINSELECTCLIENT:
+			fullclientlist(state, app);
+			break;
+		case ADMINSELECTPROJECT:
+			fullprojectlist(state, app);
+			break;
+		case ADMINSELECTTASK:
+			fulltasklist(state, app);
+			break;
+		case ADMINSELECTCOLLABORATOR:
+			fullcollaboratorlist(state, app);
+			break;
+		case ADMINCREATECLIENT:
+			createclientmenu(state, app);
+			break;
+		case ADMINCREATECOLLABORATOR:
+			createcollaboratormenu(state, app);
+			break;
+		case ADMINCREATEPROJECT:
+			createprojectmenu(state, app);
+			break;
+		case ADMINCREATETASK:
+			createTaskmenu(state, app);
+			break;
+		case ADMINEDITPROJECT:
+			projectinfo(state, app);
+			break;
+		case ADMINEDITCOLLABORATOR:
+			collaboratorinfo(state, app);
+			break;
+		case ADMINEDITCLIENT:
+			clientinfo(state, app);
+			break;
+		case ADMINEDITTASK:
+			taskinfo(state, app);
+			break;
+		default:
+			state = EXIT;
+			break;
+		}
+	}
+}
+//enum states2
+//{
+//	EXIT = -1, ESCAPEMENU, MAINMENU1, CLIENTLOGINMENU, COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, VIEWPROJECTINFO, COLLABORATORLOGINMENU, PERSONALINFOMENU, COLLABORATORMENU, MANAGERLOGINMENU, ADMINLOGINMENU, CLIENTMENU, NEWPROJECTMENU, PROJECTLISTMENU, PROJECTINFO
+//};

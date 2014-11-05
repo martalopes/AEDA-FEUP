@@ -32,18 +32,29 @@ private:
 	static int lastID; 
 	string name;
 	vector<Project*> projects;
-	string password;
 public:
 	
-	Client():ID(0), password("123"){};
-	Client(string name):name(name),ID(++lastID), password("123"){};
-	Client(string name, int setID) :name(name), ID(setID), password("123") { if (setID > lastID) lastID = setID; };
+	Client():ID(0){};
+	Client(string name):name(name),ID(++lastID){};
+	Client(string name, int setID) :name(name), ID(setID) { if (setID > lastID) lastID = setID; };
 	Client(int i)
 	{
 		stringstream s1, s2;
 		s1 << "Name " << i;
 		*this = Client(s1.str());
 	};
+	string getName() const { return this->name; };
+	string toString() const;
+	vector<Project*> getProjects() const { return this->projects; };
+	int getID()const {return ID;};
+	void setName(string name) { this->name = name; };
+	bool addProject(Project* proj, bool setClient = true);
+	void connect();
+	bool removeProject(Project* p, bool removeClient = true);
+	double getTotal() const;
+	bool operator==(const Client& c2) const { return this->ID == c2.ID; };
+	friend ostream & operator<<(ostream& out, const Client& p);
+	friend istream & operator>>(istream& in, Client& c);
 	//class de excepção associada a Clientes
 	class ClientExcept
 	{
@@ -87,20 +98,6 @@ public:
 		bool operator()(const Client* c1, const Client* c2){ return c1->getTotal() < c2->getTotal(); };
 		string getAbbreviation() const { return "Total"; };
 	};
-
-	bool verifyPassword(const string& password) const{ return this->password == password; };
-	string getName() const { return this->name; };
-	string toString() const;
-	vector<Project*> getProjects() const { return this->projects; };
-	int getID()const {return ID;};
-	void setName(string name) { this->name = name; };
-	bool addProject(Project* proj, bool setClient = true);
-	void connect();
-	bool removeProject(Project* p, bool removeClient = true);
-	double getTotal() const;
-	bool operator==(const Client& c2) const { return this->ID == c2.ID; };
-	friend ostream & operator<<(ostream& out, const Client& p);
-	friend istream & operator>>(istream& in, Client& c);
 
 };
 

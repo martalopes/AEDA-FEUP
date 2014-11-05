@@ -40,8 +40,45 @@ private:
 	vector<Project*> projects;
 	vector<pair<Task*, unsigned int> > tasks;
 	vector<Task*> finishedtasks;
-	string password;
 public:
+	
+	Collaborator() :ID(0), maxweeklyhours(0), workinghours(0){};
+	Collaborator(string name, int maxweeklyhours) : name(name), maxweeklyhours(maxweeklyhours), ID(++lastID), workinghours(0){};
+	Collaborator(string name, int maxweeklyhours, int setID) : name(name), maxweeklyhours(maxweeklyhours), workinghours(0){ if (setID > lastID) lastID = setID; };
+	Collaborator(int i)
+	{
+		stringstream s;
+		s << "Collaborator " << i;
+		*this = Collaborator(s.str(), (6 + rand() % 4) * 5);
+	};
+	int getID() const { return this->ID; };
+	string getName() const { return this->name; };
+	int getWorkingHours() const { return  this->workinghours; };
+	int getMaxWeeklyHours() const { return this->maxweeklyhours; };
+	vector<Project*> getProjects() const { return this->projects; };
+	vector<pair<Task*, unsigned int> > getTasks() const { return this->tasks; };
+	vector<Task*> getFinishedTasks() const { return this->finishedtasks; };
+	bool reassign(Task* t);
+	virtual float getCost() const{ return 0; };
+	virtual string getTitle() const{ return "Collaborator"; };
+	string toString() const;
+	void setID(int newID) { lastID = newID; };
+	void setName(string newname){ this->name = newname; };
+	void setWeeklyHours(int newhours) { this->maxweeklyhours = newhours; };
+	bool addTask(Task* t1, unsigned int hours, bool addCollaborator=true);
+	bool removeTask(Task* t, bool removeCollaborator = true);
+	bool removeProject(Project* p, bool removeCollaborator = true);
+	bool removeTrace();
+	bool changeTaskHours(Task* t1, unsigned int hours);
+	bool addProject(Project* p, bool addCollaborator = true);
+	static Collaborator* newRandomCollaborator(int i);
+	static Collaborator* newCollaboratorTitle(string title);
+	void connect();
+	bool operator==(const Collaborator& c2)const{ return this->ID == c2.ID; };
+	friend ostream & operator<<(ostream& out, const Collaborator& c);
+	friend istream & operator>>(istream& in, Collaborator& c);
+	void updateProjects() { projects = calculateProjects(); };
+	
 	class CollaboratorExcept
 	{
 		string description;
@@ -112,44 +149,6 @@ public:
 		bool operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getProjects().size() < t2->getProjects().size(); };
 		string getAbbreviation() const{ return "N. Proj"; };
 	};
-	Collaborator() :ID(0), maxweeklyhours(0), workinghours(0), password("123"){};
-	Collaborator(string name, int maxweeklyhours) : name(name), maxweeklyhours(maxweeklyhours), ID(++lastID), workinghours(0), password("123"){};
-	Collaborator(string name, int maxweeklyhours, int setID) : name(name), maxweeklyhours(maxweeklyhours), workinghours(0), password("123"){ if (setID > lastID) lastID = setID; };
-	Collaborator(int i)
-	{
-		stringstream s;
-		s << "Collaborator " << i;
-		*this = Collaborator(s.str(), (6 + rand() % 4) * 5);
-	};
-	bool verifyPassword(const string& password) const{ return this->password == password; };
-	//static int numCollaborators(){ return Collaborator::lastID; };
-	int getID() const { return this->ID; };
-	string getName() const { return this->name; };
-	int getWorkingHours() const { return  this->workinghours; };
-	int getMaxWeeklyHours() const { return this->maxweeklyhours; };
-	vector<Project*> getProjects() const { return this->projects; };
-	vector<pair<Task*, unsigned int> > getTasks() const { return this->tasks; };
-	vector<Task*> getFinishedTasks() const { return this->finishedtasks; };
-	bool reassign(Task* t);
-	virtual float getCost() const{ return 0; };
-	virtual string getTitle() const{ return "Collaborator"; };
-	string toString() const;
-	void setID(int newID) { lastID = newID; };
-	void setName(string newname){ this->name = newname; };
-	void setWeeklyHours(int newhours) { this->maxweeklyhours = newhours; };
-	bool addTask(Task* t1, unsigned int hours, bool addCollaborator=true);
-	bool removeTask(Task* t, bool removeCollaborator = true);
-	bool removeProject(Project* p, bool removeCollaborator = true);
-	bool removeTrace();
-	bool changeTaskHours(Task* t1, unsigned int hours);
-	bool addProject(Project* p, bool addCollaborator = true);
-	static Collaborator* newRandomCollaborator(int i);
-	static Collaborator* newCollaboratorTitle(string title);
-	void connect();
-	bool operator==(const Collaborator& c2)const{ return this->ID == c2.ID; };
-	friend ostream & operator<<(ostream& out, const Collaborator& c);
-	friend istream & operator>>(istream& in, Collaborator& c);
-	void updateProjects() { projects = calculateProjects(); };
 	private:
 		vector<Project*> calculateProjects()const;
 

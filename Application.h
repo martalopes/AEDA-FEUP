@@ -43,10 +43,10 @@ public:
 	};
 	Application();
 	~Application();
-	vector<Project*> getProjects() const { return projects; };
-	vector<Client*> getClients() const { return clients; };
-	vector<Collaborator*> getCollaborators() const { return collaborators; };
-	vector<Task*> getTasks() const { return tasks; };
+	static vector<Project*> getProjects()  { return projects; };
+	static vector<Client*> getClients()  { return clients; };
+	static vector<Collaborator*> getCollaborators()  { return collaborators; };
+	static vector<Task*> getTasks()  { return tasks; };
 	static Project* getProjectPtr(int ID);
 	static Client* getClientPtr(int ID);
 	static Collaborator* getCollaboratorPtr(int ID);
@@ -65,33 +65,30 @@ public:
 
 	/*escrita*/
 
-	void writeFiles(); //função que escreve nos ficheiros 
-	void writeProjects(ofstream& fout)const;
-	void writeClients(ofstream& fout)const;
-	void writeCollaborators(ofstream& fout)const;
-	void writeTasks(ofstream& fout)const;
+	static void writeFiles(); //função que escreve nos ficheiros 
+	static void writeProjects(ofstream& fout);
+	static void writeClients(ofstream& fout);
+	static void writeCollaborators(ofstream& fout);
+	static void writeTasks(ofstream& fout);
 
 	/*leitura*/
 
-	void readFiles(); //função que lê dos ficheiros
-	void readProjects(ifstream& fin);
-	void readClients(ifstream& fin);
-	void readCollaborators(ifstream& fin);
-	void readTasks(ifstream& fin);
-	void connect();
-	void play();
-	void createMenus();
+	static void readFiles(); //função que lê dos ficheiros
+	static void readProjects(ifstream& fin);
+	static void readClients(ifstream& fin);
+	static void readCollaborators(ifstream& fin);
+	static void readTasks(ifstream& fin);
+	static void connect();
 
-
-	void tick(); //guarda no vector de projectos o custo de cada projecto
-	void genApplication(); //função geradora de Applications
-	Date getDate() const{ return d; };
+	static void tick(); //guarda no vector de projectos o custo de cada projecto
+	static void genApplication(); //função geradora de Applications
+	static Date getDate() { return d; };
 private:
 	static vector<Project*> projects;
 	static vector<Client*> clients;
 	static vector<Collaborator*> collaborators;
 	static vector<Task*> tasks;
-	Date d;
+	static Date d;
 };
 
 

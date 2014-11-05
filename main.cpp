@@ -427,6 +427,9 @@ int main()
 {
 	srand((unsigned int)time(NULL));
 	Application app;
+	//app.genApplication();
+	//app.writeFiles();
+	//return 0;
 	try{
 		app.readFiles();
 	}

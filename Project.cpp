@@ -42,6 +42,7 @@ bool Project::addTask(Task * t, bool setProject)
 	if (t == NULL)
 		throw Project::ProjectExcept("Invalid Task being added to Project");
 	if (t->getProject() != NULL)
+	if (!(*t->getProject() == *this))
 		return false;
 	for (size_t i = 0; i < tasks.size(); ++i)
 	{
@@ -179,7 +180,7 @@ bool Project::removeTask(Task* t, bool removeProject)
 	if (*tasks.at(i) == *t)
 	{
 		tasks.erase(tasks.begin() + i);
-		collaborators = calculateCollaborators();
+		updateCollaborators();
 		if (removeProject)
 			t->removeProject(false);
 		return true;
@@ -243,7 +244,7 @@ double Project::weeksToFinish() const
 }
 bool Project::isPastDeadline(const Date& currentdate)
 {
-	if (!(this->isCompleted()))
+	if (this->isCompleted())
 		return false;
 	return (deadline < currentdate);
 }

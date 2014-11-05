@@ -5,7 +5,7 @@ vector<Project*> Application::projects;
 vector<Client*> Application::clients;
 vector<Collaborator*> Application::collaborators;
 vector<Task*> Application::tasks;
-
+Date Application::d;
 Application::Application()
 {}
 
@@ -179,7 +179,7 @@ bool Application::removeCollaborator(Collaborator* c)
 	return true;
 }
 
-void Application::writeProjects(ofstream& fout)const
+void Application::writeProjects(ofstream& fout)
 {
 	fout.open("projects.txt");
 	fout << projects.size() << endl;
@@ -189,7 +189,7 @@ void Application::writeProjects(ofstream& fout)const
 	}
 	fout.close();
 }
-void Application::writeClients(ofstream& fout)const
+void Application::writeClients(ofstream& fout)
 {
 	fout.open("clients.txt");
 	fout << clients.size() << endl;
@@ -199,7 +199,7 @@ void Application::writeClients(ofstream& fout)const
 	}
 	fout.close();
 }
-void Application::writeCollaborators(ofstream& fout)const
+void Application::writeCollaborators(ofstream& fout)
 {
 	fout.open("collaborators.txt");
 	fout << collaborators.size() << endl;
@@ -209,7 +209,7 @@ void Application::writeCollaborators(ofstream& fout)const
 	}
 	fout.close();
 }
-void Application::writeTasks(ofstream& fout)const
+void Application::writeTasks(ofstream& fout)
 {
 	fout.open("tasks.txt");
 	fout << tasks.size() << endl;
@@ -406,17 +406,4 @@ void Application::genApplication(){
 		}
 	}
 	int i = 0;
-}
-void Application::createMenus()
-{
-	Menu* menu1 = new Menu(MAINMENU, "Main menu", "Please select an option", 0, { CLIENTLOGIN, COLLABORATORLOGIN, ADMINLOGIN });
-	Menu* menu2 = new Menu(CLIENTLOGIN, "Client Login", "Please login", MAINMENU, {});
-	Menu* menu3 = new Menu(COLLABORATORLOGIN, "Collaborator Login", "Please login", MAINMENU, {});
-	Menu* menu4 = new Menu(ADMINLOGIN, "Admin login", "Please login", MAINMENU, {});
-	//menu = menu1;
-}
-
-void Application::play()
-{
-	//while (menu != NULL) menu = menu->execute(); 
 }

@@ -8,6 +8,7 @@ bool Client::addProject(Project* proj, bool setClient)
 	if (proj == NULL)
 		throw Client::ClientExcept("Invalid Project being added to Client");
 	if (proj->getClient() != NULL)
+		if(!(*proj->getClient() == *this))
 		return false;
 		for(size_t i = 0; i< projects.size(); ++i)
 			if(*projects.at(i) == *proj)
@@ -54,7 +55,6 @@ ostream & operator<<(ostream& out, const Client& c)
 	out << c.projects.size() << endl;
 	for (size_t i = 0; i < c.projects.size(); i++)
 		out << c.projects.at(i)->getID() << endl;
-	out << c.password << endl;
 	return out;
 }
 istream & operator>>(istream& in, Client& c)
@@ -74,7 +74,6 @@ istream & operator>>(istream& in, Client& c)
 		in.ignore();
 		c.projects.push_back((Project*)projectid);
 	}
-	getline(in, c.password);
 	return in;
 }
 double Client::getTotal() const 

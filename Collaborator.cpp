@@ -29,7 +29,7 @@ bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
 	if ((this->getWorkingHours() + hours) > this->maxweeklyhours)
 		return false;
 	tasks.push_back(make_pair(t1, hours));
-	projects = calculateProjects();
+	updateProjects();
 	//if (t1->getProject() != NULL)
 	//addProject(t1->getProject()); 
 	if (addCollaborator)
@@ -176,7 +176,6 @@ ostream & operator<<(ostream& out, const Collaborator& c)
 	out << c.finishedtasks.size() << endl;
 	for (size_t i = 0; i < c.finishedtasks.size(); i++)
 		out << c.finishedtasks.at(i)->getID() << endl;
-	out << c.password << endl;
 	return out;
 }
 istream & operator>>(istream& in, Collaborator& c)
@@ -221,7 +220,6 @@ istream & operator>>(istream& in, Collaborator& c)
 		in.ignore();
 		c.finishedtasks.push_back((Task*)taskid);
 	}
-	getline(in, c.password);
 	return in;
 }
 

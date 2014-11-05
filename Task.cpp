@@ -72,6 +72,8 @@ bool Task::addCollaborator(Collaborator* c1, unsigned int hours, bool addTask)
 		}
 	}
 	collaborators.push_back(make_pair(c1, hours));
+	if (project != NULL)
+		project->updateCollaborators();
 	if (addTask)
 		return c1->addTask(this, hours, false);
 	return true;
@@ -84,6 +86,8 @@ bool Task::removeCollaborator(Collaborator* c, bool removeTask)
 	if (collaborators.at(i).first == c)
 	{
 		collaborators.erase(collaborators.begin() + i);
+		if (project != NULL)
+			project->updateCollaborators();
 		if (removeTask)
 			return c->removeTask(this, false);
 		return true;
