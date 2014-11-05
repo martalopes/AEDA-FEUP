@@ -6,23 +6,32 @@ int Collaborator::lastID = 0;
 
 bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
 {
+	if (t1 == NULL)
+		throw CollaboratorExcept("Invalid Task being added to Collaborator");
+	if (t1->isCompleted())
+	{
+		for (size_t i = 0; i < finishedtasks.size(); i++)
+		{
+			if (*finishedtasks.at(i) == *t1)
+				return false;
+		}
+		finishedtasks.push_back(t1);
+		projects = calculateProjects();
+		return true;
+	}
 	for (size_t i = 0; i < this->tasks.size(); ++i)
 	{
 		if (*(tasks[i].first) == *t1)
 		{
-			throw CollaboratorExcept("Task already exists");
+			return false;
 		}
 	}
 	if ((this->getWorkingHours() + hours) > this->maxweeklyhours)
 		return false;
 	tasks.push_back(make_pair(t1, hours));
-	/*size_t i = 0;
-	for (; i < projects.size(); i++)
-	if (*t1->getProject() == *projects.at(i))
-	break;
-	if (i == projects.size())
-	projects.push_back(t1->getProject());*/
-	addProject(t1->getProject());
+	projects = calculateProjects();
+	//if (t1->getProject() != NULL)
+	//addProject(t1->getProject()); 
 	if (addCollaborator)
 		t1->addCollaborator(this, hours, false);
 	workinghours += hours;
@@ -37,22 +46,40 @@ bool Collaborator::removeTask(Task* t, bool removeCollaborator)
 	{
 		workinghours -= tasks.at(i).second;
 		tasks.erase(tasks.begin() + i);
-		size_t j = 0;
-		for (; j < tasks.size(); j++)
-		if (tasks.at(j).first->getProject() == t->getProject())
-			break;
-		if (j == tasks.size())//colaborador nao tem mais tarefas do mesmo projecto
-			removeProject(t->getProject(), true);
+		//size_t j = 0;
+		//for (; j < tasks.size(); j++)
+		//if (tasks.at(j).first->getProject() == t->getProject())
+		//	break;
+		//if (j == tasks.size())//colaborador nao tem mais tarefas do mesmo projecto
+		//	removeProject(t->getProject(), true);
+		updateProjects();
 		if (removeCollaborator)
 			return t->removeCollaborator(this, false);
 		return true;
+	}
+	for (size_t i = 0; i < finishedtasks.size(); i++)
+	{
+		if (finishedtasks.at(i) == t)
+		{
+			finishedtasks.erase(finishedtasks.begin() + i);
+			//size_t j = 0;
+			//for (; j < tasks.size(); j++)
+			//if (finishedtasks.at(j)->getProject() == t->getProject())
+			//	break;
+			//if (j == tasks.size())//colaborador nao tem mais tarefas do mesmo projecto
+			//	removeProject(t->getProject(), true);
+			updateProjects();
+			if (removeCollaborator)
+				return t->removeCollaborator(this, false);
+			return true;
+		}
 	}
 	return false;
 }
 bool Collaborator::removeProject(Project* p, bool removeCollaborator)
 {
 	if (p == NULL)
-		throw CollaboratorExcept("Invalid Project");
+		throw CollaboratorExcept("Invalid Project being removed from collaborator");
 	for (size_t i = 0; i < projects.size(); ++i)
 	if (*projects.at(i) == *p)
 	{
@@ -77,8 +104,14 @@ bool Collaborator::changeTaskHours(Task* t1, unsigned int hours)
 	}
 	return false;
 }
+string Collaborator::toString() const
+{
+	return normalize(to_string(ID), name, 30);
+}
 bool Collaborator::addProject(Project* p, bool addCollaborator)
 {
+	if (p == NULL)
+		throw Collaborator::CollaboratorExcept("Invalid Project being added to Collaborator");
 	for (size_t i = 0; i < this->projects.size(); ++i)
 	{
 		if (*projects.at(i) == *p)
@@ -91,6 +124,7 @@ bool Collaborator::addProject(Project* p, bool addCollaborator)
 		p->addCollaborator(this, false);
 	return true;
 }
+
 void Collaborator::connect()
 {
 	for (size_t i = 0; i < projects.size(); i++)
@@ -232,4 +266,21 @@ Collaborator* Collaborator::newCollaboratorTitle(string title)
 	if ("Tester" == title)
 		return new Tester();
 	return NULL;
+}
+vector<Project*> Collaborator::calculateProjects()const
+{
+	vector<Project*> out;
+	for (size_t i = 0; i < tasks.size(); i++)
+	{
+		if (tasks.at(i).first->getProject() != NULL)
+		if (find(out.begin(), out.end(), tasks.at(i).first->getProject()) == out.end())
+			out.push_back(tasks.at(i).first->getProject());
+	}
+	for (size_t i = 0; i < finishedtasks.size(); i++)
+	{
+		if (finishedtasks.at(i)->getProject() != NULL)
+		if (find(out.begin(), out.end(), finishedtasks.at(i)->getProject()) == out.end())
+			out.push_back(finishedtasks.at(i)->getProject());
+	}
+	return out;
 }

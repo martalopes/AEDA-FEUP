@@ -8,6 +8,7 @@
 #include "Task.h"
 #include "Date.h"
 #include "Menu.h"
+#include "Utils.h"
 
 #include <string>
 #include <utility>
@@ -56,10 +57,10 @@ public:
 	static void addTask(Task* t);
 
 
-	bool removeProject(Project* p);
-	bool removeClient(Client* c);
-	bool removeTask(Task* t);
-	bool removeCollaborator(Collaborator* c);
+	static bool removeProject(Project* p);
+	static bool removeClient(Client* c);
+	static bool removeTask(Task* t);
+	static bool removeCollaborator(Collaborator* c);
 
 
 	/*escrita*/

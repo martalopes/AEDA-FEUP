@@ -11,19 +11,29 @@ int Task::getPriority() const
 		sum += double(dependants.at(i)->getPriority()) / dependencies.size();
 	return sum;
 };
-void Task::setProject(Project* p, bool addTask)
+bool Task::setProject(Project* p, bool addTask)
 {
 	if (p == NULL)
 		throw TaskExcept("Invalid Project");
-	project = p;
+	if (project != NULL)
+		return false;
 	if (addTask)
 		p->addTask(this, false);
+	project = p;
+	project->updateCollaborators();
+	for (size_t i = 0; i < collaborators.size(); i++)
+	{
+		collaborators.at(i).first->updateProjects();
+	}
+	return true;
 }
 bool Task::addDependency(Task* t, bool addDependant)
 {
 	if (t == NULL)
 		throw TaskExcept("No Task being added to Task:", ID);
-	if (!(*project == *t->project))
+	if (*this == *t)
+		throw TaskExcept("Task being added to itself as dependency");
+	if (!(project == t->project) || project == NULL || t->project == NULL)
 		return false;
 	for (size_t i = 0; i < dependencies.size(); ++i)
 	if (*dependencies.at(i) == *t)
@@ -37,8 +47,10 @@ bool Task::addDependant(Task* t, bool addDependency)
 {
 	if (t == NULL)
 		throw TaskExcept("No Task being added to Task:", ID);
-	if (!(*project == *t->project))
-		return false;
+	if (*this == *t)
+		throw TaskExcept("Task being added to itself as dependant");
+	if (!(project == t->project) || project == NULL || t->project == NULL)
+		return false;				//tarefas nao pertencem ao mesmo projecto
 	for (size_t i = 0; i < dependants.size(); ++i)
 	if (*dependants.at(i) == *t)
 		return false;
@@ -49,6 +61,8 @@ bool Task::addDependant(Task* t, bool addDependency)
 }
 bool Task::addCollaborator(Collaborator* c1, unsigned int hours, bool addTask)
 {
+	if (c1 == NULL)
+		throw Task::TaskExcept("Invalid Collaborator being added to Task");
 	for (size_t i = 0; i < this->collaborators.size(); ++i)
 	{
 		if (*collaborators[i].first == *c1)
@@ -158,8 +172,13 @@ void Task::connect()
 		Task * ptr = Application::getTaskPtr((int)dependants.at(i));
 			dependants.at(i) = ptr;
 	}
-	Project * ptr = Application::getProjectPtr((int)project);
+	if ((int)project != 0)
+	{
+		Project * ptr = Application::getProjectPtr((int)project);
+		if (ptr == NULL)
+			throw TaskExcept("Error in tasks.txt");
 		project = ptr;
+	}
 }
 
 bool Task::operator==(Task& t2)
@@ -240,14 +259,28 @@ istream & operator>>(istream& in, Task& t)
 bool Task::removeProject(bool removeTask)
 {
 	if (project == NULL)
-		throw(TaskExcept("Task has no project"));
+		return false;
+	if (!isIsolated())
+		return false;
 	if (removeTask)
+	{
 		project->removeTask(this, false);
+		project->updateCollaborators();
+	}
 	project = NULL;
+	for (size_t i = 0; i < collaborators.size(); i++)
+	{
+		collaborators.at(i).first->updateProjects();
+	}
 	return true;
+}
+string Task::toString() const
+{
+	return normalize(to_string(ID), name, 30);
 }
 bool Task::removeTrace()//remover todas as referencias de outros objectos à tarefa
 {
+	if (project != NULL)
 	project->removeTask(this, false); // remover referencia do projecto à tarefa
 	for (size_t i = 0; i < collaborators.size(); ++i)
 	{
@@ -289,7 +322,7 @@ bool Task::removeDependency(Task* t, bool removeDependant)
 		throw TaskExcept("Dependency does not exist");
 	dependencies.erase(dependencies.begin() + i);
 	if (removeDependant)
-		return t->removeDependency(this, false);
+		return t->removeDependant(this, false);
 	return false;
 }
 

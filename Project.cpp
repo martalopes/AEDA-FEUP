@@ -4,9 +4,6 @@
 
 int Project::lastID = 0;
 
-bool Project::ProjectComparatorClient::operator()(const Project& t1, const Project& t2) { return t1.getClient()->getID() < t2.getClient()->getID(); };
-bool Project::ProjectComparatorClient::operator()(const Project* t1, const Project* t2) { return t1->getClient()->getID() < t2->getClient()->getID(); };
-
 Project::Project(int i)
 {
 	stringstream s1, s2;
@@ -14,12 +11,17 @@ Project::Project(int i)
 	s2 << "Type " << i;
 	*this = Project(s1.str(), s2.str(), Date() + Date::toSeconds(0, 6 + rand() % 10, 0, 0, 0, 0), 10000 + (rand() % 5000 - 2500));
 }
-void Project::setClient(Client* c, bool addProject)
+string Project::toString() const 
+{ return normalize(to_string(ID), name, 30); };
+bool Project::setClient(Client* c, bool addProject)
 {
 	if (c == NULL) throw ProjectExcept("Invalid client");
+	if (client != NULL)
+		return false;
 	else client = c;
 	if (addProject)
 		c->addProject(this, false);
+	return true;
 }
 bool Project::addCollaborator(Collaborator* c, bool addProject)
 {
@@ -35,19 +37,24 @@ bool Project::addCollaborator(Collaborator* c, bool addProject)
 		c->addProject(this, false);
 	return true;
 }
-void Project::addTask(Task * t, bool setProject)
+bool Project::addTask(Task * t, bool setProject)
 {
 	if (t == NULL)
+		throw Project::ProjectExcept("Invalid Task being added to Project");
+	if (t->getProject() != NULL)
+		return false;
 	for (size_t i = 0; i < tasks.size(); ++i)
 	{
 		if (*tasks.at(i) == *t)
 		{
-			throw ProjectExcept("Task already exists");
+			return false;
 		}
 	}
 	tasks.push_back(t);
+	collaborators = calculateCollaborators();
 	if (setProject)
-		t->setProject(this, false);
+		return t->setProject(this, false);
+	return true;
 }
 bool Project::tick()
 {
@@ -55,6 +62,10 @@ bool Project::tick()
 		return false;
 	for (size_t i = 0; i < tasks.size(); ++i)
 	{
+		if (rand() % 20 == 0)
+			tasks.at(i)->delay();
+		if (rand() % 20 == 0)
+			tasks.at(i)->speedup();
 		double value = tasks.at(i)->tick();
 		if (value >= 0)
 			cost += value;
@@ -160,12 +171,17 @@ istream & operator>>(istream& in, Project& p)
 
 bool Project::removeTask(Task* t, bool removeProject)
 {
+	if (t == NULL)
+		throw ProjectExcept("Invalid Task being removed");
+	if (!t->isIsolated())
+		return false;//se tiver associada a outras tarefas, nao pode ser removida
 	for (size_t i = 0; i < tasks.size(); i++)
 	if (*tasks.at(i) == *t)
 	{
 		tasks.erase(tasks.begin() + i);
+		collaborators = calculateCollaborators();
 		if (removeProject)
-			return t->removeProject(false);
+			t->removeProject(false);
 		return true;
 	}
 	throw(ProjectExcept("Task does not exist"));
@@ -173,7 +189,7 @@ bool Project::removeTask(Task* t, bool removeProject)
 bool Project::removeClient(bool removeProject)
 {
 	if (client == NULL)
-		throw ProjectExcept("Client being removed does not exist");
+		return false;
 	if (removeProject)
 		client->removeProject(this, false);
 	client = NULL;
@@ -203,6 +219,7 @@ bool Project::removeTrace()
 	{
 		tasks.at(i)->removeTraceOutsideProject();
 	}
+	if (client != NULL)
 	client->removeProject(this, false);
 	return true;
 }
@@ -236,4 +253,16 @@ Date Project::projectedFinishDate(const Date& currentdate) const
 	if (abs(weeks - (-1)) < 0.001)
 		return Date(0);
 	else return currentdate + (int)(weeks * 7 * 24 * 3600);
+}
+vector<Collaborator*> Project::calculateCollaborators()const
+{
+	vector<Collaborator*> out;
+	for (size_t i = 0; i < tasks.size(); i++)
+	{
+		for (size_t j = 0; j < tasks.at(i)->getCollaborators().size(); j++)
+		if (tasks.at(i)->getCollaborators().at(j).first != NULL)
+		if (find(out.begin(), out.end(), tasks.at(i)->getCollaborators().at(j).first) == out.end())
+			out.push_back(tasks.at(i)->getCollaborators().at(j).first);
+	}
+	return out;
 }

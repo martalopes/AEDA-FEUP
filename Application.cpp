@@ -57,7 +57,7 @@ void Application::addProject(Project* p)
 };
 void Application::addClient(Client* c)
 {
-	for (size_t i = 0; i < projects.size(); ++i)
+	for (size_t i = 0; i < clients.size(); ++i)
 	if (*clients.at(i) == *c)
 		throw ApplicationExcept("Client already exists");
 	clients.push_back(c);

@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #include "Cursor.h"
 #include "Project.h"
@@ -13,6 +14,8 @@
 #include "Task.h"
 #include "Date.h"
 #include "Application.h"
+#include "insertionSort.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -62,5 +65,6 @@ public:
 	};
 };
 
+string normalize(const string& s1, const string& s2, int n);
 
 #endif

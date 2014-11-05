@@ -3,14 +3,19 @@
 int Client::lastID = 0;
 
 
-void Client::addProject(Project* proj, bool setClient)
+bool Client::addProject(Project* proj, bool setClient)
 	{
+	if (proj == NULL)
+		throw Client::ClientExcept("Invalid Project being added to Client");
+	if (proj->getClient() != NULL)
+		return false;
 		for(size_t i = 0; i< projects.size(); ++i)
 			if(*projects.at(i) == *proj)
 				throw ClientExcept("Project already exists");
 		projects.push_back(proj);
 		if (setClient)
 			proj->setClient(this, false);
+		return true;
 	};
 
 bool Client::removeProject(Project* p, bool removeClient)
@@ -27,7 +32,7 @@ bool Client::removeProject(Project* p, bool removeClient)
 			return true;
 		}
 	}
-	throw ClientExcept("Project does not exist");
+	return false;
 }
 
 void Client::connect()
@@ -79,3 +84,7 @@ double Client::getTotal() const
 		sum += projects.at(i)->getCost(); 
 	return sum;
 }
+string Client::toString() const
+{
+	return normalize(to_string(ID), name, 30);
+};

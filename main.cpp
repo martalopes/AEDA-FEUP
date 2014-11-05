@@ -438,10 +438,15 @@ int main()
 	}
 	int state = 1;
 	menus(state, app);
-	app.writeFiles();
-
-
-	test3();
+	try{
+		app.writeFiles();
+	}
+	catch (Application::ApplicationExcept& e)
+	{
+		cerr << e();
+		system("Pause");
+		return 1;
+	}
 	//Application a;
 	/*if (0)
 	{
@@ -461,6 +466,5 @@ int main()
 	a.createMenus();
 	a.play();
 	a.writeFiles();*/
-	system("pause");
 	return 0;
 }
