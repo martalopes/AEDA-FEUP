@@ -35,10 +35,12 @@ public:
 	///class de excepcao associada a Aplicacao
 	class ApplicationExcept
 	{
+		///descricao da excecao
 		string description;
 	public:
+		///construtor de excecao
 		ApplicationExcept(string description);
-		/// @return descricao
+		/// @return descricao da excecao
 		string operator()();
 	};
 protected:
@@ -107,13 +109,13 @@ public:
 	
 	/// remove projeto da aplicacao
 	/// @throw projeto nao existe
-	/// @param apontador para a projeto
+	/// @param apontador para o projeto
 	/// @return sucesso da operacao
 	static bool removeProject(Project* p);
 
 	/// remove cliente da aplicacao
 	/// @throw cliente nao existe
-	/// @param apontador para a cliente
+	/// @param apontador para o cliente
 	/// @return sucesso da operacao
 	static bool removeClient(Client* c);
 
@@ -125,7 +127,7 @@ public:
 
 	/// remove colaborador da aplicacao
 	/// @throw colaborador nao existe
-	/// @param apontador para a colaborador
+	/// @param apontador para o colaborador
 	/// @return sucesso da operacao
 	static bool removeCollaborator(Collaborator* c);
 

@@ -66,41 +66,120 @@ public:
 	string getDescription()const;
 	///modifica descricao da tarefa
 	void setDescription(string s);
+
 	///modifica nome da tarefa
 	void setName(string nm);
+
 	///modifica esforco da tarefa
 	void setEffort(unsigned int ef);
+
 	///@return esforco da tarefa
 	int getEffort()const;
 
+	///associa projeto a tarefa
+	///@param projeto a ser associado
+	///@param indica se a tarefa deve ser adicionada ao projeto
+	///@throw projeto nao existe
+	///@return sucesso da operacao
 	bool setProject(Project* p, bool addTask = true);
+
+	///adiciona dependencia a tarefa
+	///@param tarefa a ser associada
+	///@param indica se a tarefa deve ser adicionada como dependente a dependencia
+	///@throw tarefa nao existe
+	///@return sucesso da operacao
 	bool addDependency(Task* t, bool addDependant = true);
+
+	///adiciona dependente a tarefa
+	///@param tarefa a ser associada
+	///@param indica se a tarefa deve ser adicionada como  dependencia ao dependente
+	///@throw tarefa nao existe
+	///@return sucesso da operacao
 	bool addDependant(Task* t, bool addDependency = true);
+
+	///adiciona colaborador a tarefa
+	///@param colaborador a ser associado
+	///@param numero de horas que o colaborador vai trabalhar na tarefa
+	///@throw colaborador nao existe
+	///@return sucesso da operacao
 	bool addCollaborator(Collaborator* t1, unsigned int hours, bool addTask = true);
+
+	///remove colaborador da tarefa
+	///@param colaborador a ser desassociado
+	///@param indica se a tarefa deve ser removida do colaborador
+	///@throw colaborador nao existe
+	///@return sucesso da operacao
 	bool removeCollaborator(Collaborator* c, bool removeTask = true);
+
+	///desassocia projeto da tarefa
+	///@param indica se a tarefa deve ser removida do projeto
+	///@return sucesso da operacao
 	bool removeProject(bool removeTask=true);
+	///remove todas as referencias a tarefa noutros objetos
+	///@return sucesso da operacao
 	bool removeTrace();
+	///remove todas as referencias a tarefa noutros objetos, fora do projeto ao qual esta associado
+	///@return sucesso da operacao
 	bool removeTraceOutsideProject();
+	///remove dependencia da tarefa
+	///@param tarefa a ser removida
+	///@param indica se a tarefa deve ser removida da sua dependencia
+	///@throw tarefa nao existe
+	///@return sucesso da operacao
 	bool removeDependency(Task* t, bool removeDependant = true);
+	///remove dependente da tarefa
+	///@param tarefa a ser removida
+	///@param indica se a tarefa deve ser removida da seu dependente
+	///@throw tarefa nao existe
+	///@return sucesso da operacao
 	bool removeDependant(Task* t, bool removeDependency = true);
-	double calculateEstimatedTime() const; //tempo estimado de realizacao da tarefa, sem contar com dependencias, em semanas
-	double calculateTimeToCompletion() const; //tempo que falta para a conclusao da tarefa, a contar com dependencias, em semanas
-	bool isReady()const; //uma tarefa e dada como concluida quando todas as tarefas de que depende ja se encontram realizadas
-	double tick();//semana de trabalho.. retorna o custo daquele dia de trabalho
+	///@return tempo estimado de realizacao da tarefa, sem contar com dependencias, em semanas, -1 se a tarefa nao estiver a ser trabalhada
+	double calculateEstimatedTime() const; 
+	///@return tempo que falta para a conclusao da tarefa, a contar com dependencias, em semanas, -1 se a tarefa ou 1 das suas dependencias nao estivera ser trabalhada
+	double calculateTimeToCompletion() const; 
+	///@return uma tarefa pode ser trabalhada quando todas as tarefas de que depende ja se encontram realizadas
+	bool isReady()const; 
+	///semana de trabalho
+	///@return custo daquela semana de trabalho
+	double tick();
+	///@param data atual
+	///@return data estimada de conclusao da tarefa
 	Date getDateOfCompletion(const Date& d)const;
-	void connect(); 
+	///substitui IDs contidos na tarefa pelos apontadores para os objetos correspondentes
+	void connect();
+	///@return string com o nome e o ID da tarefa
 	string toString() const;
-	//indica se a tarefa esta ou nao concluida
+	///poe o esforco da tarefa a 0, e remove todos os colaboradores da tarefa, adicionando a tarefa a lista de tarefas completadas dos colaboradores
 	void complete();
+	///@param indica se a tarefa esta concluida
 	bool isCompleted() const;
+	///atraso na tarefa
+	///@param atraso pretendido
+	///@return sucesso da operacao
 	bool delay(int i);
+	///atraso aleatorio na tarefa
+	///@return sucesso da operacao
 	bool delay();
+	///adiantamento aleatorio na tarefa
+	///@return sucesso da operacao
 	bool speedup();
+	///@return verdadeiro se tarefa nao esta associada a outras por dependencias
 	bool isIsolated()const;
+	///@return tarefas sao iguais se tiverem o mesmo ID
 	bool operator==(Task& t2);
+
+	/// escrita de todos os dados da tarefa, no lugar dos apontadores sao escritos os IDs dos objetos
+	/// @param  stream de saida
+	/// @param  tarefa a ser escrita
+	/// @return stream de saida
 	friend ostream & operator<<(ostream& out, const Task& t);
+
+	/// leitura de todos os dados da tarefa, no lugar dos apontadores sao lidos os IDs dos objetos
+	/// @param  stream de entrada
+	/// @param  tarefa a ser lido
+	/// @return stream de entrada
 	friend istream & operator>>(istream& in, Task& t);
-	
+	///classe de excecao associada a tarefas
 	class TaskExcept
 	{
 		string description;

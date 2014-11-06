@@ -40,9 +40,11 @@ private:
 	vector<pair<Task*, unsigned int> > tasks;
 	vector<Task*> finishedtasks;
 public:
-	
+	///construtor por defeito
 	Collaborator();
+	///construtor sem ID especificado
 	Collaborator(string name, int maxweeklyhours);
+	///construtor com ID especificado
 	Collaborator(string name, int maxweeklyhours, int setID);
 	///cria um colaborador generico
 	Collaborator(int i);
@@ -112,9 +114,11 @@ public:
 	///remove todas as referencias ao colaborador noutros objetos
 	///@return sucesso da operacao
 	bool removeTrace();
+
 	///altera as horas de trabalho numa tarefa
 	///@param tarefa cujo horario se pretende alterar
-	///
+	///@throw tarefa nula
+	///@return sucesso da operacao
 	bool changeTaskHours(Task* t1, unsigned int hours);////
 
 	///adiciona projeto ao colaborador
@@ -158,6 +162,7 @@ public:
 		///@return descricao da excepcao
 		string operator()();
 	};
+	///interface de comparacao de colaboradores
 	class CollaboratorComparator
 	{
 	public:
@@ -170,60 +175,108 @@ public:
 		///@return abreviacao do comparador
 		virtual string getAbbreviation() const = 0;
 	};
+	///comparacao de colaboradores por ordem alfabetica
 	class CollaboratorComparatorAlphabetic : public CollaboratorComparator
 	{
 	public:
+		///comparacao entre colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator& t1, const Collaborator& t2);
+		///comparacao entre apontadores para colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
+	///comparacao de colaboradores por custo
 	class CollaboratorComparatorCost : public CollaboratorComparator
 	{
 	public:
+		///comparacao entre colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator& t1, const Collaborator& t2);
+		///comparacao entre apontadores para colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
+	///comparacao de colaboradores por ID
 	class CollaboratorComparatorID : public CollaboratorComparator
 	{
 	public:
+		///comparacao entre colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator& t1, const Collaborator& t2);
+		///comparacao entre apontadores para colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
+	///comparacao de colaboradores por horas de trabalho semanais
 	class CollaboratorComparatorWorkinghours : public CollaboratorComparator
 	{
 	public:
+		///comparacao entre colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator& t1, const Collaborator& t2);
+		///comparacao entre apontadores para colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
+	///comparacao de colaboradores por maximo de horas de trabalho semanais 
 	class CollaboratorComparatorMaxWeeklyHours : public CollaboratorComparator
 	{
 	public:
+		///comparacao entre colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator& t1, const Collaborator& t2);
+		///comparacao entre apontadores para colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
+	///comparacao de colaboradores por numero de tarefas
 	class CollaboratorComparatorNumTasks : public CollaboratorComparator
 	{
 	public:
+		///comparacao entre colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator& t1, const Collaborator& t2);
+		///comparacao entre apontadores para colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
+	///comparacao de colaboradores por experiencia (numero de tarefas terminadas)
 	class CollaboratorComparatorExperience : public CollaboratorComparator
 	{
 	public:
+		///comparacao entre colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator& t1, const Collaborator& t2);
+		///comparacao entre apontadores para colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
+	///comparacao de colaboradores por numero de projetos em que estao envolvidos
 	class CollaboratorComparatorNumProjects : public CollaboratorComparator
 	{
-	public:
+	public:		
+		///comparacao entre colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator& t1, const Collaborator& t2);
+		///comparacao entre apontadores para colaboradores
+		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
 	private:
@@ -231,52 +284,78 @@ public:
 		vector<Project*> calculateProjects()const;
 
 };
-
+/// especializacao de colaborador
 class Programmer : public Collaborator
 {
 public:
-
+	///construtor sem ID
 	Programmer(string name, int maxweeklyhours);
+	///construtor com ID
 	Programmer(string name, int maxweeklyhours, int setID);
+	///programador generico
 	Programmer(int i);
-	Programmer() ;
+	///construtor por defeito
+	Programmer();
+	///@return custo do programador, igual para todos
 	double getCost() const;
+	///@return titulo do programador
 	string getTitle() const;
 private:
 
 };
+/// especializacao de colaborador
 class Architect : public Collaborator
 {
 public:
+	///construtor sem ID
 	Architect(string name, int maxweeklyhours);
+	///construtor com ID
 	Architect(string name, int maxweeklyhours, int setID);
+	///arquiteto generico
 	Architect(int i);
+	///contrutor por defeito
 	Architect();
+	///@return custo de um arquitecto, igual para todos
 	double getCost() const ;
+	///@return titulo do arquitecto
 	string getTitle() const;
 private:
 
 };
+/// especializacao de colaborador
 class Manager : public Collaborator
 {
 public:
+	///construtor sem ID
 	Manager(string name, int maxweeklyhours);
+	///construtor com ID
 	Manager(string name, int maxweeklyhours, int setID);
+	///gestor generico
 	Manager(int i);
+	///construtor por defeito
 	Manager();
-	double getCost() const ;
+	///@return custo de um gestor, igual para todos
+	double getCost() const;
+	///@return titulo de um arquitecto, igual para todos
 	string getTitle() const;
 private:
 
 };
+/// especializacao de colaborador
 class Tester : public Collaborator
 {
 public:
+	///construtor sem ID
 	Tester(string name, int maxweeklyhours);
+	///construtor com ID
 	Tester(string name, int maxweeklyhours, int setID) ;
+	///tester generico
 	Tester(int i);
-	Tester() ;
-	double getCost() const ;
+	///construtor por defeito
+	Tester();
+	///@return custo de um tester, igual para todos
+	double getCost() const;
+	///@return titulo de um tester, igual para todos
 	string getTitle() const;
 private:
 

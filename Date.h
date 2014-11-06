@@ -11,19 +11,30 @@ using namespace std;
 class Date
 {
 public:
-
+	///data atual
 	Date();
+	///constroi a data a partir do numero de segundos a partir de 1/1/1970
+	///@param numero de segundos a partir do qual deve ser construida a data
 	Date(time_t seconds);
+	///construtor com a data a partir do dia, mes, ano, horas, minutos, segundos
+	///@param dia, mes, ano, horas, minutos, segundos
 	Date(int day, int month, int year, int hours, int minutes, int seconds);
+	///construtor com a data a partir do dia, mes, ano
+	///@param dia, mes, ano, horas
 	Date(int day, int month, int year);
 	///constroi uma data a partir de uma string
+	///@param string contendo a data a construir
 	Date(string format);
 	///classe de excepcoes associada a data
 	class DateExcept
 	{
+		///descricao da excecao
 		string description;
 	public:
+		///construtor
+		///@param descricao
 		DateExcept(string description);
+		///@return descricao
 		string operator()();
 	};
 	Date& Date::operator=(const Date& d2);

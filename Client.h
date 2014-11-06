@@ -32,10 +32,13 @@ private:
 	string name;
 	vector<Project*> projects;
 public:
-	
+	///construtor por defeito
 	Client();
+	///construtor sem ID especidficado
 	Client(string name);
+	///construtor com ID
 	Client(string name, int setID);
+	///client generico
 	Client(int i);
 	///@return nome do client
 	string getName() const ;
@@ -108,32 +111,52 @@ public:
 	class ClientComparatorID: public ClientComparator
 	{
 	public:
+		///comparacao entre clientes
+		///@return c1 < c2
 		bool operator()(const Client& c1, const Client& c2);
+		///comparacao entre apontadores para clientes
+		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
+		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};
 	///comparacao de clientes por ordem alfabetica
 	class ClientComparatorAlphabetic : public ClientComparator
 	{
 	public:
+		///comparacao entre clientes
+		///@return c1 < c2
 		bool operator()(const Client& c1, const Client& c2);
+		///comparacao entre apontadores para clientes
+		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
+		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};
 	///comparacao de clientes por numero de projetos
 	class ClientComparatorNumProjects : public ClientComparator
 	{
 	public:
+		///comparacao entre clientes
+		///@return c1 < c2
 		bool operator()(const Client& c1, const Client& c2);
+		///comparacao entre apontadores para clientes
+		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
+		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};
 	///comparacao de clientes por custo total
 	class ClientComparatorTotal : public ClientComparator
 	{
 	public:
+		///comparacao entre clientes
+		///@return c1 < c2
 		bool operator()(const Client& c1, const Client& c2);
+		///comparacao entre apontadores para clientes
+		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
+		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};
 
