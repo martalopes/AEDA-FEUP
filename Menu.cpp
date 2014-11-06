@@ -1921,6 +1921,9 @@ void menus(int& state, Application& app)
 	{
 		switch (state)
 		{
+		case ESCAPEMENU:
+			genericmenu(state, app, "", "Are you sure you want to Exit this Application?", { "No", "Yes" }, { ADMINMENU, EXIT });
+			break;
 		case MAINMENU1:
 			state = ADMINMENU;
 			break;

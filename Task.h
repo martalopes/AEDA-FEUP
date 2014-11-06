@@ -184,63 +184,136 @@ public:
 	{
 		string description;
 	public:
+
 		TaskExcept(string description, int ID = -1);
 		string operator()();
 	};
 	class TaskComparator
 	{
 	public:
-		virtual bool operator()(const Task& t1, const Task& t2)=0;
+		///comparacao entre objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
+		virtual bool operator()(const Task& t1, const Task& t2) = 0;
+		///comparacao entre ápontadores para objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		virtual bool operator()(const Task* t1, const Task* t2) = 0;
+		///@return abreviacao do comparador
 		virtual string getAbbreviation() const=0;
 	};
 	class TaskComparatorAlphabetic : public TaskComparator
 	{
 	public:
+		///comparacao entre objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task& t1, const Task& t2);
+		///comparacao entre ápontadores para objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task* t1, const Task* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
 	class TaskComparatorID : public TaskComparator
 	{
 	public:
+		///comparacao entre objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task& t1, const Task& t2);
+		///comparacao entre ápontadores para objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task* t1, const Task* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
 	class TaskComparatorEffort : public TaskComparator
 	{
 	public:
+		///comparacao entre objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task& t1, const Task& t2);
-		bool operator()(const Task* t1, const Task* t2) ;
+		///comparacao entre ápontadores para objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
+		bool operator()(const Task* t1, const Task* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
 	class TaskComparatorEstimatedTime : public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) ;
-		bool operator()(const Task* t1, const Task* t2) ;
+		///comparacao entre objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
+		bool operator()(const Task& t1, const Task& t2);
+		///comparacao entre ápontadores para objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
+		bool operator()(const Task* t1, const Task* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
 	class TaskComparatorTimeToCompletion : public TaskComparator
 	{
 	public:
+		///comparacao entre objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task& t1, const Task& t2);
+		///comparacao entre ápontadores para objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task* t1, const Task* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
 	class TaskComparatorNumDependants: public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) ;
-		bool operator()(const Task* t1, const Task* t2) ;
+		///comparacao entre objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
+		bool operator()(const Task& t1, const Task& t2);
+		///comparacao entre ápontadores para objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
+		bool operator()(const Task* t1, const Task* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
 	class TaskComparatorNumDependencies : public TaskComparator
 	{
 	public:
+		///comparacao entre objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task& t1, const Task& t2) ;
+		///comparacao entre ápontadores para objetos da classe
+		///@param objeto 1
+		///@param objeto 2
+		///@return verdadeiro se objeto 1 < objeto 2
 		bool operator()(const Task* t1, const Task* t2);
+		///@return abreviacao do comparador
 		string getAbbreviation() const;
 	};
 };

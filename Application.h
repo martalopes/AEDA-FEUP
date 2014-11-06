@@ -157,23 +157,36 @@ public:
 	static void readFiles();
 	///le os projetos do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@throw ficheiro nao existe
 	///@param input file stream
 	static void readProjects(ifstream& fin);
 
 	///le os clientes do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@throw ficheiro nao existe
 	///@param input file stream
 	static void readClients(ifstream& fin);
 
 	///le os colaboradores do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@throw ficheiro nao existe
 	///@param input file stream
 	static void readCollaborators(ifstream& fin);
 
 	///le os tarefas do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@throw ficheiro nao existe
 	///@param input file stream
 	static void readTasks(ifstream& fin);
+
+	///le a data do sistema
+	///@throw ficheiro nao existe
+	///@param input file stream
+	static void readApp(ifstream& fin);
+	
+	///escreve a data do sistema
+	//@param output file stream
+	static void writeApp(ofstream& fout);
 
 	///substitui os IDs nos atributos pelos apontadores para os objetos corretos
 	static void connect();
@@ -186,9 +199,13 @@ public:
 	///@return data atual da aplicacao
 	static Date getDate();
 private:
+	///projetos guardados no sistema
 	static vector<Project*> projects;
+	///clientes guardados no sistema
 	static vector<Client*> clients;
+	///colaboradores guardados no sistema
 	static vector<Collaborator*> collaborators;
+	///tarefas guaradas no sistema
 	static vector<Task*> tasks;
 	///data atual
 	static Date d;

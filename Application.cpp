@@ -269,6 +269,7 @@ void Application::writeFiles()
 	writeClients(fout);
 	writeCollaborators(fout);
 	writeTasks(fout);
+	writeApp(fout);
 	fout.close();
 }
 void Application::readProjects(ifstream& fin)
@@ -337,6 +338,23 @@ void Application::readTasks(ifstream& fin)
 	}
 	fin.close();
 }
+
+void Application::readApp(ifstream& fin)
+{
+	fin.open("application.txt");
+	if (!fin)
+		throw ApplicationExcept("application.txt does not exist");
+	string date;
+	getline(fin, date);
+	d = Date(date);
+	fin.close();
+}
+void Application::writeApp(ofstream& fout)
+{
+	fout.open("application.txt");
+	fout << d.printDate2() << endl;
+	fout.close();
+}
 void Application::connect()
 {
 	try{
@@ -392,6 +410,7 @@ void Application::readFiles()
 	readClients(fin);
 	readCollaborators(fin);
 	readTasks(fin);
+	readApp(fin);
 	connect();
 }
 void Application::tick()
