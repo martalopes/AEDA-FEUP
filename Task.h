@@ -18,10 +18,10 @@ Task Class:
 Cada tarefa vai ser identificada por:
 um ID, para facilitar a sua identificacao;
 um nome;
-uma descrição;
-Cada tarefa tem um esforço expectável que é contabilizado pelo numero de colaboradores que se dedicam a tarefa;
+uma descricao;
+Cada tarefa tem um esforco expectavel que e contabilizado pelo numero de colaboradores que se dedicam a tarefa;
 Sendo assim cada tarefa vai ter um vector de colaboradores associado.
-Como cada tarefa nao é independente, isto é existem tarefas que dependem de outras e outras que dependem desta,
+Como cada tarefa nao e independente, isto e existem tarefas que dependem de outras e outras que dependem desta,
 optamos por criar um vector de tarefas dependentes (dependants) e de tarefas de que depende (dependencies).
 */
 
@@ -36,34 +36,43 @@ private:
 	static int lastID;
 	string name;
 	string description;
-	int effort; //no. de horas restante para a tarefa ficar terminada
-	vector< pair<Collaborator*, unsigned int> > collaborators; //par formado pelo colaborador e as horas que dedica a essa tarefa
-	vector<Task*> dependencies; //tarefas das quais depende a tarefa
-	vector<Task*> dependants; // tarefas que dependem da tarefa
+	///no. de horas restante para a tarefa ficar terminada
+	int effort; 
+	/// lista de pares formado pelo colaborador e as horas que dedica a essa tarefa
+	vector< pair<Collaborator*, unsigned int> > collaborators; 
+	///tarefas das quais depende a tarefa
+	vector<Task*> dependencies; 
+	/// tarefas que dependem da tarefa
+	vector<Task*> dependants; 
 	Project* project;
 public:
-	Task(): ID(0),effort(0),project(NULL){};
-	Task(string name, string description, unsigned int effort): name(name), description(description), effort(effort),ID(++lastID), project(NULL){};
-	Task(string name, string description, unsigned int effort, int setID): name(name), description(description), effort(effort),ID(setID), project(NULL){if(setID > lastID) lastID = setID;};
-	Task(int i)
-	{
-		stringstream s1,s2;
-		s1 << "Task " << i;
-		s2 << "Description " << i;
-		*this = Task(s1.str(),s2.str(), 1 + rand() % 100);
-	};
-	string getName() const { return this->name; };
-	int getID() const { return this->ID; };
-	Project* getProject()const{ return this->project; };
-	vector<Task*> getDependants() const{ return dependants; };
-	vector<Task*> getDependencies() const{ return dependencies; };
-	vector<pair<Collaborator*, unsigned int> > getCollaborators() const{ return collaborators; };
-	int getPriority() const;
-	string getDescription()const{ return description; };
-	void setDescription(string s){ description = s; };
-	void setName(string nm){ name = nm; };
-	void setEffort(unsigned int ef){ if (ef == 0) complete(); else effort = ef; };
-	int getEffort()const { return this->effort; };
+	Task();
+	Task(string name, string description, unsigned int effort);
+	Task(string name, string description, unsigned int effort, int setID);
+	Task(int i);
+	///@return nome da tarefa
+	string getName() const;
+	///@return ID da tarefa
+	int getID() const ;
+	///@return projeto associado a tarefa
+	Project* getProject()const;
+	///@return tarefas que dependem da tarefa
+	vector<Task*> getDependants() const;
+	///@return tarefas das quais depende a tarefa
+	vector<Task*> getDependencies() const;
+	///@return lista de pares formado pelo colaborador e as horas que dedica a essa tarefa
+	vector<pair<Collaborator*, unsigned int> > getCollaborators() const;
+	///@return descricao da tarefa
+	string getDescription()const;
+	///modifica descricao da tarefa
+	void setDescription(string s);
+	///modifica nome da tarefa
+	void setName(string nm);
+	///modifica esforco da tarefa
+	void setEffort(unsigned int ef);
+	///@return esforco da tarefa
+	int getEffort()const;
+
 	bool setProject(Project* p, bool addTask = true);
 	bool addDependency(Task* t, bool addDependant = true);
 	bool addDependant(Task* t, bool addDependency = true);
@@ -74,35 +83,20 @@ public:
 	bool removeTraceOutsideProject();
 	bool removeDependency(Task* t, bool removeDependant = true);
 	bool removeDependant(Task* t, bool removeDependency = true);
-	double calculateEstimatedTime() const; //tempo estimado de realização da tarefa, sem contar com dependencias, em semanas
-	double calculateTimeToCompletion() const; //tempo que falta para a conclusão da tarefa, a contar com dependencias, em semanas
-	bool isReady()const; //uma tarefa é dada como concluida quando todas as tarefas de que depende já se encontram realizadas
+	double calculateEstimatedTime() const; //tempo estimado de realizacao da tarefa, sem contar com dependencias, em semanas
+	double calculateTimeToCompletion() const; //tempo que falta para a conclusao da tarefa, a contar com dependencias, em semanas
+	bool isReady()const; //uma tarefa e dada como concluida quando todas as tarefas de que depende ja se encontram realizadas
 	double tick();//semana de trabalho.. retorna o custo daquele dia de trabalho
-	Date getDateOfCompletion(const Date& d)const{ return d + 7 * 24 * 3600 * calculateTimeToCompletion(); };
+	Date getDateOfCompletion(const Date& d)const;
 	void connect(); 
 	string toString() const;
 	//indica se a tarefa esta ou nao concluida
 	void complete();
-	bool isCompleted() const
-	{
-		return (effort <= 0);
-	};
-	bool delay(int i){ if (isCompleted()) return false; effort += i; return true; };
-	bool delay()
-	{ 
-		if (isCompleted()) 
-			return false; 
-		effort += rand() % 19 + 1;
-	};
-	bool speedup()
-	{
-		if (isCompleted())
-			return false;
-		if (getEffort() <= 20)
-			return false;
-		effort -= rand() % 19 + 1;
-	};
-	bool isIsolated()const{ return (dependants.size() == 0) && (dependencies.size() == 0); };
+	bool isCompleted() const;
+	bool delay(int i);
+	bool delay();
+	bool speedup();
+	bool isIsolated()const;
 	bool operator==(Task& t2);
 	friend ostream & operator<<(ostream& out, const Task& t);
 	friend istream & operator>>(istream& in, Task& t);
@@ -111,8 +105,8 @@ public:
 	{
 		string description;
 	public:
-		TaskExcept(string description, int ID = -1) :description(description){if(ID != -1) {stringstream s; s << ID; description+= s.str();}};
-		string operator()(){ return description; };
+		TaskExcept(string description, int ID = -1);
+		string operator()();
 	};
 	class TaskComparator
 	{
@@ -124,58 +118,51 @@ public:
 	class TaskComparatorAlphabetic : public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) { return t1.name < t2.name; };
-		bool operator()(const Task* t1, const Task* t2) { return t1->name < t2->name; };
-		string getAbbreviation() const{ return "Alph"; };
-	};
-	class TaskComparatorPriority : public TaskComparator
-	{
-	public:
-		bool operator()(const Task& t1, const Task& t2) { return t1.getPriority() < t2.getPriority(); };
-		bool operator()(const Task* t1, const Task* t2) { return t1->getPriority() < t2->getPriority(); };
-		string getAbbreviation() const{ return "Priority"; };
+		bool operator()(const Task& t1, const Task& t2);
+		bool operator()(const Task* t1, const Task* t2);
+		string getAbbreviation() const;
 	};
 	class TaskComparatorID : public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) { return t1.getID() < t2.getID(); };
-		bool operator()(const Task* t1, const Task* t2) { return t1->getID() < t2->getID(); };
-		string getAbbreviation() const{ return "ID"; };
+		bool operator()(const Task& t1, const Task& t2);
+		bool operator()(const Task* t1, const Task* t2);
+		string getAbbreviation() const;
 	};
 	class TaskComparatorEffort : public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) { return t1.getEffort() < t2.getEffort(); };
-		bool operator()(const Task* t1, const Task* t2) { return t1->getEffort() < t2->getEffort(); };
-		string getAbbreviation() const{ return "Effort"; };
+		bool operator()(const Task& t1, const Task& t2);
+		bool operator()(const Task* t1, const Task* t2) ;
+		string getAbbreviation() const;
 	};
 	class TaskComparatorEstimatedTime : public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) { return t1.calculateEstimatedTime() < t2.calculateEstimatedTime(); };
-		bool operator()(const Task* t1, const Task* t2) { return t1->calculateEstimatedTime() < t2->calculateEstimatedTime(); };
-		string getAbbreviation() const{ return "Est Time"; };
+		bool operator()(const Task& t1, const Task& t2) ;
+		bool operator()(const Task* t1, const Task* t2) ;
+		string getAbbreviation() const;
 	};
 	class TaskComparatorTimeToCompletion : public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) { return t1.calculateTimeToCompletion() < t2.calculateTimeToCompletion(); };
-		bool operator()(const Task* t1, const Task* t2) { return t1->calculateTimeToCompletion() < t2->calculateTimeToCompletion(); };
-		string getAbbreviation() const{ return "To Complete"; };
+		bool operator()(const Task& t1, const Task& t2);
+		bool operator()(const Task* t1, const Task* t2);
+		string getAbbreviation() const;
 	};
 	class TaskComparatorNumDependants: public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) { return t1.getDependants().size() < t2.getDependants().size(); };
-		bool operator()(const Task* t1, const Task* t2) { return t1->getDependants().size() < t2->getDependants().size(); };
-		string getAbbreviation() const{ return "N Dependants"; };
+		bool operator()(const Task& t1, const Task& t2) ;
+		bool operator()(const Task* t1, const Task* t2) ;
+		string getAbbreviation() const;
 	};
 	class TaskComparatorNumDependencies : public TaskComparator
 	{
 	public:
-		bool operator()(const Task& t1, const Task& t2) { return t1.getDependencies().size() < t2.getDependencies().size(); };
-		bool operator()(const Task* t1, const Task* t2) { return t1->getDependencies().size() < t2->getDependencies().size(); };
-		string getAbbreviation() const{ return "N Dependencies"; };
+		bool operator()(const Task& t1, const Task& t2) ;
+		bool operator()(const Task* t1, const Task* t2);
+		string getAbbreviation() const;
 	};
 };
 #endif

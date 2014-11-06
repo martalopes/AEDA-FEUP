@@ -426,8 +426,8 @@ int main()
 {
 	srand((unsigned int)time(NULL));
 	Application* app = Application::Instance();
-	/*app.genApplication();
-	app.writeFiles();
+	/*app->genApplication();
+	app->writeFiles();
 	return 0;*/
 	try{
 		Application::readFiles();

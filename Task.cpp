@@ -4,13 +4,6 @@
 
 int Task::lastID = 0;
 
-int Task::getPriority() const
-{
-	double sum = calculateEstimatedTime();
-	for (size_t i = 0; i < dependants.size(); i++)
-		sum += double(dependants.at(i)->getPriority()) / dependencies.size();
-	return sum;
-};
 bool Task::setProject(Project* p, bool addTask)
 {
 	if (p == NULL)
@@ -100,9 +93,9 @@ double  Task::calculateEstimatedTime() const //tempo que demora a tarefa a ser c
 		return 0; //se tarefa esta comcluida retornar 0
 	int sum = 0;
 	for (size_t i = 0; i < collaborators.size(); i++)
-		sum += collaborators.at(i).second; //soma das horas que a tarefa é trabalhada por semana
+		sum += collaborators.at(i).second; //soma das horas que a tarefa e trabalhada por semana
 	if (sum == 0)
-		return -1;//tempo é 'infinito'
+		return -1;//tempo e 'infinito'
 	else return double(effort) / sum;
 };
 double Task::calculateTimeToCompletion() const //tempo que a tarefa vai demorar a ser completada, tendo em conta que as tarefas das quais depende terao de ser completadas primeiro
@@ -282,10 +275,10 @@ string Task::toString() const
 {
 	return normalize(to_string(ID), name, 30);
 }
-bool Task::removeTrace()//remover todas as referencias de outros objectos à tarefa
+bool Task::removeTrace()//remover todas as referencias de outros objectos a tarefa
 {
 	if (project != NULL)
-	project->removeTask(this, false); // remover referencia do projecto à tarefa
+	project->removeTask(this, false); // remover referencia do projecto a tarefa
 	for (size_t i = 0; i < collaborators.size(); ++i)
 	{
 		collaborators.at(i).first->removeTask(this, false);// remover tarefa de todos os colaboradores
@@ -345,3 +338,82 @@ bool Task::removeDependant(Task* t, bool removeDependency)
 		return t->removeDependency(this, false);
 	return true;
 }
+
+
+Task::Task() : ID(0), effort(0), project(NULL){}
+Task::Task(string name, string description, unsigned int effort) : name(name), description(description), effort(effort), ID(++lastID), project(NULL){}
+Task::Task(string name, string description, unsigned int effort, int setID) : name(name), description(description), effort(effort), ID(setID), project(NULL){ if (setID > lastID) lastID = setID; }
+Task::Task(int i)
+{
+	stringstream s1, s2;
+	s1 << "Task " << i;
+	s2 << "Description " << i;
+	*this = Task(s1.str(), s2.str(), 1 + rand() % 100);
+}
+
+string Task::getName() const { return this->name; }
+int Task::getID() const { return this->ID; }
+Project* Task::getProject()const{ return this->project; }
+vector<Task*> Task::getDependants() const{ return dependants; }
+vector<Task*> Task::getDependencies() const{ return dependencies; }
+vector<pair<Collaborator*, unsigned int> > Task::getCollaborators() const{ return collaborators; }
+string Task::getDescription()const{ return description; }
+void Task::setDescription(string s){ description = s; }
+void Task::setName(string nm){ name = nm; }
+void Task::setEffort(unsigned int ef){ if (ef == 0) complete(); else effort = ef; }
+int Task::getEffort()const { return this->effort; }
+Date Task::getDateOfCompletion(const Date& d)const{ return d + 7 * 24 * 3600 * calculateTimeToCompletion(); }
+bool Task ::isCompleted() const
+{
+	return (effort <= 0);
+}
+
+bool Task::delay(int i){ if (isCompleted()) return false; effort += i; return true; }
+bool Task::delay()
+{
+	if (isCompleted())
+		return false;
+	effort += rand() % 19 + 1;
+}
+
+bool Task::speedup()
+{
+	if (isCompleted())
+		return false;
+	if (getEffort() <= 20)
+		return false;
+	effort -= rand() % 19 + 1;
+}
+bool Task::isIsolated()const{ return (dependants.size() == 0) && (dependencies.size() == 0); }
+
+Task::TaskExcept::TaskExcept(string description, int ID ) :description(description) { if (ID != -1) { stringstream s; s << ID; description += s.str(); } }
+string Task::TaskExcept::operator()(){ return description; }
+
+bool Task::TaskComparatorAlphabetic ::operator()(const Task& t1, const Task& t2) { return t1.name < t2.name; }
+bool Task::TaskComparatorAlphabetic ::operator()(const Task* t1, const Task* t2) { return t1->name < t2->name; }
+string Task::TaskComparatorAlphabetic::getAbbreviation() const{ return "Alph"; }
+
+
+bool Task::TaskComparatorID::operator()(const Task& t1, const Task& t2) { return t1.getID() < t2.getID(); };
+bool Task::TaskComparatorID::operator()(const Task* t1, const Task* t2) { return t1->getID() < t2->getID(); };
+string Task::TaskComparatorID::getAbbreviation() const{ return "ID"; };
+
+bool Task::TaskComparatorEffort ::operator()(const Task& t1, const Task& t2) { return t1.getEffort() < t2.getEffort(); };
+bool Task::TaskComparatorEffort ::operator()(const Task* t1, const Task* t2) { return t1->getEffort() < t2->getEffort(); };
+string Task::TaskComparatorEffort::getAbbreviation() const{ return "Effort"; };
+
+bool Task::TaskComparatorEstimatedTime ::operator()(const Task& t1, const Task& t2) { return t1.calculateEstimatedTime() < t2.calculateEstimatedTime(); };
+bool Task::TaskComparatorEstimatedTime ::operator()(const Task* t1, const Task* t2) { return t1->calculateEstimatedTime() < t2->calculateEstimatedTime(); };
+string Task::TaskComparatorEstimatedTime::getAbbreviation() const{ return "Est Time"; };
+
+bool Task::TaskComparatorTimeToCompletion ::operator()(const Task& t1, const Task& t2) { return t1.calculateTimeToCompletion() < t2.calculateTimeToCompletion(); };
+bool Task::TaskComparatorTimeToCompletion ::operator()(const Task* t1, const Task* t2) { return t1->calculateTimeToCompletion() < t2->calculateTimeToCompletion(); };
+string Task::TaskComparatorTimeToCompletion::getAbbreviation() const{ return "To Complete"; };
+
+bool Task::TaskComparatorNumDependants::operator()(const Task& t1, const Task& t2) { return t1.getDependants().size() < t2.getDependants().size(); };
+bool Task::TaskComparatorNumDependants::operator()(const Task* t1, const Task* t2) { return t1->getDependants().size() < t2->getDependants().size(); };
+string Task::TaskComparatorNumDependants::getAbbreviation() const{ return "N Dependants"; };
+
+bool Task::TaskComparatorNumDependencies ::operator()(const Task& t1, const Task& t2) { return t1.getDependencies().size() < t2.getDependencies().size(); };
+bool Task::TaskComparatorNumDependencies ::operator()(const Task* t1, const Task* t2) { return t1->getDependencies().size() < t2->getDependencies().size(); };
+string Task::TaskComparatorNumDependencies::getAbbreviation() const{ return "N Dependencies"; };

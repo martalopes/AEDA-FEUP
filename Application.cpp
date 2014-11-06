@@ -40,38 +40,56 @@ void Application::clear()
 }
 vector<Project*> Application::getProjects()  { return projects; };
 vector<Client*> Application::getClients()  { return clients; };
-//
-//template<class T*>
-//T* binary_searchID(vector<T*> v, int ID)
-
-
-Project* Application::getProjectPtr(int ID) /////////////////////******
+///adaptacao de binary_search
+template<class T>
+T* binary_searchID(vector<T*> v, int ID)
 {
-	for (size_t i = 0; i < projects.size(); ++i)
+	int left = 0, right = v.size() - 1;
+	while (left <= right)
+	{
+		int middle = (left + right) / 2;
+		if (v[middle]->getID() < ID)
+			left = middle + 1;
+		else if (ID < v[middle]->getID())
+			right = middle - 1;
+		else
+			return v[middle]; // encontrou
+	}
+	return NULL; // nao encontrou
+}
+
+
+Project* Application::getProjectPtr(int ID)
+{
+	/*for (size_t i = 0; i < projects.size(); ++i)
 	if (projects.at(i)->getID() == ID)
 		return projects.at(i);
-	return NULL;
+	return NULL;*/
+	return binary_searchID(projects, ID);
 };
-Client* Application::getClientPtr(int ID)/////////////////////******
+Client* Application::getClientPtr(int ID)
 {
-	for (size_t i = 0; i < clients.size(); ++i)
+	/*for (size_t i = 0; i < clients.size(); ++i)
 	if (clients.at(i)->getID() == ID)
 		return clients.at(i);
-	return NULL;
+	return NULL;*/
+	return binary_searchID(clients, ID);
 };
-Collaborator* Application::getCollaboratorPtr(int ID) /////////////////////******
+Collaborator* Application::getCollaboratorPtr(int ID)
 {
-	for (size_t i = 0; i < collaborators.size(); ++i)
-	if (collaborators.at(i)->getID() == ID)
-		return collaborators.at(i);
-	return NULL;
+	//for (size_t i = 0; i < collaborators.size(); ++i)
+	//if (collaborators.at(i)->getID() == ID)
+	//	return collaborators.at(i);
+	//return NULL;
+	return binary_searchID(collaborators, ID);
 };
-Task* Application::getTaskPtr(int ID)/////////////////////******
+Task* Application::getTaskPtr(int ID)
 {
-	for (size_t i = 0; i < tasks.size(); ++i)
+	/*for (size_t i = 0; i < tasks.size(); ++i)
 	if (tasks.at(i)->getID() == ID)
 		return tasks.at(i);
-	return NULL;
+	return NULL;*/
+	return binary_searchID(tasks, ID);
 };
 void Application::addProject(Project* p)
 {
@@ -436,11 +454,12 @@ void Application::genApplication(){
 }
 
 
-
-vector<Collaborator*> Application::getCollaborators() 
-{ 
-	return collaborators; 
+vector<Collaborator*> Application::getCollaborators()
+{
+	return collaborators;
 }
-vector<Task*> Application::getTasks() 
-{ return tasks; }
+vector<Task*> Application::getTasks()
+{
+	return tasks;
+}
 Date Application::getDate() { return d; }

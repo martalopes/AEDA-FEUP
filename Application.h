@@ -32,29 +32,34 @@ class Application
 	friend class Collaborator;
 	friend class Project;
 public:
-	///class de excepção associada a Aplicações 
+	///class de excepcao associada a Aplicacao
 	class ApplicationExcept
 	{
 		string description;
 	public:
 		ApplicationExcept(string description);
+		/// @return descricao
 		string operator()();
 	};
 protected:
-	///construtor da classe não é acessivel fora da classe - apenas existirá um objeto da classe
+	///construtor da classe nao e acessivel fora da classe - apenas existira um objeto da classe
 	Application();
 public:
 	/// apenas pode existir um objeto da classe
-	/// se ainda nao tiver sido criado um objeto da classe, é criado um, senao retorna um apontador para esse objeto
+	/// se ainda nao tiver sido criado um objeto da classe, e criado um, senao retorna um apontador para esse objeto
 	/// @return apontador para aplicacao
 	static Application* Instance();
-	
+	///destrutor
 	~Application();
 	/// elimina todos os dados da aplicacao, permitindo a recuperacao da memoria ocupada por eles
 	static void clear();
+	///@return projetos
 	static vector<Project*> getProjects();
+	///@return clientes
 	static vector<Client*> getClients();
+	///@return colaboradores
 	static vector<Collaborator*> getCollaborators();
+	///@return tarefas
 	static vector<Task*> getTasks();
 	/// obter um projeto a partir do seu ID
 	/// @throw projeto nao existe
@@ -101,40 +106,91 @@ public:
 	static void addTask(Task* t);
 	
 	/// remove projeto da aplicacao
-	/// @throw 
-	/// @param apontador para a tarefa
+	/// @throw projeto nao existe
+	/// @param apontador para a projeto
+	/// @return sucesso da operacao
 	static bool removeProject(Project* p);
+
+	/// remove cliente da aplicacao
+	/// @throw cliente nao existe
+	/// @param apontador para a cliente
+	/// @return sucesso da operacao
 	static bool removeClient(Client* c);
+
+	/// remove tarefa da aplicacao
+	/// @throw tarefa nao existe
+	/// @param apontador para a tarefa
+	/// @return sucesso da operacao
 	static bool removeTask(Task* t);
+
+	/// remove colaborador da aplicacao
+	/// @throw colaborador nao existe
+	/// @param apontador para a colaborador
+	/// @return sucesso da operacao
 	static bool removeCollaborator(Collaborator* c);
 
 
 	/*escrita*/
 
-	static void writeFiles(); //função que escreve nos ficheiros 
+	///escreve os dados do sistema em ficheiros
+	static void writeFiles();
+	///escreve os projetos do sistema em ficheiros
+	///@param output file stream
 	static void writeProjects(ofstream& fout);
+
+	///escreve os clientes do sistema em ficheiros
+	///@param output file stream
 	static void writeClients(ofstream& fout);
+
+	///escreve os colaboradores do sistema em ficheiros
+	///@param output file stream
 	static void writeCollaborators(ofstream& fout);
+
+	///escreve os tarefas do sistema em ficheiros
+	///@param output file stream
 	static void writeTasks(ofstream& fout);
 
 	/*leitura*/
-
-	static void readFiles(); //função que lê dos ficheiros
+	///le dos ficheiros os dados do sistema
+	static void readFiles();
+	///le os projetos do sistema
+	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@param input file stream
 	static void readProjects(ifstream& fin);
+
+	///le os clientes do sistema
+	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@param input file stream
 	static void readClients(ifstream& fin);
+
+	///le os colaboradores do sistema
+	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@param input file stream
 	static void readCollaborators(ifstream& fin);
+
+	///le os tarefas do sistema
+	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@param input file stream
 	static void readTasks(ifstream& fin);
+
+	///substitui os IDs nos atributos pelos apontadores para os objetos corretos
 	static void connect();
 
-	static void tick(); //guarda no vector de projectos o custo de cada projecto
-	static void genApplication(); //função geradora de Applications
+	///simula uma semana de trabalho
+	static void tick();
+
+	///gera os dados da aplicacao
+	static void genApplication();
+	///@return data atual da aplicacao
 	static Date getDate();
 private:
 	static vector<Project*> projects;
 	static vector<Client*> clients;
 	static vector<Collaborator*> collaborators;
 	static vector<Task*> tasks;
+	///data atual
 	static Date d;
+	///apontador para o unico objeto da class
 	static Application* instance;
 };
 
