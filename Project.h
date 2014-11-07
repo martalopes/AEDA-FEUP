@@ -38,7 +38,6 @@ public:
 	///construtor por defeito
 	Project();
 	///construtor sem ID especificado
-<<<<<<< HEAD
 	///@param name nome do projecto
 	///@param type tipo de projecto
 	///@param deadline prazo do projecto
@@ -53,12 +52,6 @@ public:
 	Project(string name, string type, Date deadline, double cost, int setID);
 	///projeto generico
 	///@param i indice do projecto
-=======
-	Project(string name, string type, Date deadline, double cost );
-	///construtor com ID especificado
-	Project(string name, string type, Date deadline, double cost, int setID);
-	///projeto generico
->>>>>>> origin/master
 	Project(int i);
 
 	/// converter projeto em string
@@ -87,11 +80,7 @@ public:
 	Date getDeadline()const;
 
 	///modifica o prazo do projeto
-<<<<<<< HEAD
 	///@param d novo prazo do projeto
-=======
-	///@param novo prazo do projeto
->>>>>>> origin/master
 	void setDeadline(const Date& d);
 
 	/// compara a data atual com o prazo do projeto
@@ -115,7 +104,6 @@ public:
 	vector<Collaborator*> getCollaborators() const;
 
 	/// modifica ID do projeto
-<<<<<<< HEAD
 	/// @param ID novo ID
 	void setID(int ID);
 	///modifica o ultimo ID a ser utilizado da classe projeto
@@ -125,16 +113,6 @@ public:
 	///associa cliente a projeto
 	///@param c cliente a ser associado
 	///@param addProject indica se o projeto deve ser adicionado ao cliente
-=======
-	/// @param novo ID
-	void setID(int ID);
-	///modifica o ultimo ID a ser utilizado da classe projeto
-	static void setLastID(int lID);
-
-	///associa cliente a projeto
-	///@param cliente a ser associado
-	///@param indica se o projeto deve ser adicionado ao cliente
->>>>>>> origin/master
 	///@throw cliente nao existre
 	///@return sucesso da operacao
 	bool setClient(Client* c, bool addProject = true);
@@ -214,13 +192,8 @@ public:
 
 
 	/// leitura de todos os dados do projeto, no lugar dos apontadores sao lidos os IDs dos objetos
-<<<<<<< HEAD
 	/// @param in stream de entrada
 	/// @param p projeto a ser lido
-=======
-	/// @param  stream de entrada
-	/// @param  projeto a ser lido
->>>>>>> origin/master
 	/// @return stream de entrada
 	friend istream & operator>>(istream& in, Project& p);
 
@@ -249,13 +222,8 @@ public:
 			///@return verdadeiro se objeto 1 < objeto 2
 			virtual bool operator()(const Project& t1, const Project& t2) = 0;
 			///comparacao entre apontadores para objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			virtual bool operator()(const Project* t1, const Project* t2) = 0;
 			///@return abreviacao do comparador
@@ -266,7 +234,6 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
@@ -274,15 +241,6 @@ public:
 			///comparacao entre apontadores para objetos da classe
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
-			bool operator()(const Project& t1, const Project& t2);
-			///comparacao entre apontadores para objetos da classe
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
 			///@return abreviacao do comparador
@@ -293,7 +251,6 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
@@ -301,15 +258,6 @@ public:
 			///comparacao entre apontadores para objetos da classe
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
-			bool operator()(const Project& t1, const Project& t2);
-			///comparacao entre apontadores para objetos da classe
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
 			///@return abreviacao do comparador
@@ -320,7 +268,6 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
@@ -328,15 +275,6 @@ public:
 			///comparacao entre apontadores para objetos da classe
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
-			bool operator()(const Project& t1, const Project& t2);
-			///comparacao entre apontadores para objetos da classe
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
 			///@return abreviacao do comparador
@@ -347,7 +285,6 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
@@ -355,15 +292,6 @@ public:
 			///comparacao entre apontadores para objetos da classe
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
-			bool operator()(const Project& t1, const Project& t2);
-			///comparacao entre apontadores para objetos da classe
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
 			///@return abreviacao do comparador
@@ -374,7 +302,6 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
@@ -382,15 +309,6 @@ public:
 			///comparacao entre apontadores para objetos da classe
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
-			bool operator()(const Project& t1, const Project& t2);
-			///comparacao entre apontadores para objetos da classe
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
 			///@return abreviacao do comparador
@@ -401,7 +319,6 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
@@ -409,15 +326,6 @@ public:
 			///comparacao entre apontadores para objetos da classe
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
-			bool operator()(const Project& t1, const Project& t2);
-			///comparacao entre apontadores para objetos da classe
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
 			///@return abreviacao do comparador
@@ -428,7 +336,6 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
@@ -436,15 +343,6 @@ public:
 			///comparacao entre apontadores para objetos da classe
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
-			bool operator()(const Project& t1, const Project& t2);
-			///comparacao entre apontadores para objetos da classe
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
 			///@return abreviacao do comparador
@@ -455,7 +353,6 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-<<<<<<< HEAD
 			///@param t1 objeto 1
 			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
@@ -463,15 +360,6 @@ public:
 			///comparacao entre apontadores para objetos da classe
 			///@param t1 objeto 1
 			///@param t2 objeto 2
-=======
-			///@param objeto 1
-			///@param objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
-			bool operator()(const Project& t1, const Project& t2);
-			///comparacao entre apontadores para objetos da classe
-			///@param objeto 1
-			///@param objeto 2
->>>>>>> origin/master
 			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
 			///@return abreviacao do comparador

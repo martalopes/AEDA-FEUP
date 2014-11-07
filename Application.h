@@ -109,41 +109,25 @@ public:
 	
 	/// remove projeto da aplicacao
 	/// @throw projeto nao existe
-<<<<<<< HEAD
 	/// @param p apontador para o projeto
-=======
-	/// @param apontador para o projeto
->>>>>>> origin/master
 	/// @return sucesso da operacao
 	static bool removeProject(Project* p);
 
 	/// remove cliente da aplicacao
 	/// @throw cliente nao existe
-<<<<<<< HEAD
 	/// @param c apontador para o cliente
-=======
-	/// @param apontador para o cliente
->>>>>>> origin/master
 	/// @return sucesso da operacao
 	static bool removeClient(Client* c);
 
 	/// remove tarefa da aplicacao
 	/// @throw tarefa nao existe
-<<<<<<< HEAD
 	/// @param t apontador para a tarefa
-=======
-	/// @param apontador para a tarefa
->>>>>>> origin/master
 	/// @return sucesso da operacao
 	static bool removeTask(Task* t);
 
 	/// remove colaborador da aplicacao
 	/// @throw colaborador nao existe
-<<<<<<< HEAD
 	/// @param c apontador para o colaborador
-=======
-	/// @param apontador para o colaborador
->>>>>>> origin/master
 	/// @return sucesso da operacao
 	static bool removeCollaborator(Collaborator* c);
 
@@ -153,7 +137,6 @@ public:
 	///escreve os dados do sistema em ficheiros
 	static void writeFiles();
 	///escreve os projetos do sistema em ficheiros
-<<<<<<< HEAD
 	///@param fout output file stream
 	static void writeProjects(ofstream& fout);
 
@@ -167,21 +150,6 @@ public:
 
 	///escreve os tarefas do sistema em ficheiros
 	///@param fout output file stream
-=======
-	///@param output file stream
-	static void writeProjects(ofstream& fout);
-
-	///escreve os clientes do sistema em ficheiros
-	///@param output file stream
-	static void writeClients(ofstream& fout);
-
-	///escreve os colaboradores do sistema em ficheiros
-	///@param output file stream
-	static void writeCollaborators(ofstream& fout);
-
-	///escreve os tarefas do sistema em ficheiros
-	///@param output file stream
->>>>>>> origin/master
 	static void writeTasks(ofstream& fout);
 
 	/*leitura*/
@@ -190,58 +158,34 @@ public:
 	///le os projetos do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
-=======
-	///@param input file stream
->>>>>>> origin/master
 	static void readProjects(ifstream& fin);
 
 	///le os clientes do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
-=======
-	///@param input file stream
->>>>>>> origin/master
 	static void readClients(ifstream& fin);
 
 	///le os colaboradores do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
-=======
-	///@param input file stream
->>>>>>> origin/master
 	static void readCollaborators(ifstream& fin);
 
 	///le os tarefas do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
-=======
-	///@param input file stream
->>>>>>> origin/master
 	static void readTasks(ifstream& fin);
 
 	///le a data do sistema
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
 	static void readApp(ifstream& fin);
 	
 	///escreve a data do sistema
 	//@param fout output file stream
-=======
-	///@param input file stream
-	static void readApp(ifstream& fin);
-	
-	///escreve a data do sistema
-	//@param output file stream
->>>>>>> origin/master
 	static void writeApp(ofstream& fout);
 
 	///substitui os IDs nos atributos pelos apontadores para os objetos corretos
