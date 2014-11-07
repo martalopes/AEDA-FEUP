@@ -14,6 +14,7 @@ public:
 	///data atual
 	Date();
 	///constroi a data a partir do numero de segundos a partir de 1/1/1970
+<<<<<<< HEAD
 	///@param seconds numero de segundos a partir do qual deve ser construida a data
 	Date(time_t seconds);
 	///construtor com a data a partir do dia, mes, ano, horas, minutos, segundos
@@ -31,6 +32,18 @@ public:
 	Date(int day, int month, int year);
 	///constroi uma data a partir de uma string
 	///@param format string contendo a data a construir
+=======
+	///@param numero de segundos a partir do qual deve ser construida a data
+	Date(time_t seconds);
+	///construtor com a data a partir do dia, mes, ano, horas, minutos, segundos
+	///@param dia, mes, ano, horas, minutos, segundos
+	Date(int day, int month, int year, int hours, int minutes, int seconds);
+	///construtor com a data a partir do dia, mes, ano
+	///@param dia, mes, ano, horas
+	Date(int day, int month, int year);
+	///constroi uma data a partir de uma string
+	///@param string contendo a data a construir
+>>>>>>> origin/master
 	Date(string format);
 	///classe de excepcoes associada a data
 	class DateExcept
@@ -39,18 +52,26 @@ public:
 		string description;
 	public:
 		///construtor
+<<<<<<< HEAD
 		///@param description descricao
+=======
+		///@param descricao
+>>>>>>> origin/master
 		DateExcept(string description);
 		///@return descricao
 		string operator()();
 	};
 	Date& Date::operator=(const Date& d2);
+<<<<<<< HEAD
 	///@param day dia
 	///@param month mes
 	///@param year ano
 	///@param hours horas
 	///@param minutes minutos
 	///@param seconds segundos
+=======
+	///@param data
+>>>>>>> origin/master
 	///@return numero de segundos correspondente aos parametros
 	static int toSeconds(int day, int month, int year, int hours, int minutes, int seconds);
 	///@return numero de segundos desde 1 de janeiro de 1970 ate a data
