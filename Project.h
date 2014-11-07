@@ -15,18 +15,6 @@
 #include <utility>
 #include <vector>
 
-/*
-Project Class:
-Cada projecto vai ser composto/identificado:
-por nome,
-por um tipo,
-para facilitar a identificação do projecto será atribuido um ID a cada um,
-tem um prazo associado,
-é composto por tarefas,
-colaboradores, pois cada projecto vai ser implementado por colaboradores diferentes.
-tem um cliente associado.
-*/
-
 using namespace std;
 
 class Client;
@@ -47,24 +35,56 @@ private:
 	vector<Collaborator*> collaborators; //vector de colaboradores;
 public:
 	 
-	
+	///construtor por defeito
 	Project();
+	///construtor sem ID especificado
+	///@param name nome do projecto
+	///@param type tipo de projecto
+	///@param deadline prazo do projecto
+	///@param cost custo do projecto
 	Project(string name, string type, Date deadline, double cost );
+	///construtor com ID especificado
+	///@param name nome do projecto
+	///@param type tipo de projecto
+	///@param deadline prazo do projecto
+	///@param cost custo do projecto
+	///@param setID ID do projecto
 	Project(string name, string type, Date deadline, double cost, int setID);
+	///projeto generico
+	///@param i indice do projecto
 	Project(int i);
+
 	/// converter projeto em string
 	/// @return string correspondente ao projeto
 	string toString() const;
+
+	///@return ID do projeto
 	int getID() const;
+
+	///@return ultimo ID a ser utilizado
 	static int getLastID();
+
+	///@return nome do projeto
 	string getName() const;
+
+	///@return tipo do projeto
 	string getType() const ;
+
+	///@return cliente associado ao projeto
 	Client* getClient()const;
+
+	///@return custo do projeto
 	double getCost() const;
+
+	///@return data do prazo do projeto
 	Date getDeadline()const;
+
+	///modifica o prazo do projeto
+	///@param d novo prazo do projeto
 	void setDeadline(const Date& d);
+
 	/// compara a data atual com o prazo do projeto
-	/// @param  data atual
+	/// @param currentdate data atual
 	/// @return verdadeiro se a data passada como argumento for posterior ao prazo do projeto
 	bool isPastDeadline(const Date& currentdate);
 
@@ -73,29 +93,50 @@ public:
 	double weeksToFinish() const;
 
 	/// data estimada de conclusao do projeto
-	/// @param data atual
+	/// @param currentdate data atual
 	/// @return data de conclusao do projeto
 	Date projectedFinishDate(const Date& currentdate) const;
+
+	///@return taredas do projeto
 	vector<Task*> getTasks() const;
+
+	///@return colaboradores do projeto
 	vector<Collaborator*> getCollaborators() const;
+
+	/// modifica ID do projeto
+	/// @param ID novo ID
 	void setID(int ID);
-	static void setLastID(int lID) ;
+	///modifica o ultimo ID a ser utilizado da classe projeto
+	///@param lID ultimo ID 
+	static void setLastID(int lID);
+
+	///associa cliente a projeto
+	///@param c cliente a ser associado
+	///@param addProject indica se o projeto deve ser adicionado ao cliente
+	///@throw cliente nao existre
+	///@return sucesso da operacao
 	bool setClient(Client* c, bool addProject = true);
+
+	///modifica nome do projeto
+	///@param novo nome
 	void setName(string newname);
+
+	///modifica tipo do projeto
+	///@param novo tipo do projeto
 	void setType(string newtype);
 
 	/// adiciona colaborador
 	/// @throw	colaborador nao existe
-	/// @param  apontador para colaborador a ser adicionado
-	/// @param  bool que indica se o projeto deve ser adicionado ao colaborador
+	/// @param c apontador para colaborador a ser adicionado
+	/// @param addProject bool que indica se o projeto deve ser adicionado ao colaborador
 	/// @return indica o sucesso da operacao
-	bool addCollaborator(Collaborator* c, bool addProject = true);
+	//bool addCollaborator(Collaborator* c, bool addProject = true);
 
 
 	/// adiciona tarefa, atualizando a lista de colaboradores do projeto
 	/// @throw	tarefa nao existe
-	/// @param  apontador para colaborador a ser adicionado
-	/// @param  bool que indica se o projeto deve ser adicionado a tarefa
+	/// @param t apontador para colaborador a ser adicionado
+	/// @param setProject bool que indica se o projeto deve ser adicionado a tarefa
 	/// @return indica o sucesso da operacao
 	bool addTask(Task * t, bool setProject = true);
 
@@ -116,8 +157,8 @@ public:
 
 	/// remove tarefa
 	/// @throw	tarefa nao existe
-	/// @param  apontador para tarefa a ser removida
-	/// @param  bool que indica se o projeto deve ser removido  da tarefa
+	/// @param t apontador para tarefa a ser removida
+	/// @param removeProject bool que indica se o projeto deve ser removido  da tarefa
 	/// @return indica o sucesso da operacao
 	bool removeTask(Task* t, bool removeProject = true);
 
@@ -132,27 +173,28 @@ public:
 	bool removeClient(bool removeProject = true);
 
 	/// remove colaborador
-	/// @throw	colaborador nao existe
-	/// @param  apontador para colaborador a ser removido
-	/// @param  bool que indica se o projeto deve ser removido do colaborador
+	/// @throw colaborador nao existe
+	/// @param c apontador para colaborador a ser removido
+	/// @param removeProject bool que indica se o projeto deve ser removido do colaborador
 	/// @return indica o sucesso da operacao
-	bool removeCollaborator(Collaborator* c, bool removeProject = true);
+	//bool removeCollaborator(Collaborator* c, bool removeProject = true);
 
 	/// igualdade entre projetos se tiverem IDs iguais
+	/// @param p2 projecto a ser comparado
 	/// @return igualdade dos projetos
 	bool operator==(const Project& p2) const;
 
 	/// escrita de todos os dados do projeto, no lugar dos apontadores sao escritos os IDs dos objetos
-	/// @param  stream de saida
-	/// @param  projeto a ser escrito
+	/// @param out stream de saida
+	/// @param p projeto a ser escrito
 	/// @return stream de saida
 	friend ostream & operator<<(ostream& out, const Project& p);
 
 
 	/// leitura de todos os dados do projeto, no lugar dos apontadores sao lidos os IDs dos objetos
-	/// @param  stream de entrada
-	/// @param  projeto a ser lido
-	/// @return stream de entreada
+	/// @param in stream de entrada
+	/// @param p projeto a ser lido
+	/// @return stream de entrada
 	friend istream & operator>>(istream& in, Project& p);
 
 	/// atualizacao da lista de colaboradores que trabalham na tarefa
@@ -161,12 +203,13 @@ private:
 	/// calculo da lista de colaboradores que trabalham na tarefa
 		vector<Collaborator*> calculateCollaborators()const;
 public:
-		///class de excepção associada a Projectos
+		///class de excepcao associada a Projectos
 		class ProjectExcept
 		{
 			string description;
 		public:
 			ProjectExcept(string description);
+			///@return descricao da excecao
 			string operator()();
 		};
 		///interface de comparacao de projetos
@@ -174,83 +217,152 @@ public:
 		{
 		public:
 			///comparacao entre objetos da classe
-			///@param objeto 1
-			///@param objeto 2
+			///@param t1 objeto 1
+			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
 			virtual bool operator()(const Project& t1, const Project& t2) = 0;
-			///comparacao entre objetos da classe
-			///@param objeto 1
-			///@param objeto 2
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
 			///@return verdadeiro se objeto 1 < objeto 2
 			virtual bool operator()(const Project* t1, const Project* t2) = 0;
-			///comparacao entre apontadores para objetos da classe
-			///@param apontador para objeto 1
-			///@param apontador para objeto 2
-			///@return verdadeiro se objeto 1 < objeto 2
+			///@return abreviacao do comparador
 			virtual string getAbbreviation() const = 0;
 		};
-		///class de comparação para ordenar os projectos de forma alfabetica
+		///class de comparacao para ordenar os projectos de forma alfabetica
 		class ProjectComparatorAlphabetic : public ProjectComparator
 		{
 		public:
+			///comparacao entre objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project& t1, const Project& t2);
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
+			///@return abreviacao do comparador
 			string getAbbreviation() const;
 		};
-		///class de comparação para ordenar os projectos em função do custo
+		///class de comparacao para ordenar os projectos em funcao do custo
 		class ProjectComparatorCost : public ProjectComparator
 		{
 		public:
+			///comparacao entre objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project& t1, const Project& t2);
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
+			///@return abreviacao do comparador
 			string getAbbreviation() const;
 		};
-		///class de comparação para ordenar os projectos por ID
+		///class de comparacao para ordenar os projectos por ID
 		class ProjectComparatorID : public ProjectComparator
 		{
 		public:
+			///comparacao entre objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project& t1, const Project& t2);
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
+			///@return abreviacao do comparador
 			string getAbbreviation() const;
 		};
-		///class de comparação que servirá para ordenar os projectos por numero de tarefas
+		///class de comparacao que servira para ordenar os projectos por numero de tarefas
 		class ProjectComparatorNumTasks : public ProjectComparator
 		{
 		public:
+			///comparacao entre objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project& t1, const Project& t2);
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
+			///@return abreviacao do comparador
 			string getAbbreviation() const;
 		};
-		///class de comparação que servirá para ordenar os projectos por numero de colaboradores
+		///class de comparacao que servira para ordenar os projectos por numero de colaboradores
 		class ProjectComparatorNumCollaborators : public ProjectComparator
 		{
 		public:
+			///comparacao entre objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project& t1, const Project& t2);
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
+			///@return abreviacao do comparador
 			string getAbbreviation() const;
 		};
-		///class de comparação que servirá para ordenar os projectos por tipo
+		///class de comparacao que servira para ordenar os projectos por tipo
 		class ProjectComparatorType : public ProjectComparator
 		{
 		public:
+			///comparacao entre objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project& t1, const Project& t2);
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
+			///@return abreviacao do comparador
 			string getAbbreviation() const;
 		};
-		///class de comparação que servirá para ordenar os projectos por prazo
+		///class de comparacao que servira para ordenar os projectos por prazo
 		class ProjectComparatorDeadline : public ProjectComparator
 		{
 		public:
+			///comparacao entre objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project& t1, const Project& t2);
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
+			///@return abreviacao do comparador
 			string getAbbreviation() const;
 		};
-		///class de comparação que servirá para ordenar os projectos por data estimada de terminacao do projecto
+		///class de comparacao que servira para ordenar os projectos por data estimada de terminacao do projecto
 		class ProjectComparatorTimeToFinish : public ProjectComparator
 		{
 		public:
+			///comparacao entre objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project& t1, const Project& t2);
+			///comparacao entre apontadores para objetos da classe
+			///@param t1 objeto 1
+			///@param t2 objeto 2
+			///@return verdadeiro se objeto 1 < objeto 2
 			bool operator()(const Project* t1, const Project* t2);
+			///@return abreviacao do comparador
 			string getAbbreviation() const;
 		};
 };

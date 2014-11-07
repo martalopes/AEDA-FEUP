@@ -16,13 +16,14 @@ const int SPACE = 32;
 const int BACKSPACE = 8;
 const int ESCAPE = 27;
 
-//largura do ecra
+///largura do ecra
 const int WIDTH = 80;
 
-//usado para guardar o numero de '\n' ate ao fim do ecra atual
+///usado para guardar o numero de '\n' ate ao fim do ecra atual
 int end_of_screen = 24;
+///cor atual
 int current_color = 7;
-
+///@return uma string de tamanho n, com s1 no inicio e s2 no fim
 string normalize(const string& s1, const string& s2, int n)
 {
 	string s_out = s1;
@@ -35,7 +36,6 @@ string normalize(const string& s1, const string& s2, int n)
 	}
 	return s_out;
 }
-
 void ClearScreen() /* http://www.cplusplus.com/articles/4z18T05o/ */
 {
 	HANDLE                     hStdOut;
@@ -72,8 +72,7 @@ void ClearScreen() /* http://www.cplusplus.com/articles/4z18T05o/ */
 	/* Move the cursor home */
 	SetConsoleCursorPosition(hStdOut, homeCoords);
 }/* http://www.cplusplus.com/articles/4z18T05o/ */
-
-//centra uma string
+///centra uma string
 ostream& operator>>(ostream& out, string s)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
@@ -86,13 +85,13 @@ ostream& operator>>(ostream& out, string s)
 	out << s;
 	return out;
 }
-//usado em vez de el de modo a contabilizar o numero de '\n' ate ao fim do ecra atual
+///usado em vez de el de modo a contabilizar o numero de '\n' ate ao fim do ecra atual
 ostream& el(ostream& out)
 {
 	end_of_screen--;
 	return out << endl;
 }
-//move o cursor ate ao fim do ecra e restaura end_of_screen
+///move o cursor ate ao fim do ecra e restaura end_of_screen
 void go_end_of_screen()
 {
 	while (end_of_screen > 0)
@@ -110,11 +109,11 @@ void changecolor(string color)
 		current_color = 112;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), current_color);
 }
-
+///mostra um menu generico e atualiza o estado
 void genericmenu(int &state, Application &app, string name, string text, vector<string> options, vector<int> results)
 {
 	bool more = true;//falso termina a funcao
-	bool change = false; //indica se é preciso voltar imprimir o ecra
+	bool change = false; //indica se e preciso voltar imprimir o ecra
 	Cursor cursor1(results.size() - 1);
 	while (more)
 	{
@@ -161,167 +160,15 @@ void genericmenu(int &state, Application &app, string name, string text, vector<
 		ClearScreen();
 	}
 }
-
-
-//void menuProject(int& state, Application& app){
-//
-//	char c;
-//	string nome;
-//	do{
-//		system("CLS");
-//		cout << "View more information? Y-yes, N-no" << el;
-//		c = getch();
-//	} while (c != 'Y' && c != 'N');
-//	if (c == 'Y')
-//	{
-//		system("CLS");
-//		cout << "\nProject's name? " << el;
-//		cin >> nome;
-//		for (size_t i = 0; i < app.getProjects().size(); i++)
-//		{
-//			if (nome == app.getProjects().at(i)->getName())
-//			{
-//				cout << "\n" << app.getProjects().at(i)->getName() << el;
-//				cout << " - " << app.getProjects().at(i)->getType();
-//				cout << " - " << app.getProjects().at(i)->getClient();
-//				cout << " - " << app.getProjects().at(i)->getCost();
-//				cout << " - " << app.getProjects().at(i)->getDeadline().printDate2();
-//
-//			}
-//		}
-//
-//	}
-//	if (c == 'N')
-//		return;
-//
-//}
-//
-//void menuClient(){
-//	int id;
-//	string password;
-//	char c;
-//
-//	while (true){
-//		system("CLS");
-//		cout << "MENU:" << el;
-//		cout << "ID: ";
-//		cin >> id;
-//		cout << "Password: " << el;
-//		cin >> password;
-//
-//
-//		for (size_t i = 0; i < Application::clients.size(); i++)
-//		{
-//			if (id == Application::clients.at(i)->getID())
-//			{
-//				if (password == Application::clients.at(i)->getPassword()){
-//					do{
-//						system("CLS");
-//						cout << "MENU:" << el;
-//						cout << "[1] Creat a new project " << el;
-//						cout << "[2] List of created projects " << el;
-//						cout << "[3] Go Back " << el;
-//						c = getch();
-//					} while (c != '1' && c != '2' && c != '3');
-//				}
-//				else {
-//					system("CLS");
-//					cout << "Wrong password... " << el;
-//					return;
-//				}
-//			}
-//
-//		}
-//
-//		if (c == '1')
-//		{
-//			string name;
-//			string type;
-//			int day, month, year, hours, minutes, seconds;
-//
-//			system("CLS");
-//			cout << "\nName: ";
-//			cin >> name;
-//			cout << "\nType: ";
-//			cin >> type;
-//			cout << "\nDeadline: \nDay ";
-//			cin >> day;
-//			cout << "\nMonth ";
-//			cin >> month;
-//			cout << "\nYear ";
-//			cin >> year;
-//			cout << "\nHours ";
-//			cin >> hours;
-//			cout << "\nMinutes ";
-//			cin >> minutes;
-//			cout << "\nSeconds ";
-//			cin >> seconds;
-//
-//			Date deadline(day, month, year, hours, minutes, seconds);
-//			Project* p = new Project(name, type, deadline, 0);
-//			Application::addProject(p);
-//
-//			return;
-//		}
-//		if (c == '2')
-//		{
-//			system("CLS");
-//			for (size_t i = 0; i < Application::clients.size(); i++)
-//			{
-//				if (id == Application::clients.at(i)->getID())
-//				{
-//					for (size_t i = 0; i < projects.size(); i++)
-//					{
-//						cout << "\n" << Application::projects.at(i)->getName() << el;
-//						cout << " - " << Application::projects.at(i)->getType() << el;
-//					}
-//				}
-//			}
-//
-//			return;
-//		}
-//		if (c == '3')
-//			menu();
-//	}
-//}
-//
-//void menu(){
-//	system("CLS");
-//	char c;
-//	do {
-//		//gotoXY("MENU:", 1);
-//		cout << "MENU:" << el;
-//		cout << "[1] Client " << el;
-//		cout << "[2] Colaborator " << el;
-//		cout << "[3] Manager " << el;
-//		cout << "[4] Admin " << el;
-//		cout << "[5] Go Back " << el;
-//
-//	} while (c != '1' && c != '2' && c != '3' && c != '4' && c != '5');
-//
-//	if (c == '1')
-//
-//	if (c == '2')
-//
-//	if (c == '3')
-//
-//	if (c == '4')
-//
-//	if (c == '5')
-//		menu();
-//
-//}
 enum states
 {
 	EXIT = -1, ESCAPEMENU, MAINMENU1, CLIENTLOGINMENU, TASKMENU, COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, VIEWPROJECTINFO, COLLABORATORLOGINMENU, PERSONALINFOMENU, COLLABORATORMENU, MANAGERLOGINMENU, ADMINLOGINMENU, CLIENTMENU, NEWPROJECTMENU, PROJECTLISTMENU, PROJECTINFO,
 	ADMINMENU, ADMINCLIENTMENU, ADMINSELECTCLIENT, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ADMINCREATECLIENT, ADMINCREATEPROJECT, ADMINSELECTPROJECT, ADMINCREATETASK, ADMINSELECTTASK, ADMINCREATECOLLABORATOR, ADMINSELECTCOLLABORATOR, ADMINEDITCLIENT, ADMINEDITPROJECT, ADMINEDITTASK, ADMINEDITCOLLABORATOR, TICK
 };
-
 static Client* currentclient = NULL;
 static Project* currentproject = NULL;
 static Task* currenttask = NULL;
 static Collaborator* currentcollaborator = NULL;
-
 void createprojectmenu(int& state, Application& app)
 {
 	string name;
@@ -503,140 +350,6 @@ void createcollaboratormenu(int& state, Application& app)
 	}
 	state = ADMINCOLLABORATORMENU;
 }
-//void clientlogin(int& state, Application& app)
-//{
-//	string ID;
-//	string password;
-//	int id;
-//	do
-//	{
-//		system("CLS");
-//		cout << el << el >> "Please enter Client ID" << el << el << el;
-//		cout << "                   >  ";
-//		getline(cin, ID);
-//		if (ID == "")
-//		{
-//			state = MAINMENU1; return;
-//		}
-//		stringstream s;
-//		s << ID;
-//		s >> id;
-//	} while ((currentclient = Application::getClientPtr(id)) == NULL);
-//	do
-//	{
-//		system("CLS");
-//		cout << el << el >> "Please enter Client ID" << el << el << el;
-//		cout << "                   >  " << currentclient->getID();
-//		cout << el << el >> "Please enter password" << el << el << el;
-//		cout << "                   >  ";
-//		getline(cin, password);
-//		if (password == "")
-//			return;
-//	} while (!currentclient->verifyPassword(password));
-//	state = CLIENTMENU;
-//}
-
-//void collaboratorlogin(int& state, Application& app)
-//{
-//	string ID;
-//	string password;
-//	int id;
-//	do
-//	{
-//		system("CLS");
-//		cout << el << el >> "Please enter Collaborator ID" << el << el << el;
-//		cout << "                   >  ";
-//		getline(cin, ID);
-//		if (ID == "")
-//		{
-//			state = MAINMENU1; return;
-//		}
-//		stringstream s;
-//		s << ID;
-//		s >> id;
-//	} while ((currentcollaborator = Application::getCollaboratorPtr(id)) == NULL);
-//	do
-//	{
-//		system("CLS");
-//		cout << el << el >> "Please enter Collaborator ID" << el << el << el;
-//		cout << "                   >  " << currentcollaborator->getID();
-//		cout << el << el >> "Please enter password" << el << el << el;
-//		cout << "                   >  ";
-//		getline(cin, password);
-//		if (password == "")
-//			return;
-//	} while (!currentcollaborator->verifyPassword(password));
-//	state = COLLABORATORMENU;
-//}
-
-void personalinfo(int& state, Application& app)
-{
-	system("CLS");
-	cout << el << el;
-	cout << el << el >> "Max Weekly Hours: " + to_string(currentcollaborator->getMaxWeeklyHours()) << el;
-	cout << el << el >> "Working Hours: " + to_string(currentcollaborator->getWorkingHours()) << el;
-	cout << el << el >> "Cost: " + to_string(currentcollaborator->getCost()) << el;
-	cin.get();
-	state = COLLABORATORMENU;
-}
-
-void colprojdate(int& state, Application& app)
-{
-	vector <Project *> pdate;
-
-	for (size_t i = 0; i < currentcollaborator->getProjects().size(); i++)
-	{
-		pdate.push_back(currentcollaborator->getProjects()[i]);
-	}
-
-	sort(pdate.begin(), pdate.end(), Project::ProjectComparatorDeadline());
-
-	for (size_t i = 0; i < pdate.size(); i++)
-	{
-		cout << i + 1 << " - " << "Nome: " << pdate[i]->getName() << " | " << "Tipo: " << pdate[i]->getType() << " | " << "Prazo: " << pdate[i]->getDeadline().printDate2() << el;
-	}
-	cin.get();
-	state = COLLABORATORMENU;
-}
-
-void colprojtype(int& state, Application& app)
-{
-	vector <Project *> ptype;
-
-	for (size_t i = 0; i < currentcollaborator->getProjects().size(); i++)
-	{
-		ptype.push_back(currentcollaborator->getProjects()[i]);
-	}
-
-	sort(ptype.begin(), ptype.end(), Project::ProjectComparatorType());
-
-	for (size_t i = 0; i < ptype.size(); i++)
-	{
-		cout << i + 1 << " - " << "Nome: " << ptype[i]->getName() << " | " << "Tipo: " << ptype[i]->getType() << " | " << "Prazo: " << ptype[i]->getDeadline().printDate2() << el;
-	}
-	cin.get();
-	state = COLLABORATORMENU;
-}
-
-void colprojname(int& state, Application& app)
-{
-	system("CLS");
-	vector <Project *> pname;
-
-	for (size_t i = 0; i < currentcollaborator->getProjects().size(); i++)
-	{
-		pname.push_back(currentcollaborator->getProjects()[i]);
-	}
-
-	sort(pname.begin(), pname.end(), Project::ProjectComparatorAlphabetic());
-
-	for (size_t i = 0; i < pname.size(); i++)
-	{
-		cout << i + 1 << " - " << "Nome: " << pname[i]->getName() << " | " << "Tipo: " << pname[i]->getType() << " | " << "Prazo: " << pname[i]->getDeadline().printDate2() << el;
-	}
-	cin.get();
-	state = COLLABORATORMENU;
-}
 vector<Project::ProjectComparator*> getProjectComparators()
 {
 	vector<Project::ProjectComparator*> out;
@@ -678,7 +391,6 @@ vector<Task::TaskComparator*> getTaskComparators()
 	out.push_back(p7);
 	return out;
 }
-
 vector<Client::ClientComparator*> getClientComparators()
 {
 	vector<Client::ClientComparator*> out;
@@ -713,7 +425,6 @@ vector<Collaborator::CollaboratorComparator*> getCollaboratorComparators()
 	out.push_back(p8);
 	return out;
 }
-
 template<class T>
 vector<vector<string>> prep_list(vector<T*> v_in)
 {
@@ -734,8 +445,6 @@ vector<vector<string>> prep_list(vector<T*> v_in)
 		v_out.push_back(v);
 	return v_out;
 }
-
-
 void clientprojectlist(int& state, Application& app)
 {
 	bool more = true;
@@ -872,7 +581,6 @@ void clientprojectlist(int& state, Application& app)
 		delete comps.at(i);
 	}
 }
-
 void fullprojectlist(int& state, Application& app)
 {
 	bool more = true;
@@ -1153,7 +861,6 @@ void fullclientlist(int& state, Application& app)
 		delete comps.at(i);
 	}
 }
-
 void fullcollaboratorlist(int& state, Application& app)
 {
 	bool more = true;
@@ -1294,7 +1001,6 @@ void fullcollaboratorlist(int& state, Application& app)
 		delete comps.at(i);
 	}
 }
-
 void fulltasklist(int& state, Application& app)
 {
 	bool more = true;
@@ -1637,8 +1343,6 @@ void projectinfo(int &state, Application& app)
 	ClearScreen();
 	//state = ADMINSELECTPROJECT;
 }
-
-
 void clientcommand(int& state)
 {
 	string line;
@@ -1721,7 +1425,6 @@ void clientcommand(int& state)
 	}*/
 
 }
-
 void clientinfo(int &state, Application& app)
 {
 	ClearScreen();
@@ -1741,7 +1444,6 @@ void clientinfo(int &state, Application& app)
 	ClearScreen();
 	//state = ADMINSELECTCLIENT;
 }
-
 void collaboratorcommand(int& state)
 {
 	string line;
@@ -1848,7 +1550,6 @@ void collaboratorcommand(int& state)
 	}*/
 
 }
-
 void collaboratorinfo(int &state, Application& app)
 {
 	ClearScreen();
@@ -2157,11 +1858,10 @@ void taskinfo(int& state, Application& app)
 	ClearScreen();
 	//state = ADMINSELECTTASK;
 }
-
 void tickmenu(int& state, Application& app)
 {
 		bool more = true;//falso termina a funcao
-		bool change = false; //indica se é preciso voltar imprimir o ecra
+		bool change = false; //indica se e preciso voltar imprimir o ecra
 		vector<int> results = { TICK, ADMINMENU };
 		vector<string> options = { "Tick", "Back" };
 		Cursor cursor1(results.size() - 1);
@@ -2221,49 +1921,11 @@ void menus(int& state, Application& app)
 	{
 		switch (state)
 		{
+		case ESCAPEMENU:
+			genericmenu(state, app, "", "Are you sure you want to Exit this Application?", { "No", "Yes" }, { ADMINMENU, EXIT });
+			break;
 		case MAINMENU1:
 			state = ADMINMENU;
-			break;
-			genericmenu(state, app, "", "Please select an Option:", { "Client Login", "Collaborator Login", "Manager Login", "Admin Login", "Quit" }, { CLIENTLOGINMENU, COLLABORATORLOGINMENU, MANAGERLOGINMENU, ADMINLOGINMENU, ESCAPEMENU });
-			break;
-		case ESCAPEMENU:
-			genericmenu(state, app, "", "Are you sure you want to Exit this Application?", { "No", "Yes" }, { MAINMENU1, EXIT });
-			break;
-		case CLIENTLOGINMENU:
-			//clientlogin(state, app);
-			break;
-		case CLIENTMENU:
-			genericmenu(state, app, "", "Please select an option:", { "Create new Project", "List of Projects", "Back" }, { NEWPROJECTMENU, PROJECTLISTMENU, MAINMENU1 });
-			break;
-		case COLLABORATORLOGINMENU:
-			//collaboratorlogin(state, app);
-			break;
-		case COLLABORATORMENU:
-			genericmenu(state, app, "", "Please select an option:", { "View personal information", "View Project information", "Back" }, { PERSONALINFOMENU, VIEWPROJECTINFO, MAINMENU1 });
-			break;
-		case PERSONALINFOMENU:
-			personalinfo(state, app);
-			break;
-		case VIEWPROJECTINFO:
-			genericmenu(state, app, "", "Please select an option:", { "List of projects by date", "List of projects by type", "List of projects by name", "Back" }, { COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, MAINMENU1 });
-			break;
-		case COLPROJBYDATE:
-			colprojdate(state, app);
-			break;
-		case COLPROJBYTYPE:
-			colprojtype(state, app);
-			break;
-		case COLPROJBYNAME:
-			colprojname(state, app);
-			break;
-		case NEWPROJECTMENU:
-			createprojectmenu(state, app);
-			break;
-		case PROJECTLISTMENU:
-			clientprojectlist(state, app);
-			break;
-		case PROJECTINFO:
-			projectinfo(state, app);
 			break;
 		case ADMINMENU:
 			currentclient = NULL;
@@ -2329,7 +1991,3 @@ void menus(int& state, Application& app)
 		}
 	}
 }
-//enum states2
-//{
-//	EXIT = -1, ESCAPEMENU, MAINMENU1, CLIENTLOGINMENU, COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, VIEWPROJECTINFO, COLLABORATORLOGINMENU, PERSONALINFOMENU, COLLABORATORMENU, MANAGERLOGINMENU, ADMINLOGINMENU, CLIENTMENU, NEWPROJECTMENU, PROJECTLISTMENU, PROJECTINFO
-//};

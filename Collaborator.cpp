@@ -56,8 +56,6 @@ bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
 		return false;
 	tasks.push_back(make_pair(t1, hours));
 	updateProjects();
-	//if (t1->getProject() != NULL)
-	//addProject(t1->getProject()); 
 	if (addCollaborator)
 		t1->addCollaborator(this, hours, false);
 	workinghours += hours;
@@ -102,20 +100,20 @@ bool Collaborator::removeTask(Task* t, bool removeCollaborator)
 	}
 	return false;
 }
-bool Collaborator::removeProject(Project* p, bool removeCollaborator)
-{
-	if (p == NULL)
-		throw CollaboratorExcept("Invalid Project being removed from collaborator");
-	for (size_t i = 0; i < projects.size(); ++i)
-	if (*projects.at(i) == *p)
-	{
-		projects.erase(projects.begin() + i);
-		if (removeCollaborator)
-			return p->removeCollaborator(this, false);
-		return true;
-	}
-	return false;
-}
+//bool Collaborator::removeProject(Project* p, bool removeCollaborator)
+//{
+//	if (p == NULL)
+//		throw CollaboratorExcept("Invalid Project being removed from collaborator");
+//	for (size_t i = 0; i < projects.size(); ++i)
+//	if (*projects.at(i) == *p)
+//	{
+//		projects.erase(projects.begin() + i);
+//		if (removeCollaborator)
+//			return p->removeCollaborator(this, false);
+//		return true;
+//	}
+//	return false;
+//}
 bool Collaborator::changeTaskHours(Task* t1, unsigned int hours)
 {
 	for (size_t i = 0; i < this->tasks.size(); ++i)
@@ -134,22 +132,22 @@ string Collaborator::toString() const
 {
 	return normalize(to_string(ID), name, 30);
 }
-bool Collaborator::addProject(Project* p, bool addCollaborator)
-{
-	if (p == NULL)
-		throw Collaborator::CollaboratorExcept("Invalid Project being added to Collaborator");
-	for (size_t i = 0; i < this->projects.size(); ++i)
-	{
-		if (*projects.at(i) == *p)
-		{
-			return false;
-		}
-	}
-	projects.push_back(p);
-	if (addCollaborator)
-		p->addCollaborator(this, false);
-	return true;
-}
+//bool Collaborator::addProject(Project* p, bool addCollaborator)
+//{
+//	if (p == NULL)
+//		throw Collaborator::CollaboratorExcept("Invalid Project being added to Collaborator");
+//	for (size_t i = 0; i < this->projects.size(); ++i)
+//	{
+//		if (*projects.at(i) == *p)
+//		{
+//			return false;
+//		}
+//	}
+//	projects.push_back(p);
+//	if (addCollaborator)
+//		p->addCollaborator(this, false);
+//	return true;
+//}
 
 void Collaborator::connect()
 {
@@ -175,10 +173,10 @@ void Collaborator::connect()
 
 bool Collaborator::removeTrace()
 {
-	for (size_t i = 0; i < projects.size(); i++)
+	/*for (size_t i = 0; i < projects.size(); i++)
 	{
-		projects.at(i)->removeCollaborator(this, false);
-	}
+	projects.at(i)->removeCollaborator(this, false);
+	}*/
 	for (size_t i = 0; i < tasks.size(); i++)
 	{
 		tasks.at(i).first->removeCollaborator(this, false);
@@ -308,10 +306,66 @@ vector<Project*> Collaborator::calculateProjects()const
 	}
 	return out;
 }
-
 Collaborator::CollaboratorExcept::CollaboratorExcept(string description) :description(description){}
 string  Collaborator::CollaboratorExcept::operator()(){ return description; }
 
 bool Collaborator::CollaboratorComparatorAlphabetic ::operator()(const Collaborator& t1, const Collaborator& t2) { return t1.name < t2.name; }
 bool Collaborator::CollaboratorComparatorAlphabetic ::operator()(const Collaborator* t1, const Collaborator* t2) { return t1->name < t2->name; }
 string Collaborator::CollaboratorComparatorAlphabetic::getAbbreviation() const{ return "Alph"; }
+
+bool Collaborator::CollaboratorComparatorCost ::operator()(const Collaborator& t1, const Collaborator& t2) { return t1.workinghours < t2.workinghours; }
+bool Collaborator::CollaboratorComparatorCost ::operator()(const Collaborator* t1, const Collaborator* t2) { return t1->workinghours < t2->workinghours; }
+string Collaborator::CollaboratorComparatorCost::getAbbreviation() const{ return "Cost"; }
+
+bool Collaborator::CollaboratorComparatorID :: operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getID() < t2.getID(); }
+bool Collaborator::CollaboratorComparatorID :: operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getID() < t2->getID(); }
+string Collaborator::CollaboratorComparatorID::getAbbreviation() const{ return "ID"; }
+
+bool  Collaborator::CollaboratorComparatorWorkinghours ::operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getWorkingHours() < t2.getWorkingHours(); }
+bool Collaborator::CollaboratorComparatorWorkinghours ::operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getWorkingHours() < t2->getWorkingHours(); }
+string Collaborator::CollaboratorComparatorWorkinghours::getAbbreviation() const{ return "Wrk Hrs"; }
+
+bool  Collaborator::CollaboratorComparatorMaxWeeklyHours ::operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getMaxWeeklyHours() < t2.getMaxWeeklyHours(); }
+bool Collaborator::CollaboratorComparatorMaxWeeklyHours ::operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getMaxWeeklyHours() < t2->getMaxWeeklyHours(); }
+string Collaborator::CollaboratorComparatorMaxWeeklyHours::getAbbreviation() const{ return "Week Hrs"; }
+
+bool Collaborator::CollaboratorComparatorNumTasks ::operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getTasks().size() < t2.getTasks().size(); }
+bool Collaborator::CollaboratorComparatorNumTasks ::operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getTasks().size() < t2->getTasks().size(); }
+string Collaborator::CollaboratorComparatorNumTasks::getAbbreviation() const{ return "N. Tasks"; }
+
+bool Collaborator::CollaboratorComparatorExperience ::operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getFinishedTasks().size() < t2.getFinishedTasks().size(); }
+bool Collaborator::CollaboratorComparatorExperience ::operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getFinishedTasks().size() < t2->getFinishedTasks().size(); }
+string Collaborator::CollaboratorComparatorExperience::getAbbreviation() const{ return "Exp"; }
+
+bool Collaborator::CollaboratorComparatorNumProjects::operator()(const Collaborator& t1, const Collaborator& t2) { return t1.getProjects().size() < t2.getProjects().size(); }
+bool Collaborator::CollaboratorComparatorNumProjects::operator()(const Collaborator* t1, const Collaborator* t2) { return t1->getProjects().size() < t2->getProjects().size(); }
+string Collaborator::CollaboratorComparatorNumProjects::getAbbreviation() const{ return "N. Proj"; }
+
+Programmer::Programmer(string name, int maxweeklyhours) : Collaborator(name, maxweeklyhours){}
+Programmer::Programmer(string name, int maxweeklyhours, int setID) : Collaborator(name, maxweeklyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; }
+Programmer::Programmer(int i) : Collaborator(i){}
+Programmer::Programmer() : Collaborator(){}
+double Programmer::getCost() const { return PROGRAMMER_COST; }
+string Programmer::getTitle() const{ return "Programmer"; }
+
+
+Architect::Architect(string name, int maxweeklyhours) : Collaborator(name, maxweeklyhours){}
+Architect::Architect(string name, int maxweeklyhours, int setID) : Collaborator(name, maxweeklyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; }
+Architect::Architect(int i) : Collaborator(i){}
+Architect::Architect() : Collaborator(){}
+double Architect::getCost() const { return ARCHITECT_COST; }
+string Architect::getTitle() const{ return "Architect"; }
+
+Manager::Manager(string name, int maxweeklyhours) : Collaborator(name, maxweeklyhours){}
+Manager::Manager(string name, int maxweeklyhours, int setID) : Collaborator(name, maxweeklyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; }
+Manager::Manager(int i) : Collaborator(i){}
+Manager::Manager() : Collaborator(){}
+double Manager::getCost() const { return MANAGER_COST; }
+string Manager::getTitle() const{ return "Manager"; }
+
+Tester::Tester(string name, int maxweeklyhours) : Collaborator(name, maxweeklyhours){}
+Tester::Tester(string name, int maxweeklyhours, int setID) : Collaborator(name, maxweeklyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; }
+Tester::Tester(int i) : Collaborator(i){}
+Tester::Tester() : Collaborator(){}
+double Tester::getCost() const { return TESTER_COST; }
+string Tester::getTitle() const{ return "Tester"; }
