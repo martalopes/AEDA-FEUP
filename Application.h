@@ -171,11 +171,8 @@ public:
 	///@param fout output file stream
 	static void writeCollaborators(ofstream& fout);
 
-<<<<<<< HEAD
 	static void writeFormerCollaborators(ofstream& fout);
 
-=======
->>>>>>> origin/master
 	///escreve os tarefas do sistema em ficheiros
 	///@param fout output file stream
 	static void writeTasks(ofstream& fout);

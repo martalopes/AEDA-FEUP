@@ -114,11 +114,7 @@ public:
 	///associa cliente a projeto
 	///@param c cliente a ser associado
 	///@param addProject indica se o projeto deve ser adicionado ao cliente
-<<<<<<< HEAD
 	///@throw cliente nao existe
-=======
-	///@throw cliente nao existre
->>>>>>> origin/master
 	///@return sucesso da operacao
 	bool setClient(Client* c, bool addProject = true);
 
