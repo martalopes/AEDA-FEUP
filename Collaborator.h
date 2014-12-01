@@ -114,6 +114,16 @@ public:
 	///@return sucesso da operacao
 	bool removeTask(Task* t, bool removeCollaborator = true);
 
+<<<<<<< HEAD
+=======
+	///remove projeto do colaborador
+	///@param p projeto a ser removida
+	///@param removeCollaborator indica se o colaborador deve ser removido do projeto
+	///@throw projeto nao existe
+	///@return sucesso da operacao
+	//bool removeProject(Project* p, bool removeCollaborator = true);
+
+>>>>>>> origin/master
 	///remove todas as referencias ao colaborador noutros objetos
 	///@return sucesso da operacao
 	bool removeTrace();
@@ -123,7 +133,18 @@ public:
 	///@param hours novas horas da tarefa
 	///@throw tarefa nula
 	///@return sucesso da operacao
+<<<<<<< HEAD
 	bool changeTaskHours(Task* t1, unsigned int hours);
+=======
+	bool changeTaskHours(Task* t1, unsigned int hours);////
+
+	///adiciona projeto ao colaborador
+	///@param p projeto
+	///@param addCollaborator indica se colaborador deve ser adicionado ao projeto
+	///@throw projeto nao existe
+	///@return sucesso da operacao
+	//bool addProject(Project* p, bool addCollaborator = true);
+>>>>>>> origin/master
 
 	///cria um colaborador aleatorio e retorna um apontador para ele
 	///@param i indice do colaborador

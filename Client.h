@@ -83,7 +83,11 @@ public:
 
 	/// escrita de todos os dados do client, no lugar dos apontadores sao escritos os IDs dos objetos
 	/// @param out stream de saida
+<<<<<<< HEAD
 	/// @param c cliente a ser escrito
+=======
+	/// @param p client a ser escrito
+>>>>>>> origin/master
 	/// @return stream de saida
 	friend ostream & operator<<(ostream& out, const Client& c);
 
