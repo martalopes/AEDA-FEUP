@@ -7,7 +7,8 @@
 #include "Collaborator.h"
 #include "Task.h"
 #include "Date.h"
-
+#include "BST.h"
+#include "SmartPtr.h"
 
 #include <string>
 #include <utility>
@@ -16,6 +17,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <algorithm>
+#include <unordered_set>
 
 #define NUM_PROJECTS 10
 #define NUM_CLIENTS 5
@@ -24,6 +26,16 @@
 
 using namespace std;
 
+class Collaborator;
+
+struct CollaboratorEqual
+{
+	bool operator()(Collaborator* const c1, Collaborator* const c2) const;
+};
+struct  CollaboratorHash
+{
+	size_t operator()(Collaborator* const  c) const;
+};
 
 class Application
 {
@@ -57,10 +69,21 @@ public:
 	static void clear();
 	///@return projetos
 	static vector<Project*> getProjects();
-	///@return clientes
-	static vector<Client*> getClients();
+	///@return clientes /////////////////////////////////////////////////////////////////////
+	static vector<Client*> getClients(BSTItr<SmartPtr<Client>> * it);
+	static vector<Client*> getClients_InOrder();
+	static vector<Client*> getClients_PreOrder();
+	static vector<Client*> getClients_PostOrder();
+	static vector<Client*> getClients_Level();
+
+	static void fillBST();
+	////////////////////////////////////////////////////////////////////
 	///@return colaboradores
 	static vector<Collaborator*> getCollaborators();
+
+	static vector<Collaborator*> getFormerCollaborators();
+
+
 	///@return tarefas
 	static vector<Task*> getTasks();
 	/// obter um projeto a partir do seu ID
@@ -109,41 +132,25 @@ public:
 	
 	/// remove projeto da aplicacao
 	/// @throw projeto nao existe
-<<<<<<< HEAD
 	/// @param p apontador para o projeto
-=======
-	/// @param apontador para o projeto
->>>>>>> origin/master
 	/// @return sucesso da operacao
 	static bool removeProject(Project* p);
 
 	/// remove cliente da aplicacao
 	/// @throw cliente nao existe
-<<<<<<< HEAD
 	/// @param c apontador para o cliente
-=======
-	/// @param apontador para o cliente
->>>>>>> origin/master
 	/// @return sucesso da operacao
 	static bool removeClient(Client* c);
 
 	/// remove tarefa da aplicacao
 	/// @throw tarefa nao existe
-<<<<<<< HEAD
 	/// @param t apontador para a tarefa
-=======
-	/// @param apontador para a tarefa
->>>>>>> origin/master
 	/// @return sucesso da operacao
 	static bool removeTask(Task* t);
 
 	/// remove colaborador da aplicacao
 	/// @throw colaborador nao existe
-<<<<<<< HEAD
 	/// @param c apontador para o colaborador
-=======
-	/// @param apontador para o colaborador
->>>>>>> origin/master
 	/// @return sucesso da operacao
 	static bool removeCollaborator(Collaborator* c);
 
@@ -153,7 +160,6 @@ public:
 	///escreve os dados do sistema em ficheiros
 	static void writeFiles();
 	///escreve os projetos do sistema em ficheiros
-<<<<<<< HEAD
 	///@param fout output file stream
 	static void writeProjects(ofstream& fout);
 
@@ -165,23 +171,10 @@ public:
 	///@param fout output file stream
 	static void writeCollaborators(ofstream& fout);
 
+	static void writeFormerCollaborators(ofstream& fout);
+
 	///escreve os tarefas do sistema em ficheiros
 	///@param fout output file stream
-=======
-	///@param output file stream
-	static void writeProjects(ofstream& fout);
-
-	///escreve os clientes do sistema em ficheiros
-	///@param output file stream
-	static void writeClients(ofstream& fout);
-
-	///escreve os colaboradores do sistema em ficheiros
-	///@param output file stream
-	static void writeCollaborators(ofstream& fout);
-
-	///escreve os tarefas do sistema em ficheiros
-	///@param output file stream
->>>>>>> origin/master
 	static void writeTasks(ofstream& fout);
 
 	/*leitura*/
@@ -190,58 +183,36 @@ public:
 	///le os projetos do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
-=======
-	///@param input file stream
->>>>>>> origin/master
 	static void readProjects(ifstream& fin);
 
 	///le os clientes do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
-=======
-	///@param input file stream
->>>>>>> origin/master
 	static void readClients(ifstream& fin);
 
 	///le os colaboradores do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
-=======
-	///@param input file stream
->>>>>>> origin/master
 	static void readCollaborators(ifstream& fin);
+
+	static void readFormerCollaborators(ifstream& fin);
 
 	///le os tarefas do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
-=======
-	///@param input file stream
->>>>>>> origin/master
 	static void readTasks(ifstream& fin);
 
 	///le a data do sistema
 	///@throw ficheiro nao existe
-<<<<<<< HEAD
 	///@param fin input file stream
 	static void readApp(ifstream& fin);
 	
 	///escreve a data do sistema
 	//@param fout output file stream
-=======
-	///@param input file stream
-	static void readApp(ifstream& fin);
-	
-	///escreve a data do sistema
-	//@param output file stream
->>>>>>> origin/master
 	static void writeApp(ofstream& fout);
 
 	///substitui os IDs nos atributos pelos apontadores para os objetos corretos
@@ -258,16 +229,19 @@ private:
 	///projetos guardados no sistema
 	static vector<Project*> projects;
 	///clientes guardados no sistema
-	static vector<Client*> clients;
+	static BST<SmartPtr<Client>> clients;
 	///colaboradores guardados no sistema
 	static vector<Collaborator*> collaborators;
 	///tarefas guaradas no sistema
 	static vector<Task*> tasks;
+
+	static unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual> former_collaborators;
 	///data atual
 	static Date d;
 	///apontador para o unico objeto da class
 	static Application* instance;
 };
+
 
 
 

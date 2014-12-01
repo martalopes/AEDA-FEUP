@@ -5,14 +5,12 @@ int Client::lastID = 0;
 Client::Client() :ID(0){}
 Client::Client(string name) :name(name), ID(++lastID){}
 Client::Client(string name, int setID) :name(name), ID(setID) { if (setID > lastID) lastID = setID; }
-
 Client::Client(int i)
 {
 	stringstream s1, s2;
 	s1 << "Name " << i;
 	*this = Client(s1.str());
 }
-
 string Client::getName() const { return this->name; }
 vector<Project*> Client::getProjects() const { return this->projects; }
 int Client::getID()const { return ID; }
@@ -20,7 +18,6 @@ void Client::setName(string name) { this->name = name; }
 bool Client::operator==(const Client& c2) const { return this->ID == c2.ID; }
 Client::ClientExcept::ClientExcept(string description) :description(description){}
 string  Client::ClientExcept::operator()(){ return description; }
-
 bool Client::addProject(Project* proj, bool setClient)
 	{
 	if (proj == NULL)
@@ -36,7 +33,6 @@ bool Client::addProject(Project* proj, bool setClient)
 			proj->setClient(this, false);
 		return true;
 	};
-
 bool Client::removeProject(Project* p, bool removeClient)
 {
 	if (p == NULL)
@@ -53,7 +49,6 @@ bool Client::removeProject(Project* p, bool removeClient)
 	}
 	return false;
 }
-
 void Client::connect()
 {
 	for (size_t i = 0; i < projects.size(); i++)
@@ -105,19 +100,44 @@ string Client::toString() const
 {
 	return normalize(to_string(ID), name, 30);
 };
-
 bool Client::ClientComparatorID ::operator()(const Client& c1, const Client& c2){ return c1.getID() < c2.getID(); }
 bool Client::ClientComparatorID ::operator()(const Client* c1, const Client* c2){ return c1->getID() < c2->getID(); }
 string Client::ClientComparatorID::getAbbreviation() const { return "ID"; }
-
 bool  Client::ClientComparatorAlphabetic ::operator()(const Client& c1, const Client& c2){ return c1.getName() < c2.getName(); }
 bool Client::ClientComparatorAlphabetic ::operator()(const Client* c1, const Client* c2){ return c1->getName() < c2->getName(); }
 string Client::ClientComparatorAlphabetic::getAbbreviation() const { return "Alph"; }
-
 bool Client::ClientComparatorNumProjects ::operator()(const Client& c1, const Client& c2){ return c1.getProjects().size() < c2.getProjects().size(); }
 bool Client::ClientComparatorNumProjects ::operator()(const Client* c1, const Client* c2){ return c1->getProjects().size() < c2->getProjects().size(); }
 string Client::ClientComparatorNumProjects::getAbbreviation() const { return "N Proj"; }
-
 bool Client::ClientComparatorTotal ::operator()(const Client& c1, const Client& c2){ return c1.getTotal() < c2.getTotal(); }
 bool Client::ClientComparatorTotal ::operator()(const Client* c1, const Client* c2){ return c1->getTotal() < c2->getTotal(); }
 string Client::ClientComparatorTotal::getAbbreviation() const { return "Total"; }
+bool Client::operator < (const Client& c2) const
+{
+	double total1 = 0; 
+	double total2 = 0;
+	int numprojects1 = 0;
+	int numprojects2 = 0;
+	for (size_t i = 0; i < this->getProjects().size(); i++)
+	{
+		if (this->getProjects().at(i)->isCompleted())
+		{
+			numprojects1++;
+			total1 += this->getProjects().at(i)->getCost();
+		}
+	}
+	for (size_t i = 0; i < c2.getProjects().size(); i++)
+	{
+		if (c2.getProjects().at(i)->isCompleted())
+		{
+			numprojects2++;
+			total2 += c2.getProjects().at(i)->getCost();
+		}
+	}
+	if (total1 == total2 && numprojects1 == numprojects2)
+		return this->ID < c2.ID;
+	if (total1 == total2)
+		return numprojects1 > numprojects2;
+	else return total1 > total2;
+	return false;
+}

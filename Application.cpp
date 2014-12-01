@@ -2,14 +2,26 @@
 
 
 vector<Project*> Application::projects;
-vector<Client*> Application::clients;
+BST<SmartPtr<Client>> Application::clients(SmartPtr<Client>((Client*)NULL));
 vector<Collaborator*> Application::collaborators;
 vector<Task*> Application::tasks;
+unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual> Application::former_collaborators;
 Date Application::d;
 Application* Application::instance = NULL;
 
+static vector<Client*> tempclients;
+
 Application::ApplicationExcept::ApplicationExcept(string description) : description(description){};
 string Application::ApplicationExcept::operator()(){ return description; };
+
+bool CollaboratorEqual::operator()(Collaborator* const c1, Collaborator* const c2) const
+{
+	return  *c1 == *c2;
+}
+size_t CollaboratorHash::operator()(Collaborator* const c) const
+{
+	return (size_t)c->getID();
+}
 
 Application* Application::Instance()
 {
@@ -27,19 +39,80 @@ void Application::clear()
 {
 	for (size_t i = 0; i < projects.size(); i++)
 		delete projects.at(i);
-	for (size_t i = 0; i < clients.size(); i++)
-		delete clients.at(i);
+
+	BSTItrIn<SmartPtr<Client>> it(clients);
+	while (!it.isAtEnd())
+	{
+		it.retrieve().deletePtr();
+		it.advance();
+	}
+
 	for (size_t i = 0; i < collaborators.size(); i++)
 		delete collaborators.at(i);
 	for (size_t i = 0; i < tasks.size(); i++)
 		delete tasks.at(i);
 	projects.clear();
-	clients.clear();
+	clients.makeEmpty();
 	collaborators.clear();
 	tasks.clear();
 }
 vector<Project*> Application::getProjects()  { return projects; };
-vector<Client*> Application::getClients()  { return clients; };
+//vector<Client*> Application::getClients(BSTItr<SmartPtr<Client>> * it) 
+//{
+//	vector<Client*> out;
+//	while (!it->isAtEnd())
+//	{
+//		out.push_back(it->retrieve().getPointer());
+//		it->advance();
+//	}
+//	it->reset(clients);
+//	return out;
+//};
+
+vector<Client*> Application::getClients_InOrder()
+{
+	vector<Client*> out;
+	BSTItrIn<SmartPtr<Client>> it(clients);
+	while (!it.isAtEnd())
+	{
+		out.push_back(it.retrieve().getPointer());
+		it.advance();
+	}
+	return out;
+}
+vector<Client*> Application::getClients_PreOrder()
+{
+	vector<Client*> out;
+	BSTItrPre<SmartPtr<Client>> it(clients);
+	while (!it.isAtEnd())
+	{
+		out.push_back(it.retrieve().getPointer());
+		it.advance();
+	}
+	return out;
+}
+vector<Client*> Application::getClients_PostOrder()
+{
+	vector<Client*> out;
+	BSTItrPost<SmartPtr<Client>> it(clients);
+	while (!it.isAtEnd())
+	{
+		out.push_back(it.retrieve().getPointer());
+		it.advance();
+	}
+	return out;
+}
+vector<Client*> Application::getClients_Level()
+{
+	vector<Client*> out;
+	BSTItrLevel<SmartPtr<Client>> it(clients);
+	while (!it.isAtEnd())
+	{
+		out.push_back(it.retrieve().getPointer());
+		it.advance();
+	}
+	return out;
+}
 ///adaptacao de binary_search
 template<class T>
 T* binary_searchID(vector<T*> v, int ID)
@@ -58,37 +131,43 @@ T* binary_searchID(vector<T*> v, int ID)
 	return NULL; // nao encontrou
 }
 
-
 Project* Application::getProjectPtr(int ID)
 {
-	/*for (size_t i = 0; i < projects.size(); ++i)
-	if (projects.at(i)->getID() == ID)
-		return projects.at(i);
-	return NULL;*/
 	return binary_searchID(projects, ID);
 };
 Client* Application::getClientPtr(int ID)
 {
-	/*for (size_t i = 0; i < clients.size(); ++i)
-	if (clients.at(i)->getID() == ID)
-		return clients.at(i);
-	return NULL;*/
-	return binary_searchID(clients, ID);
+	if (tempclients.size() == 0)
+	{
+		BSTItrIn<SmartPtr<Client>> it(clients);
+		while (!it.isAtEnd())
+		{
+			if (it.retrieve()->getID() == ID)
+				return it.retrieve().getPointer();
+			it.advance();
+		}
+		return NULL;
+	}
+	else
+	{
+		 return binary_searchID(tempclients, ID);
+	}
 };
 Collaborator* Application::getCollaboratorPtr(int ID)
 {
-	//for (size_t i = 0; i < collaborators.size(); ++i)
-	//if (collaborators.at(i)->getID() == ID)
-	//	return collaborators.at(i);
-	//return NULL;
-	return binary_searchID(collaborators, ID);
+	Collaborator* out = binary_searchID(collaborators, ID);
+	if (out != NULL)
+		return out;
+	auto it = former_collaborators.begin();
+	for (; it != former_collaborators.end(); ++it)
+	{
+		if ((**it).getID() == ID)
+			return *it;
+	}
+	return NULL;
 };
 Task* Application::getTaskPtr(int ID)
 {
-	/*for (size_t i = 0; i < tasks.size(); ++i)
-	if (tasks.at(i)->getID() == ID)
-		return tasks.at(i);
-	return NULL;*/
 	return binary_searchID(tasks, ID);
 };
 void Application::addProject(Project* p)
@@ -100,10 +179,9 @@ void Application::addProject(Project* p)
 };
 void Application::addClient(Client* c)
 {
-	for (size_t i = 0; i < clients.size(); ++i)
-	if (*clients.at(i) == *c)
+	if (!clients.find(SmartPtr<Client>(c)).isNull())
 		throw ApplicationExcept("Client already exists");
-	clients.push_back(c);
+	else clients.insert(SmartPtr<Client>(c));
 };
 void Application::addCollaborator(Collaborator* c)
 {
@@ -166,42 +244,24 @@ bool Application::removeProject(Project* p)
 			i--;
 		}
 	}
-	for (size_t i = 0; i < projects.size(); i++)
-	{
-		if (*p == *projects.at(i))
-		{
-			projects.erase(projects.begin() + i);
-			delete p;
-			i--;
-		}
-	}
+	projects.erase(projects.begin() + j);
+	delete p;
 	return true;
 }
 bool Application::removeClient(Client* c)
 {
 	if (c == NULL)
 		throw ApplicationExcept("Invalid client being removed from Application");
-	size_t j = 0;
-	for (; j < clients.size(); j++)
-	{
-		if (*c == *clients.at(j))
-			break;
-	}
-	if (j == clients.size())
+	if (clients.find(SmartPtr<Client>(c)).isNull())
 		throw ApplicationExcept("Client being removed does not exist");
 	for (size_t i = 0; i < c->getProjects().size(); i++)
-		removeProject(c->getProjects().at(i));
-	for (size_t i = 0; i < clients.size(); i++)
 	{
-		if (*c == *clients.at(i))
-		{
-			clients.erase(clients.begin() + i);
-			delete c;
-			i--;
-			return true;
-		}
+		removeProject(c->getProjects().at(i));
+		i--;
 	}
-	return false;
+	clients.remove(SmartPtr<Client>(c));
+	delete c;
+	return true;
 }
 
 bool Application::removeCollaborator(Collaborator* c)
@@ -235,10 +295,19 @@ void Application::writeProjects(ofstream& fout)
 void Application::writeClients(ofstream& fout)
 {
 	fout.open("clients.txt");
-	fout << clients.size() << endl;
-	for (size_t i = 0; i < clients.size(); i++)
+	int numclients=0;
+	BSTItrIn<SmartPtr<Client>> it1(clients);
+	while (!it1.isAtEnd())
 	{
-		fout << *clients.at(i);
+		numclients++;
+		it1.advance();
+	}
+	fout << numclients << endl;
+	BSTItrIn<SmartPtr<Client>> it(clients);
+	while (!it.isAtEnd())
+	{
+		fout << *it.retrieve();
+		it.advance();
 	}
 	fout.close();
 }
@@ -249,6 +318,17 @@ void Application::writeCollaborators(ofstream& fout)
 	for (size_t i = 0; i < collaborators.size(); i++)
 	{
 		fout << *collaborators.at(i);
+	}
+	fout.close();
+}
+void Application::writeFormerCollaborators(ofstream& fout)
+{
+	fout.open("formercollaborators.txt");
+	fout << former_collaborators.size() << endl;
+	auto it = former_collaborators.begin();
+	for (; it != former_collaborators.begin(); ++it)
+	{
+		fout << **it;
 	}
 	fout.close();
 }
@@ -268,6 +348,7 @@ void Application::writeFiles()
 	writeProjects(fout);
 	writeClients(fout);
 	writeCollaborators(fout);
+	writeFormerCollaborators(fout);
 	writeTasks(fout);
 	writeApp(fout);
 	fout.close();
@@ -296,11 +377,17 @@ void Application::readClients(ifstream& fin)
 	unsigned int numclients = 0;
 	fin >> numclients;
 	fin.ignore();
+	//for (size_t i = 0; i < numclients; i++)
+	//{
+	//	Client* c = new Client();
+	//	fin >> *c;
+	//	clients.insert(SmartPtr<Client>(c));
+	//}
 	for (size_t i = 0; i < numclients; i++)
 	{
 		Client* c = new Client();
 		fin >> *c;
-		clients.push_back(c);
+		tempclients.push_back(c);
 	}
 	fin.close();
 }
@@ -319,6 +406,24 @@ void Application::readCollaborators(ifstream& fin)
 		Collaborator* c = Collaborator::newCollaboratorTitle(title);
 		fin >> *c;
 		collaborators.push_back(c);
+	}
+	fin.close();
+}
+void Application::readFormerCollaborators(ifstream& fin)
+{
+	fin.open("formercollaborators.txt");
+	if (!fin)
+		throw ApplicationExcept("formercollaborators.txt does not exist");
+	unsigned int numcollaborators = 0;
+	fin >> numcollaborators;
+	fin.ignore();
+	for (size_t i = 0; i < numcollaborators; i++)
+	{
+		string title;
+		getline(fin, title);
+		Collaborator* c = Collaborator::newCollaboratorTitle(title);
+		fin >> *c;
+		former_collaborators.insert(c);
 	}
 	fin.close();
 }
@@ -369,10 +474,15 @@ void Application::connect()
 		throw ApplicationExcept(e());
 	}
 	try{
-
-		for (size_t i = 0; i < clients.size(); i++)
+		//BSTItrIn<SmartPtr<Client>> it(clients);
+		//while (!it.isAtEnd())
+		//{
+		//	it.retrieve()->connect();
+		//	it.advance();
+		//}
+		for (size_t i = 0; i < tempclients.size(); i++)
 		{
-			clients.at(i)->connect();
+			tempclients.at(i)->connect();
 		}
 	}
 	catch (Client::ClientExcept& e)
@@ -384,6 +494,20 @@ void Application::connect()
 		for (size_t i = 0; i < collaborators.size(); i++)
 		{
 			collaborators.at(i)->connect();
+		}
+	}
+	catch (Collaborator::CollaboratorExcept& e)
+	{
+		throw ApplicationExcept(e());
+	}
+	try{
+		auto it = former_collaborators.begin();
+		for (; it!= former_collaborators.end(); ++it)
+		{
+			Collaborator* c = *it;
+			former_collaborators.erase(it);
+			c->connect();
+			former_collaborators.insert(c);
 		}
 	}
 	catch (Collaborator::CollaboratorExcept& e)
@@ -402,16 +526,25 @@ void Application::connect()
 		throw ApplicationExcept(e());
 	}
 }
+void Application::fillBST()
+{
+	for (size_t i = 0; i < tempclients.size(); i++)
+		clients.insert(SmartPtr<Client>(tempclients.at(i)));
+	tempclients.clear();
+}
+
 void Application::readFiles()
 {
 	clear();
 	ifstream fin;
 	readProjects(fin);
-	readClients(fin);
 	readCollaborators(fin);
+	readFormerCollaborators(fin);
+	readClients(fin);
 	readTasks(fin);
 	readApp(fin);
 	connect();
+	fillBST();
 }
 void Application::tick()
 {
@@ -438,16 +571,17 @@ void Application::genApplication(){
 	for (int i = 1; i <= numclients; i++)
 	{
 		Client* c = new Client(i);
-		clients.push_back(c);
+		clients.insert(SmartPtr<Client>(c));
 	}
 	for (int i = 1; i <= numtasks; i++)
 	{
 		Task* t = new Task(i);
 		tasks.push_back(t);
 	}
+	vector<Client*> clients_vector = getClients_InOrder();
 	for (size_t i = 0; i < projects.size(); i++)
 	{
-		projects.at(i)->setClient(clients.at(rand() % clients.size())); //assign each project a client
+		projects.at(i)->setClient(clients_vector.at(rand() % clients_vector.size())); //assign each project a client
 	}
 	for (size_t i = 0; i < tasks.size(); i++)
 	{
@@ -465,7 +599,6 @@ void Application::genApplication(){
 		for (size_t j = 0; j < tasks.size(); j++)
 		if (rand() % 10 == 0)
 		{
-			//if (tasks.at(i)->isReady())
 			collaborators.at(i)->addTask(tasks.at(j), rand() % 5 + 1);
 		}
 	}
@@ -476,6 +609,17 @@ void Application::genApplication(){
 vector<Collaborator*> Application::getCollaborators()
 {
 	return collaborators;
+}
+
+vector<Collaborator*> Application::getFormerCollaborators()
+{
+	auto it = former_collaborators.begin();
+	vector<Collaborator*> out;
+	for (; it != former_collaborators.end(); ++it)
+	{
+		out.push_back(*it);
+	}
+	return out;
 }
 vector<Task*> Application::getTasks()
 {

@@ -35,7 +35,6 @@ public:
 	///construtor por defeito
 	Client();
 	///construtor sem ID especidficado
-<<<<<<< HEAD
 	///@param name nome de Cliente
 	Client(string name);
 	///construtor com ID
@@ -44,12 +43,6 @@ public:
 	Client(string name, int setID);
 	///client generico
 	///@param i indice de Cliente	
-=======
-	Client(string name);
-	///construtor com ID
-	Client(string name, int setID);
-	///client generico
->>>>>>> origin/master
 	Client(int i);
 	///@return nome do client
 	string getName() const ;
@@ -60,20 +53,12 @@ public:
 	///@return ID do cliente
 	int getID()const;
 	///modificar o nome do cliente
-<<<<<<< HEAD
 	///@param name novo nome de Cliente
 	void setName(string name);
 	///adicionar projeto a colaborador
 	///@throw projeto nao existe
 	///@param proj projeto
 	///@param setClient indica se o cliente deve ser associado ao projeto
-=======
-	void setName(string name);
-	///adicionar projeto a colaborador
-	///@throw projeto nao existe
-	///@param projeto
-	///@param indica se o cliente deve ser associado ao projeto
->>>>>>> origin/master
 	///@return sucesso da operacao
 	bool addProject(Project* proj, bool setClient = true);
 	///substitui os IDs dos objetos pelos apontadores para os objetos
@@ -82,45 +67,29 @@ public:
 
 	///remover projeto de colaborador
 	///@throw projeto nao existe
-<<<<<<< HEAD
 	///@param p projeto
 	///@param removeClient indica se o cliente deve ser removido ao projeto
-=======
-	///@param projeto
-	///@param indica se o cliente deve ser removido ao projeto
->>>>>>> origin/master
 	///@return sucesso da operacao
 	bool removeProject(Project* p, bool removeClient = true);
 
 	///@return custo total de todos os projetos do cliente
 	double getTotal() const;
 	///dois clientes sao iguais se os seus IDs forem iguais
-<<<<<<< HEAD
 	///@param c2 cliente a ser comparado
-=======
->>>>>>> origin/master
 	///@return verdadeiro se sao iguais
 	bool operator==(const Client& c2) const;
 
+	bool operator < (const Client& c2) const;
+
 	/// escrita de todos os dados do client, no lugar dos apontadores sao escritos os IDs dos objetos
-<<<<<<< HEAD
 	/// @param out stream de saida
-	/// @param p client a ser escrito
-=======
-	/// @param  stream de saida
-	/// @param  client a ser escrito
->>>>>>> origin/master
+	/// @param c cliente a ser escrito
 	/// @return stream de saida
-	friend ostream & operator<<(ostream& out, const Client& p);
+	friend ostream & operator<<(ostream& out, const Client& c);
 
 	/// leitura de todos os dados do cliente, no lugar dos apontadores sao lidos os IDs dos objetos
-<<<<<<< HEAD
 	/// @param in stream de entrada
 	/// @param c cliente a ser lido
-=======
-	/// @param  stream de entrada
-	/// @param  cliente a ser lido
->>>>>>> origin/master
 	/// @return stream de entreada
 	friend istream & operator>>(istream& in, Client& c);
 
@@ -138,7 +107,6 @@ public:
 	{
 	public:
 		///comparacao entre clientes
-<<<<<<< HEAD
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
@@ -146,11 +114,6 @@ public:
 		///comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
-=======
-		///@return c1 < c2
-		virtual bool operator()(const Client& c1, const Client& c2) = 0;
-		///comparacao entre apontadores para clientes
->>>>>>> origin/master
 		///@return c1 < c2
 		virtual bool operator()(const Client* c1, const Client* c2) = 0;
 		///@return string que contem uma abreviacao do nome do comparador
@@ -161,7 +124,6 @@ public:
 	{
 	public:
 		///comparacao entre clientes
-<<<<<<< HEAD
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
@@ -169,11 +131,6 @@ public:
 		///comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
-=======
-		///@return c1 < c2
-		bool operator()(const Client& c1, const Client& c2);
-		///comparacao entre apontadores para clientes
->>>>>>> origin/master
 		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
 		///@return string que contem uma abreviacao do nome do comparador
@@ -184,7 +141,6 @@ public:
 	{
 	public:
 		///comparacao entre clientes
-<<<<<<< HEAD
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
@@ -192,11 +148,6 @@ public:
 		///comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
-=======
-		///@return c1 < c2
-		bool operator()(const Client& c1, const Client& c2);
-		///comparacao entre apontadores para clientes
->>>>>>> origin/master
 		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
 		///@return string que contem uma abreviacao do nome do comparador
@@ -207,7 +158,6 @@ public:
 	{
 	public:
 		///comparacao entre clientes
-<<<<<<< HEAD
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
@@ -215,11 +165,6 @@ public:
 		///comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
-=======
-		///@return c1 < c2
-		bool operator()(const Client& c1, const Client& c2);
-		///comparacao entre apontadores para clientes
->>>>>>> origin/master
 		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
 		///@return string que contem uma abreviacao do nome do comparador
@@ -230,7 +175,6 @@ public:
 	{
 	public:
 		///comparacao entre clientes
-<<<<<<< HEAD
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
@@ -238,17 +182,13 @@ public:
 		///comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
-=======
-		///@return c1 < c2
-		bool operator()(const Client& c1, const Client& c2);
-		///comparacao entre apontadores para clientes
->>>>>>> origin/master
 		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
 		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};
-
+	friend class ClientPtr;
 };
+
 
 #endif

@@ -61,7 +61,6 @@ bool Task::addCollaborator(Collaborator* c1, unsigned int hours, bool addTask)
 		if (*collaborators[i].first == *c1)
 		{
 			return false;
-			//throw TaskExcept("Collaborator already exists");
 		}
 	}
 	collaborators.push_back(make_pair(c1, hours));

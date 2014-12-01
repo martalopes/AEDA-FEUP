@@ -12,6 +12,12 @@ Collaborator::Collaborator(int i)
 	stringstream s;
 	s << "Collaborator " << i;
 	*this = Collaborator(s.str(), (6 + rand() % 4) * 5);
+	stringstream contact_stream;
+	contact_stream << "Contact " << i;
+	stringstream address_stream;
+	address_stream << "Address " << i;
+	this->contact = contact_stream.str();
+	this->address = address_stream.str();
 }
 
 int Collaborator::getID() const { return this->ID; }
@@ -27,8 +33,6 @@ void Collaborator::setName(string newname){ this->name = newname; }
 void Collaborator::setWeeklyHours(int newhours) { this->maxweeklyhours = newhours; }
 bool Collaborator::operator==(const Collaborator& c2)const{ return this->ID == c2.ID; }
 void Collaborator::updateProjects() { projects = calculateProjects(); }
-
-
 
 bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
 {
@@ -70,12 +74,6 @@ bool Collaborator::removeTask(Task* t, bool removeCollaborator)
 	{
 		workinghours -= tasks.at(i).second;
 		tasks.erase(tasks.begin() + i);
-		//size_t j = 0;
-		//for (; j < tasks.size(); j++)
-		//if (tasks.at(j).first->getProject() == t->getProject())
-		//	break;
-		//if (j == tasks.size())//colaborador nao tem mais tarefas do mesmo projecto
-		//	removeProject(t->getProject(), true);
 		updateProjects();
 		if (removeCollaborator)
 			return t->removeCollaborator(this, false);
@@ -86,12 +84,6 @@ bool Collaborator::removeTask(Task* t, bool removeCollaborator)
 		if (finishedtasks.at(i) == t)
 		{
 			finishedtasks.erase(finishedtasks.begin() + i);
-			//size_t j = 0;
-			//for (; j < tasks.size(); j++)
-			//if (finishedtasks.at(j)->getProject() == t->getProject())
-			//	break;
-			//if (j == tasks.size())//colaborador nao tem mais tarefas do mesmo projecto
-			//	removeProject(t->getProject(), true);
 			updateProjects();
 			if (removeCollaborator)
 				return t->removeCollaborator(this, false);
@@ -100,20 +92,7 @@ bool Collaborator::removeTask(Task* t, bool removeCollaborator)
 	}
 	return false;
 }
-//bool Collaborator::removeProject(Project* p, bool removeCollaborator)
-//{
-//	if (p == NULL)
-//		throw CollaboratorExcept("Invalid Project being removed from collaborator");
-//	for (size_t i = 0; i < projects.size(); ++i)
-//	if (*projects.at(i) == *p)
-//	{
-//		projects.erase(projects.begin() + i);
-//		if (removeCollaborator)
-//			return p->removeCollaborator(this, false);
-//		return true;
-//	}
-//	return false;
-//}
+
 bool Collaborator::changeTaskHours(Task* t1, unsigned int hours)
 {
 	for (size_t i = 0; i < this->tasks.size(); ++i)
@@ -132,22 +111,6 @@ string Collaborator::toString() const
 {
 	return normalize(to_string(ID), name, 30);
 }
-//bool Collaborator::addProject(Project* p, bool addCollaborator)
-//{
-//	if (p == NULL)
-//		throw Collaborator::CollaboratorExcept("Invalid Project being added to Collaborator");
-//	for (size_t i = 0; i < this->projects.size(); ++i)
-//	{
-//		if (*projects.at(i) == *p)
-//		{
-//			return false;
-//		}
-//	}
-//	projects.push_back(p);
-//	if (addCollaborator)
-//		p->addCollaborator(this, false);
-//	return true;
-//}
 
 void Collaborator::connect()
 {
@@ -173,10 +136,6 @@ void Collaborator::connect()
 
 bool Collaborator::removeTrace()
 {
-	/*for (size_t i = 0; i < projects.size(); i++)
-	{
-	projects.at(i)->removeCollaborator(this, false);
-	}*/
 	for (size_t i = 0; i < tasks.size(); i++)
 	{
 		tasks.at(i).first->removeCollaborator(this, false);
@@ -184,11 +143,36 @@ bool Collaborator::removeTrace()
 	return true;
 }
 
+void Collaborator::leave()
+{
+	vector<Project*> pr;
+	pr = calculateProjects();
+	for (size_t i = 0; i < tasks.size(); i++)
+	{
+		tasks.at(i).first->removeCollaborator(this);
+	}
+	this->projects = pr;
+}
+
+void Collaborator::reinstate()
+{
+	this->projects = calculateProjects();
+}
+//bool CollaboratorEqual::operator()(Collaborator* const c1, Collaborator* const c2) const
+//{
+//	return  *c1 == *c2;
+//}
+//size_t CollaboratorHash::operator()(Collaborator* const c) const
+//{
+//	return (size_t)c->getID();
+//}
 ostream & operator<<(ostream& out, const Collaborator& c)
 {
 	out << c.getTitle() << endl;
 	out << c.ID << endl;
 	out << c.name << endl;
+	out << c.address << endl;
+	out << c.contact << endl;
 	out << c.maxweeklyhours << endl;
 	out << c.workinghours << endl;
 	out << c.projects.size() << endl;
@@ -209,6 +193,8 @@ istream & operator>>(istream& in, Collaborator& c)
 	if (c.ID > Collaborator::lastID)
 		Collaborator::lastID = c.ID;
 	getline(in, c.name);
+	getline(in, c.address);
+	getline(in, c.contact);
 	in >> c.maxweeklyhours;
 	in.ignore();
 	in >> c.workinghours;

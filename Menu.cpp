@@ -728,13 +728,18 @@ void fullclientlist(int& state, Application& app)
 	Cursor cursor1;
 	bool changeinoptions = true;
 	vector <Client::ClientComparator*> comps = getClientComparators();
-	vector <string> comps_abv;
-	for (size_t i = 0; i < comps.size(); i++)
-	{
-		comps_abv.push_back(comps.at(i)->getAbbreviation());
-	}
+	vector <string> comps_abv = {"In" , "Pre", "Post", "Level"};
+	//for (size_t i = 0; i < comps.size(); i++)
+	//{
+	//	comps_abv.push_back(comps.at(i)->getAbbreviation());
+	//}
 	int comp = 0;
-	vector<Client*> clients = app.getClients();
+	vector<vector<Client*>> orders;
+	orders.push_back(app.getClients_InOrder());
+	orders.push_back(app.getClients_PreOrder());
+	orders.push_back(app.getClients_PostOrder());
+	orders.push_back(app.getClients_Level());
+	vector<Client*> clients = app.getClients_InOrder();
 	vector <vector <string>> v;
 	vector<string> options;
 	while (more)
@@ -745,8 +750,9 @@ void fullclientlist(int& state, Application& app)
 		cout << el >> auxmessage << el << el >> message << el << el;
 		if (changeinoptions)
 		{
-			insertionSort(clients, *(comps.at(comp)));
-			v = prep_list(clients);
+			//insertionSort(clients, *(comps.at(comp)));
+			clients = orders[comp];
+			v = prep_list(orders.at(comp));
 			if (v.size() == 0)
 				options.clear();
 			else options = v[page - 1];
@@ -826,7 +832,7 @@ void fullclientlist(int& state, Application& app)
 			}
 			else if (input == '\t')
 			{
-				comp = (comp + 1) % comps.size();
+				comp = (comp + 1) % orders.size();
 				page = 1;
 				change = true;
 				changeinoptions = true;

@@ -26,22 +26,6 @@ bool Project::setClient(Client* c, bool addProject)
 		c->addProject(this, false);
 	return true;
 }
-//bool Project::addCollaborator(Collaborator* c, bool addProject)
-//{
-//	if (c == NULL)
-//		throw ProjectExcept("Invalid Collaborator being added to Project");
-//	for (size_t i = 0; i < this->collaborators.size(); ++i)
-//	{
-//		if (*collaborators.at(i) == *c)
-//		{
-//			return false;
-//		}
-//	}
-//	collaborators.push_back(c);
-//	if (addProject)
-//		c->addProject(this, false);
-//	return true;
-//}
 bool Project::addTask(Task * t, bool setProject)
 {
 	if (t == NULL)
@@ -201,23 +185,6 @@ bool Project::removeClient(bool removeProject)
 	client = NULL;
 	return true;
 }
-
-//bool Project::removeCollaborator(Collaborator* c, bool removeProject)
-//{
-//	if (c == NULL)
-//		throw ProjectExcept("Invalid Collaborator");
-//	for (size_t i = 0; i < collaborators.size(); i++)
-//	{
-//		if (*c == *collaborators.at(i))
-//		{
-//			collaborators.erase(collaborators.begin() + i);
-//			if (removeProject)
-//				return c->removeProject(this, false);
-//			return true;
-//		}
-//	}
-//	return false;
-//}
 
 bool Project::removeTrace()
 {

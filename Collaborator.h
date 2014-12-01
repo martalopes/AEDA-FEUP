@@ -34,6 +34,8 @@ protected:
 private:
 	int ID;
 	string name;
+	string contact;
+	string address;
 	int maxweeklyhours;// numero de horas de trabalho por semana;
 	int workinghours;// numero total de horas de trabalho;
 	vector<Project*> projects;
@@ -43,7 +45,6 @@ public:
 	///construtor por defeito
 	Collaborator();
 	///construtor sem ID especificado
-<<<<<<< HEAD
 	///@param name nome do colaborador
 	///@param maxweeklyhours numero maximo de horas por semana  
 	Collaborator(string name, int maxweeklyhours);
@@ -54,12 +55,6 @@ public:
 	Collaborator(string name, int maxweeklyhours, int setID);
 	///cria um colaborador generico
 	///@param i indice do colaborador
-=======
-	Collaborator(string name, int maxweeklyhours);
-	///construtor com ID especificado
-	Collaborator(string name, int maxweeklyhours, int setID);
-	///cria um colaborador generico
->>>>>>> origin/master
 	Collaborator(int i);
 	///@return ID do colaborador
 	int getID() const;
@@ -83,10 +78,7 @@ public:
 	vector<Task*> getFinishedTasks() const;
 
 	///remove tarefa e adiciona-a as tarefas terminadas
-<<<<<<< HEAD
 	///@param t tarefa a ser adicionada
-=======
->>>>>>> origin/master
 	///@return sucesso da operacao
 	bool reassign(Task* t);
 	
@@ -98,7 +90,6 @@ public:
 	///@return string com o nome e o ID do colaborador
 	string toString() const;
 	///modifica o ID do colaborador
-<<<<<<< HEAD
 	///@param newID novo ID do colaborador
 	void setID(int newID);
 	///modifica o nome do colaborador
@@ -112,128 +103,66 @@ public:
 	///@param t1 tarefa a ser adicionada
 	///@param hours horas que o colaborador trabalha por semana
 	///@param addCollaborator indica se o colaborador deve ser adicionado a tarefa
-=======
-	///@param novo ID do colaborador
-	void setID(int newID);
-	///modifica o nome do colaborador
-	///@param novo nome do colaborador
-	void setName(string newname);
-	///modifica as horas semanais maximas do colaborador
-	///@param novo maximo
-	void setWeeklyHours(int newhours);
-
-	///adiciona tarefa ao colaborador, atualizando os seus projetos
-	///@param tarefa a ser adicionada
-	///@param horas que o colaborador trabalha por semana
-	///@param indica se o colaborador deve ser adicionado a tarefa
->>>>>>> origin/master
 	///@throw tarefa nao existe
 	///@return sucesso da operacao
 	bool addTask(Task* t1, unsigned int hours, bool addCollaborator=true);
 
 	///remove tarefa do colaborador, atualizando os seus projetos
-<<<<<<< HEAD
 	///@param t tarefa a ser removida
 	///@param removeCollaborator indica se o colaborador deve ser removido da tarefa
-=======
-	///@param tarefa a ser removida
-	///@param indica se o colaborador deve ser removido da tarefa
->>>>>>> origin/master
 	///@throw tarefa nao existe
 	///@return sucesso da operacao
 	bool removeTask(Task* t, bool removeCollaborator = true);
 
-	///remove projeto do colaborador
-<<<<<<< HEAD
-	///@param p projeto a ser removida
-	///@param removeCollaborator indica se o colaborador deve ser removido do projeto
-	///@throw projeto nao existe
-	///@return sucesso da operacao
-	//bool removeProject(Project* p, bool removeCollaborator = true);
-
-=======
-	///@param projeto a ser removida
-	///@param indica se o colaborador deve ser removido do projeto
-	///@throw projeto nao existe
-	///@return sucesso da operacao
-	//bool removeProject(Project* p, bool removeCollaborator = true);
->>>>>>> origin/master
 	///remove todas as referencias ao colaborador noutros objetos
 	///@return sucesso da operacao
 	bool removeTrace();
 
 	///altera as horas de trabalho numa tarefa
-<<<<<<< HEAD
 	///@param t1 tarefa cujo horario se pretende alterar
 	///@param hours novas horas da tarefa
-=======
-	///@param tarefa cujo horario se pretende alterar
->>>>>>> origin/master
 	///@throw tarefa nula
 	///@return sucesso da operacao
-	bool changeTaskHours(Task* t1, unsigned int hours);////
-
-	///adiciona projeto ao colaborador
-<<<<<<< HEAD
-	///@param p projeto
-	///@param addCollaborator indica se colaborador deve ser adicionado ao projeto
-	///@throw projeto nao existe
-	///@return sucesso da operacao
-	//bool addProject(Project* p, bool addCollaborator = true);
+	bool changeTaskHours(Task* t1, unsigned int hours);
 
 	///cria um colaborador aleatorio e retorna um apontador para ele
 	///@param i indice do colaborador
-	///@return apotador para colaborador criado
+	///@return apontador para colaborador criado
 	static Collaborator* newRandomCollaborator(int i);
+
 	/// cria um colaborador com um determinado titulo
 	/// @param title titulo do colaborador a criar
-=======
-	///@param projeto
-	///@param indica se colaborador deve ser adicionado ao projeto
-	///@throw projeto nao existe
-	///@return sucesso da operacao
-	//bool addProject(Project* p, bool addCollaborator = true);
-	///cria um colaborador aleatorio e retorna um apontador para ele
-	///@return apotador para colaborador criado
-	static Collaborator* newRandomCollaborator(int i);
-	/// cria um colaborador com um determinado titulo
-	/// @param titulo do colaborador a criar
->>>>>>> origin/master
 	/// @return apontador para o colaborador criado
 	static Collaborator* newCollaboratorTitle(string title);
 	/// substitui os IDs lidos pelos apontadores para os objetos aos quais pertencem 
 	void connect();
 	/// colabodores sao iguais se os seus IDs forem iguas
-<<<<<<< HEAD
 	/// @param c2 colaborador a ser comparado
-=======
->>>>>>> origin/master
 	/// @return igualdade de colaboradores
 	bool operator==(const Collaborator& c2)const;
 
 	/// leitura de todos os dados do colaborador, no lugar dos apontadores sao lidos os IDs dos objetos
-<<<<<<< HEAD
 	/// @param out stream de entrada
 	/// @param c colaborador a ser lido
-=======
-	/// @param  stream de entrada
-	/// @param  colaborador a ser lido
->>>>>>> origin/master
 	/// @return stream de entreada
 	friend ostream & operator<<(ostream& out, const Collaborator& c);
 
 	/// leitura de todos os dados do colaborador, no lugar dos apontadores sao escritos os IDs dos objetos
-<<<<<<< HEAD
 	/// @param in stream de entrada
 	/// @param c colaborador a ser lido
-=======
-	/// @param  stream de entrada
-	/// @param  colaborador a ser lido
->>>>>>> origin/master
 	/// @return stream de entrada
 	friend istream & operator>>(istream& in, Collaborator& c);
+
 	///atualizacao da lista de projetos do colaborador
 	void updateProjects();
+
+	void leave();
+	void reinstate();
+
+	
+
+
+
 	///classe de excepcao do colaborador
 	class CollaboratorExcept
 	{
@@ -250,7 +179,6 @@ public:
 	{
 	public:
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -258,11 +186,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		virtual bool operator()(const Collaborator& t1, const Collaborator& t2) = 0;
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		virtual bool operator()(const Collaborator* t1, const Collaborator* t2) = 0;
 		///@return abreviacao do comparador
@@ -273,7 +196,6 @@ public:
 	{
 	public:
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -281,11 +203,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		bool operator()(const Collaborator& t1, const Collaborator& t2);
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
 		///@return abreviacao do comparador
@@ -296,7 +213,6 @@ public:
 	{
 	public:
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -304,11 +220,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		bool operator()(const Collaborator& t1, const Collaborator& t2);
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
 		///@return abreviacao do comparador
@@ -319,7 +230,6 @@ public:
 	{
 	public:
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -327,11 +237,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		bool operator()(const Collaborator& t1, const Collaborator& t2);
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
 		///@return abreviacao do comparador
@@ -342,7 +247,6 @@ public:
 	{
 	public:
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -350,11 +254,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		bool operator()(const Collaborator& t1, const Collaborator& t2);
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
 		///@return abreviacao do comparador
@@ -365,7 +264,6 @@ public:
 	{
 	public:
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -373,11 +271,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		bool operator()(const Collaborator& t1, const Collaborator& t2);
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
 		///@return abreviacao do comparador
@@ -388,7 +281,6 @@ public:
 	{
 	public:
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -396,11 +288,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		bool operator()(const Collaborator& t1, const Collaborator& t2);
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
 		///@return abreviacao do comparador
@@ -411,7 +298,6 @@ public:
 	{
 	public:
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -419,11 +305,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		bool operator()(const Collaborator& t1, const Collaborator& t2);
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
 		///@return abreviacao do comparador
@@ -434,7 +315,6 @@ public:
 	{
 	public:		
 		///comparacao entre colaboradores
-<<<<<<< HEAD
 		///@param t1 objecto1
 		///@param t2 objecto2
 		///@return colaborador 1 < colaborador 2
@@ -442,11 +322,6 @@ public:
 		///comparacao entre apontadores para colaboradores
 		///@param t1 objecto1
 		///@param t2 objecto2
-=======
-		///@return colaborador 1 < colaborador 2
-		bool operator()(const Collaborator& t1, const Collaborator& t2);
-		///comparacao entre apontadores para colaboradores
->>>>>>> origin/master
 		///@return colaborador 1 < colaborador 2
 		bool operator()(const Collaborator* t1, const Collaborator* t2);
 		///@return abreviacao do comparador
@@ -462,7 +337,6 @@ class Programmer : public Collaborator
 {
 public:
 	///construtor sem ID
-<<<<<<< HEAD
 	///@param name nome do programador 
 	///@param maxweeklyhours numero maximo de horas semanais
 	Programmer(string name, int maxweeklyhours);
@@ -473,12 +347,6 @@ public:
 	Programmer(string name, int maxweeklyhours, int setID);
 	///programador generico
 	///@param i indice de programador
-=======
-	Programmer(string name, int maxweeklyhours);
-	///construtor com ID
-	Programmer(string name, int maxweeklyhours, int setID);
-	///programador generico
->>>>>>> origin/master
 	Programmer(int i);
 	///construtor por defeito
 	Programmer();
@@ -494,7 +362,6 @@ class Architect : public Collaborator
 {
 public:
 	///construtor sem ID
-<<<<<<< HEAD
 	///@param name nome do Arquitecto
 	///@param maxweeklyhours numero maximo de horas semanais de trabalho
 	Architect(string name, int maxweeklyhours);
@@ -505,12 +372,6 @@ public:
 	Architect(string name, int maxweeklyhours, int setID);
 	///arquiteto generico
 	///@param i indice de Arquitecto
-=======
-	Architect(string name, int maxweeklyhours);
-	///construtor com ID
-	Architect(string name, int maxweeklyhours, int setID);
-	///arquiteto generico
->>>>>>> origin/master
 	Architect(int i);
 	///contrutor por defeito
 	Architect();
@@ -526,7 +387,6 @@ class Manager : public Collaborator
 {
 public:
 	///construtor sem ID
-<<<<<<< HEAD
 	///@param name nome do Gestor
 	///@param maxweeklyhours numero maximo de horas semanais de trabalho
 	Manager(string name, int maxweeklyhours);
@@ -537,12 +397,6 @@ public:
 	Manager(string name, int maxweeklyhours, int setID);
 	///gestor generico
 	///@param i indice de Gestor
-=======
-	Manager(string name, int maxweeklyhours);
-	///construtor com ID
-	Manager(string name, int maxweeklyhours, int setID);
-	///gestor generico
->>>>>>> origin/master
 	Manager(int i);
 	///construtor por defeito
 	Manager();
@@ -558,7 +412,6 @@ class Tester : public Collaborator
 {
 public:
 	///construtor sem ID
-<<<<<<< HEAD
 	///@param name nome do Tester
 	///@param maxweeklyhours numero maximo de horas semanais de trabalho
 	Tester(string name, int maxweeklyhours);
@@ -569,12 +422,6 @@ public:
 	Tester(string name, int maxweeklyhours, int setID) ;
 	///tester generico
 	///@param i indice de Tester
-=======
-	Tester(string name, int maxweeklyhours);
-	///construtor com ID
-	Tester(string name, int maxweeklyhours, int setID) ;
-	///tester generico
->>>>>>> origin/master
 	Tester(int i);
 	///construtor por defeito
 	Tester();
