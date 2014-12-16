@@ -120,7 +120,9 @@ void genericmenu(int &state, Application &app, string name, string text, vector<
 		go_end_of_screen();
 		ClearScreen();
 		change = false;
-		cout << el >> name << el << el >> text << el << el << el;
+		if (options.size() >= 7)
+			cout  >> name  << el >> text  << el << el;
+		else cout << el >> name << el << el >> text << el << el << el;
 		if (options.size() < 5)
 			cout << el;
 		if (options.size() < 4)
@@ -163,12 +165,14 @@ void genericmenu(int &state, Application &app, string name, string text, vector<
 enum states
 {
 	EXIT = -1, ESCAPEMENU, MAINMENU1, CLIENTLOGINMENU, TASKMENU, COLPROJBYDATE, COLPROJBYTYPE, COLPROJBYNAME, VIEWPROJECTINFO, COLLABORATORLOGINMENU, PERSONALINFOMENU, COLLABORATORMENU, MANAGERLOGINMENU, ADMINLOGINMENU, CLIENTMENU, NEWPROJECTMENU, PROJECTLISTMENU, PROJECTINFO,
-	ADMINMENU, ADMINCLIENTMENU, ADMINSELECTCLIENT, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ADMINCREATECLIENT, ADMINCREATEPROJECT, ADMINSELECTPROJECT, ADMINCREATETASK, ADMINSELECTTASK, ADMINCREATECOLLABORATOR, ADMINSELECTCOLLABORATOR, ADMINEDITCLIENT, ADMINEDITPROJECT, ADMINEDITTASK, ADMINEDITCOLLABORATOR, TICK
+	ADMINMENU, ADMINCLIENTMENU, ADMINSELECTCLIENT, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ADMINCREATECLIENT, ADMINCREATEPROJECT, ADMINSELECTPROJECT, ADMINCREATETASK, ADMINSELECTTASK, ADMINCREATECOLLABORATOR, ADMINSELECTCOLLABORATOR, ADMINEDITCLIENT, ADMINEDITPROJECT, ADMINEDITTASK, ADMINEDITCOLLABORATOR, TICK,
+	ADMINOTHERMENU, ADMINCREATECV, ADMINSELECTFORMER, ADMINSELECTCV, ADMINFORMERMENU, ADMINCVMENU, ADMINEDITCV
 };
 static Client* currentclient = NULL;
 static Project* currentproject = NULL;
 static Task* currenttask = NULL;
 static Collaborator* currentcollaborator = NULL;
+static CV* currentCV = NULL;
 void createprojectmenu(int& state, Application& app)
 {
 	string name;
@@ -233,7 +237,19 @@ void createclientmenu(int& state, Application& app)
 	{
 		state = ADMINCLIENTMENU; return;
 	}
-	Client* p = new Client(name);
+	string fiscal;
+	cout << el << el >> "Please enter Client fiscal info" << el << el << el;
+	cout << "                   >  ";
+	getline(cin, fiscal);
+	if (fiscal == "")
+	{
+		state = ADMINCLIENTMENU; return;
+	}
+	stringstream s;
+	s << fiscal;
+	int ifiscal = 0;
+	s >> ifiscal;
+	Client* p = new Client(ifiscal, name);
 	cout << el << el;
 	try{ app.addClient(p); }
 	catch (Application::ApplicationExcept& e)
@@ -301,14 +317,14 @@ void createcollaboratormenu(int& state, Application& app)
 	string deadline;
 	go_end_of_screen();
 	ClearScreen();
-	cout << el << el >> "Please enter Collaborator name" << el << el << el;
+	cout << el << el >> "Please enter Collaborator name" << el << el;
 	cout << "                   >  ";
 	getline(cin, name);
 	if (name == "")
 	{
 		state = ADMINCOLLABORATORMENU; return;
 	}
-	cout << el << el >> "Please enter Collaborator max weekly hours" << el << el << el;
+	cout << el << el >> "Please enter Collaborator max weekly hours" << el << el;
 	cout << "                   >  ";
 	string maxweeklyhours;
 	getline(cin, maxweeklyhours);
@@ -320,7 +336,7 @@ void createcollaboratormenu(int& state, Application& app)
 	s << maxweeklyhours;
 	int imaxweeklyhours = 0;
 	s >> imaxweeklyhours;
-	cout << el << el >> "Please enter Collaborator Title" << el << el << el;
+	cout << el << el >> "Please enter Collaborator Title" << el << el;
 	cout << "                   >  ";
 	string title;
 	getline(cin, title);
@@ -328,15 +344,31 @@ void createcollaboratormenu(int& state, Application& app)
 	{
 		state = ADMINCOLLABORATORMENU; return;
 	}
+	cout << el << el >> "Please enter Collaborator Contact" << el << el;
+	cout << "                   >  ";
+	string contact;
+	getline(cin, contact);
+	if (contact == "")
+	{
+		state = ADMINCOLLABORATORMENU; return;
+	}
+	cout << el << el >> "Please enter Collaborator Address" << el << el;
+	cout << "                   >  ";
+	string address;
+	getline(cin, address);
+	if (address == "")
+	{
+		state = ADMINCOLLABORATORMENU; return;
+	}
 	Collaborator* c = NULL;
 	if (title == "Manager")
-		c = new Manager(name, imaxweeklyhours);
+		c = new Manager(name,contact, address, imaxweeklyhours);
 	else if (title == "Tester")
-		c = new Tester(name, imaxweeklyhours);
+		c = new Tester(name, contact, address, imaxweeklyhours);
 	else if (title == "Architect")
-		c = new Architect(name, imaxweeklyhours);
+		c = new Architect(name, contact, address, imaxweeklyhours);
 	else if (title == "Programmer")
-		c = new Programmer(name, imaxweeklyhours);
+		c = new Programmer(name,contact, address, imaxweeklyhours);
 	else return;
 	cout << el << el;
 	try{ app.addCollaborator(c); }
@@ -349,6 +381,94 @@ void createcollaboratormenu(int& state, Application& app)
 		return;
 	}
 	state = ADMINCOLLABORATORMENU;
+}
+void createcvmenu(int& state, Application& app)
+{
+	string name;
+	string title;
+	string contact;
+	string address;
+	string previously_employed;
+	bool b_previously_employed;
+	string experience;
+	size_t i_experience;
+	string num_skills;
+	size_t i_num_skills;
+	go_end_of_screen();
+	ClearScreen();
+	cout << el << el >> "Please enter Candidate name" << el << el;
+	cout << "                   >  ";
+	getline(cin, name);
+	if (name == "")
+	{
+		state = ADMINCVMENU; return;
+	}
+	cout << el << el >> "Please enter Candidate Title" << el << el;
+	cout << "                   >  ";
+	getline(cin, title);
+	if (title == "" || (title != "Manager" && title != "Tester" && title != "Architect" && title != "Programmer"))
+	{
+		state = ADMINCVMENU; return;
+	}
+	cout << el << el >> "Please enter Candidate Contact" << el << el;
+	cout << "                   >  ";
+	getline(cin, contact);
+	if (contact == "")
+	{
+		state = ADMINCVMENU; return;
+	}
+	cout << el << el >> "Please enter Candidate's Address" << el << el;
+	cout << "                   >  ";
+	getline(cin, address);
+	if (address == "")
+	{
+		state = ADMINCVMENU; return;
+	}
+	cout << el << el >> "Was the candidate previously employed? (y/n)" << el << el;
+	cout << "                   >  ";
+	getline(cin, previously_employed);
+	if (previously_employed == "")
+	{
+		state = ADMINCVMENU; return;
+	}
+	if (previously_employed == "y")
+		b_previously_employed = true;
+	else b_previously_employed = false;
+	cout << el << el >> "Please enter Candidate's experience" << el << el;
+	cout << "                   >  ";
+	getline(cin, experience);
+	if (experience == "")
+	{
+		state = ADMINCVMENU; return;
+	}
+	stringstream s;
+	s << experience;
+	s >> i_experience;
+
+	cout << el << el >> "Please enter Candidate's number of skills" << el << el;
+	cout << "                   >  ";
+	getline(cin, num_skills);
+	if (num_skills == "")
+	{
+		state = ADMINCVMENU; return;
+	}
+	stringstream s1;
+	s1 << num_skills;
+	s1 >> i_num_skills;
+
+	CV* c = NULL;
+	c = new CV(name, contact, address, title, b_previously_employed, i_experience, i_num_skills);
+	cout << el << el;
+	try{ app.addCV(c); }
+	catch (Application::ApplicationExcept& e)
+	{
+		cout >> e();
+		go_end_of_screen();
+		cin.get();
+		delete c;
+		return;
+	}
+	state = ADMINCVMENU;
 }
 vector<Project::ProjectComparator*> getProjectComparators()
 {
@@ -727,6 +847,7 @@ void fullclientlist(int& state, Application& app)
 	int page = 1;
 	Cursor cursor1;
 	bool changeinoptions = true;
+	Application::updateClientOrder();
 	vector <Client::ClientComparator*> comps = getClientComparators();
 	vector <string> comps_abv = {"In" , "Pre", "Post", "Level"};
 	//for (size_t i = 0; i < comps.size(); i++)
@@ -990,6 +1111,255 @@ void fullcollaboratorlist(int& state, Application& app)
 					change = true;
 					more = false;
 					state = ADMINCOLLABORATORMENU;
+				}
+				else
+				{
+					currentcollaborator = collaborators.at((page - 1) * 7 + cursor1.getPosition());
+					state = ADMINEDITCOLLABORATOR;
+					change = true;
+					more = false;
+				}
+			}
+		}
+		ClearScreen();
+	}
+	for (size_t i = 0; i < comps.size(); i++)
+	{
+		delete comps.at(i);
+	}
+}
+void fullcvlist(int& state, Application& app)
+{
+	bool more = true;
+	int page = 1;
+	Cursor cursor1;
+	bool changeinoptions = true;
+	vector<CV*> cvs = app.getCVs();
+	vector <vector <string>> v;
+	vector<string> options;
+	while (more)
+	{
+		bool change = false;
+		string auxmessage = "List Candidates";
+		string message = "Please select a Candidate (TAB to switch filter)";
+		cout << el >> auxmessage << el << el >> message << el << el;
+		if (changeinoptions)
+		{
+			v = prep_list(cvs);
+			if (v.size() == 0)
+				options.clear();
+			else options = v[page - 1];
+			//options = v[page - 1];
+			cursor1.changeMax(options.size());
+			options.push_back("Back");
+		}
+		cout << el << el;
+		for (int i = 0; i < options.size(); i++)
+		{
+			if (cursor1.getPosition() == i)
+			{
+				changecolor("black");
+				cout >> "> " + options[i] << el << el;
+				changecolor("white");
+			}
+			else cout >> options[i] << el << el;
+		}
+		for (; end_of_screen>1;)
+		{
+			cout << el;
+		}
+		cout >> "Page " + to_string(page) + "/" + to_string(v.size());
+		go_end_of_screen();
+		while (!change)
+		{
+			char input = _getch();
+			if (input == UP)
+			{
+				change = cursor1.dec();
+				changeinoptions = false;
+			}
+			else if (input == DOWN)
+			{
+				change = cursor1.inc();
+				changeinoptions = false;
+			}
+			else if (input == LEFT)
+			{
+				if (page > 1)
+				{
+					page--;
+					change = true;
+					changeinoptions = true;
+				}
+				else
+				{
+					change = false;
+					changeinoptions = false;
+				}
+			}
+			else if (input == RIGHT)
+			{
+				if (page < v.size())
+				{
+					page++;
+					change = true;
+					changeinoptions = true;
+				}
+				else
+				{
+					change = false;
+					changeinoptions = false;
+				}
+			}
+			else if (input == ESCAPE)
+			{
+				change = true;
+				more = false;
+				state = ADMINCVMENU;
+			}
+			else if (input == ENTER || input == SPACE)
+			{
+				if (cursor1.getPosition() == options.size() - 1)
+				{
+					change = true;
+					more = false;
+					state = ADMINCVMENU;
+				}
+				else
+				{
+					currentCV = cvs.at((page - 1) * 7 + cursor1.getPosition());
+					state = ADMINEDITCV;
+					change = true;
+					more = false;
+				}
+			}
+		}
+		ClearScreen();
+	}
+}
+void fullformerlist(int& state, Application& app)
+{
+	bool more = true;
+	int page = 1;
+	Cursor cursor1;
+	bool changeinoptions = true;
+	vector <Collaborator::CollaboratorComparator*> comps = getCollaboratorComparators();
+	vector <string> comps_abv;
+	for (size_t i = 0; i < comps.size(); i++)
+	{
+		comps_abv.push_back(comps.at(i)->getAbbreviation());
+	}
+	int comp = 0;
+	vector<Collaborator*> collaborators = app.getFormerCollaborators();
+	vector <vector <string>> v;
+	vector<string> options;
+	while (more)
+	{
+		bool change = false;
+		string auxmessage = "List Former Collaborators";
+		string message = "Please select a collaborator (TAB to switch filter)";
+		cout << el >> auxmessage << el << el >> message << el << el;
+		if (changeinoptions)
+		{
+			insertionSort(collaborators, *(comps.at(comp)));
+			v = prep_list(collaborators);
+			if (v.size() == 0)
+				options.clear();
+			else options = v[page - 1];
+			//options = v[page - 1];
+			cursor1.changeMax(options.size());
+			options.push_back("Back");
+		}
+		cout << "       ";
+		for (int i = 0; i < comps.size(); i++)
+		{
+			if (comp == i)
+			{
+				changecolor("black");
+				cout << comps_abv[i];
+				changecolor("white");
+				cout << "     ";
+			}
+			else cout << comps_abv[i] + "   ";
+		}
+		cout << el << el;
+		for (int i = 0; i < options.size(); i++)
+		{
+			if (cursor1.getPosition() == i)
+			{
+				changecolor("black");
+				cout >> "> " + options[i] << el << el;
+				changecolor("white");
+			}
+			else cout >> options[i] << el << el;
+		}
+		for (; end_of_screen>1;)
+		{
+			cout << el;
+		}
+		cout >> "Page " + to_string(page) + "/" + to_string(v.size());
+		go_end_of_screen();
+		while (!change)
+		{
+			char input = _getch();
+			if (input == UP)
+			{
+				change = cursor1.dec();
+				changeinoptions = false;
+			}
+			else if (input == DOWN)
+			{
+				change = cursor1.inc();
+				changeinoptions = false;
+			}
+			else if (input == LEFT)
+			{
+				if (page > 1)
+				{
+					page--;
+					change = true;
+					changeinoptions = true;
+				}
+				else
+				{
+					change = false;
+					changeinoptions = false;
+				}
+			}
+			else if (input == RIGHT)
+			{
+				if (page < v.size())
+				{
+					page++;
+					change = true;
+					changeinoptions = true;
+				}
+				else
+				{
+					change = false;
+					changeinoptions = false;
+				}
+			}
+			else if (input == '\t')
+			{
+				comp = (comp + 1) % comps.size();
+				page = 1;
+				change = true;
+				changeinoptions = true;
+			}
+			else if (input == ESCAPE)
+			{
+				change = true;
+				more = false;
+				state = ADMINFORMERMENU;
+			}
+			else if (input == ENTER || input == SPACE)
+			{
+				if (cursor1.getPosition() == options.size() - 1)
+				{
+					change = true;
+					more = false;
+					state = ADMINFORMERMENU;
 				}
 				else
 				{
@@ -1384,6 +1754,16 @@ void clientcommand(int& state)
 			name += ' ' + tokens.at(i);
 		currentclient->setName(name);
 	}
+	if (tokens.at(0) == "setFiscal")
+	if (tokens.size() > 1)
+	{
+		string fiscal = tokens.at(1);
+		stringstream s;
+		s << fiscal;
+		int ifiscal = 0;
+		s >> ifiscal;
+		currentclient->setFiscal(ifiscal);
+	}
 	if (tokens.at(0) == "addProject")
 	if (tokens.size() > 1)
 	{
@@ -1436,6 +1816,7 @@ void clientinfo(int &state, Application& app)
 	ClearScreen();
 	cout << el << el >> normalize("ID of Client: ", to_string(currentclient->getID()), 50) << el;
 	cout >> normalize("Client Name: ", currentclient->getName(), 50) << el;
+	cout >> normalize("Fiscal Information: ", to_string(currentclient->getFiscal()), 50) << el;
 	cout >> normalize("Total: ", to_string(currentclient->getTotal()) + '$', 50) << el;
 	cout >> "Projects:" << el << el;
 	if (currentclient->getProjects().size() == 0)
@@ -1477,6 +1858,32 @@ void collaboratorcommand(int& state)
 		go_end_of_screen();
 		return;
 	}
+	if (tokens.at(0) == "setFormer")
+	{
+		try { Application::setFormer(currentcollaborator); }
+		catch (Application::ApplicationExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
+		currentcollaborator = NULL;
+		state = ADMINSELECTCOLLABORATOR;
+		go_end_of_screen();
+		return;
+	}
+	if (tokens.at(0) == "unsetFormer")
+	{
+		try { Application::unsetFormer(currentcollaborator); }
+		catch (Application::ApplicationExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
+		currentcollaborator = NULL;
+		state = ADMINSELECTCOLLABORATOR;
+		go_end_of_screen();
+		return;
+	}
 	if (tokens.at(0) == "setName")
 	if (tokens.size() > 1)
 	{
@@ -1484,6 +1891,22 @@ void collaboratorcommand(int& state)
 		for (size_t i = 2; i < tokens.size(); i++)
 			name += ' ' + tokens.at(i);
 		currentcollaborator->setName(name);
+	}
+	if (tokens.at(0) == "setContact")
+	if (tokens.size() > 1)
+	{
+		string contact = tokens.at(1);
+		for (size_t i = 2; i < tokens.size(); i++)
+			contact += ' ' + tokens.at(i);
+		currentcollaborator->setContact(contact);
+	}
+	if (tokens.at(0) == "setAddress")
+	if (tokens.size() > 1)
+	{
+		string address = tokens.at(1);
+		for (size_t i = 2; i < tokens.size(); i++)
+			address += ' ' + tokens.at(i);
+		currentcollaborator->setAddress(address);
 	}
 	if (tokens.at(0) == "setWeeklyHours")
 	if (tokens.size() > 1)
@@ -1550,6 +1973,7 @@ void collaboratorcommand(int& state)
 			cin.get();
 		}
 	}
+
 	/*for (size_t i = 0; i < tokens.size(); i++)
 	{
 	cout << tokens[i] << " ";
@@ -1561,6 +1985,11 @@ void collaboratorinfo(int &state, Application& app)
 	ClearScreen();
 	cout << el << el >> normalize("ID of Collaborator: ", to_string(currentcollaborator->getID()), 50) << el;
 	cout >> normalize("Collaborator Name: ", currentcollaborator->getName(), 50) << el;
+	cout >> normalize("Collaborator Contact: ", currentcollaborator->getContact(), 50) << el;
+	cout >> normalize("Collaborator Address: ", currentcollaborator->getAddress(), 50) << el;
+	if (currentcollaborator->isFormer())
+		cout >> normalize("Collaborator Status: ", "Former", 50) << el;
+	else cout >> normalize("Collaborator Status: ", "Employed", 50) << el;
 	cout >> normalize("Collaborator Title: ", currentcollaborator->getTitle(), 50) << el;
 	cout >> normalize("Collaborator Cost: ", to_string(currentcollaborator->getCost()), 50) << el;
 	cout >> normalize("Collaborator Weekly Hours: ", to_string(currentcollaborator->getMaxWeeklyHours()), 50) << el;
@@ -1591,6 +2020,152 @@ void collaboratorinfo(int &state, Application& app)
 	cout << el << el;
 	cout << "                   >  ";
 	collaboratorcommand(state);
+	ClearScreen();
+	//state = ADMINSELECTCOLLABORATOR;
+}
+void cvcommand(int& state)
+{
+	string line;
+	getline(cin, line);
+	bool ok = true;
+	bool end = false;
+	vector<string> tokens = parse_line(line, ok, end);
+	if (end)
+	{
+		state = ADMINSELECTCV;
+		//cin.get();
+		go_end_of_screen();
+		return;
+	}
+	if (tokens.at(0) == "delete")
+	{
+		try { Application::removeCV(currentCV); }
+		catch (Application::ApplicationExcept& e)
+		{
+			cout << el >> e();
+			cin.get();
+		}
+		currentCV = NULL;
+		state = ADMINSELECTCV;
+		go_end_of_screen();
+		return;
+	}
+	if (tokens.at(0) == "setName")
+	if (tokens.size() > 1)
+	{
+		string name = tokens.at(1);
+		for (size_t i = 2; i < tokens.size(); i++)
+			name += ' ' + tokens.at(i);
+		currentCV->setName(name);
+	}
+	if (tokens.at(0) == "setContact")
+	if (tokens.size() > 1)
+	{
+		string contact = tokens.at(1);
+		for (size_t i = 2; i < tokens.size(); i++)
+			contact += ' ' + tokens.at(i);
+		currentCV->setContact(contact);
+	}
+	if (tokens.at(0) == "setAddress")
+	if (tokens.size() > 1)
+	{
+		string address = tokens.at(1);
+		for (size_t i = 2; i < tokens.size(); i++)
+			address += ' ' + tokens.at(i);
+		currentCV->setAddress(address);
+	}
+	if (tokens.at(0) == "setPreviouslyEmployed")
+	if (tokens.size() > 1)
+	{
+		
+		if (tokens.at(1) == "y" || tokens.at(1) == "yes")
+		currentCV->setPreviouslyEmployed(true);
+		else currentCV->setPreviouslyEmployed(false);
+	}
+	if (tokens.at(0) == "setTitle")
+	if (tokens.size() > 1)
+	{
+
+		if (tokens.at(1) != "Programmer" && tokens.at(1) != "Tester" && tokens.at(1) != "Architect" && tokens.at(1) != "Manager")
+			cout << el >> "Invalid Title";
+		else currentCV->setTitle(tokens.at(1));
+	}
+	if (tokens.at(0) == "setExperience")
+	if (tokens.size() > 1)
+	{
+		stringstream s;
+		size_t experience = 0;
+		s << tokens.at(1);
+		s >> experience;
+		if (experience > 0)
+			currentCV->setExperience(experience);
+		else {
+			cout << el >> "Invalid experience";
+			cin.get();
+		}
+	}
+	if (tokens.at(0) == "setNumSkills")
+	if (tokens.size() > 1)
+	{
+		stringstream s;
+		size_t num_skills = 0;
+		s << tokens.at(1);
+		s >> num_skills;
+		if (num_skills > 0)
+			currentCV->setNumSkills(num_skills);
+		else {
+			cout << el >> "Invalid Number of skills";
+			cin.get();
+		}
+	}
+	if (tokens.at(0) == "hire")
+	if (tokens.size() > 2)
+	{
+		stringstream s;
+		int ID = 0;
+		s << tokens.at(1);
+		s >> ID;
+		stringstream s2;
+		int hours = 0;
+		s2 << tokens.at(2);
+		s2 >> hours;
+		if (hours > 0){
+			try{
+				Application::hire(currentCV, hours);
+			}
+			catch (Collaborator::CollaboratorExcept& e)
+			{
+				cout << el >> e();
+				cin.get();
+			}
+			currentCV = NULL;
+			state = ADMINSELECTCV;
+			go_end_of_screen();
+			return;
+		}
+		else{
+			cout << el >> "Invalid hours";
+			cin.get();
+		}
+	}
+
+}
+void cvinfo(int &state, Application& app)
+{
+	ClearScreen();
+	//cout << el << el >> normalize("ID of Candidate: ", to_string(currentCV->getID()), 50) << el;
+	cout >> normalize("Candidate Name: ", currentCV->getName(), 50) << el;
+	cout >> normalize("Candidate Contact: ", currentCV->getContact(), 50) << el;
+	cout >> normalize("Candidate Address: ", currentCV->getAddress(), 50) << el;
+	cout >> normalize("Candidate Title: ", currentCV->getTitle(), 50) << el;
+	if (currentCV->getPreviouslyEmployed())
+		cout >> normalize("Previously Employed: ", "Yes", 50) << el;
+	else cout >> normalize("Previously Employed: ", "No", 50) << el;
+	cout >> normalize("Candidate Experience: ", to_string(currentCV->getExperience()), 50) << el;
+	cout >> normalize("Candidate Number of Skills: ", to_string(currentCV->getNumSkills()), 50) << el;
+	cout << el << el;
+	cout << "                   >  ";
+	cvcommand(state);
 	ClearScreen();
 	//state = ADMINSELECTCOLLABORATOR;
 }
@@ -1938,7 +2513,7 @@ void menus(int& state, Application& app)
 			currentproject = NULL;
 			currenttask = NULL;
 			currentcollaborator = NULL;
-			genericmenu(state, app, "Admin", "Please select an Option:", { "Sim", "Clients", "Projects", "Tasks", "Collaborators", "Quit" }, { TICK, ADMINCLIENTMENU, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ESCAPEMENU });
+			genericmenu(state, app, "Admin", "Please select an Option:", { "Sim", "Clients", "Projects", "Tasks", "Collaborators","Other", "Quit" }, { TICK, ADMINCLIENTMENU, ADMINPROJECTMENU, ADMINTASKMENU, ADMINCOLLABORATORMENU, ADMINOTHERMENU, ESCAPEMENU });
 			break;
 		case TICK:
 			tickmenu(state, app);
@@ -1990,6 +2565,27 @@ void menus(int& state, Application& app)
 			break;
 		case ADMINEDITTASK:
 			taskinfo(state, app);
+			break;
+		case ADMINOTHERMENU:
+			genericmenu(state, app, "Admin", "Other", { "Former Col", "CVs", "Back" }, { ADMINFORMERMENU, ADMINCVMENU, ADMINMENU });
+			break;
+		case ADMINFORMERMENU:
+			genericmenu(state, app, "Admin", "Former Col", { "Existing", "Back" }, { ADMINSELECTFORMER, ADMINOTHERMENU });
+			break;
+		case ADMINSELECTFORMER:
+			fullformerlist(state, app);
+			break;
+		case ADMINCVMENU:
+			genericmenu(state, app, "Admin", "CVs", { "New", "Existing", "Back" }, { ADMINCREATECV, ADMINSELECTCV, ADMINOTHERMENU });
+			break;
+		case ADMINCREATECV:
+			createcvmenu(state, app);
+			break;
+		case ADMINSELECTCV:
+			fullcvlist(state, app);
+			break;
+		case ADMINEDITCV:
+			cvinfo(state, app);
 			break;
 		default:
 			state = EXIT;

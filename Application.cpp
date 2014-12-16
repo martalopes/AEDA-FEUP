@@ -5,7 +5,8 @@ vector<Project*> Application::projects;
 BST<SmartPtr<Client>> Application::clients(SmartPtr<Client>((Client*)NULL));
 vector<Collaborator*> Application::collaborators;
 vector<Task*> Application::tasks;
-unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual> Application::former_collaborators;
+Colhash Application::former_collaborators;
+CV_queue Application::cvs;
 Date Application::d;
 Application* Application::instance = NULL;
 
@@ -23,6 +24,10 @@ size_t CollaboratorHash::operator()(Collaborator* const c) const
 	return (size_t)c->getID();
 }
 
+bool CVcomparator::operator()(const CV* c1, const CV*c2)
+{
+	return c1->getValue() < c2->getValue();
+}
 Application* Application::Instance()
 {
 	if (instance == NULL)
@@ -190,6 +195,76 @@ void Application::addCollaborator(Collaborator* c)
 		throw ApplicationExcept("Collaborator already exists");
 	collaborators.push_back(c);
 }
+
+void Application::setFormer(Collaborator* c)
+{
+	auto it = former_collaborators.begin();
+	for (; it != former_collaborators.end(); ++it)
+	{
+		if (*c == **it)
+		{
+			throw ApplicationExcept("Collaborator is already in former list");
+		}
+	}
+	for (size_t i = 0; i < collaborators.size(); ++i)
+	if (*collaborators.at(i) == *c)
+	{
+		collaborators.erase(collaborators.begin() + i);
+		c->leave();
+		former_collaborators.insert(c);
+		return;
+	}
+	throw ApplicationExcept("Collaborator does not exist");
+}
+
+
+
+void Application::addCV(CV* c)
+{
+	cvs.push(c);
+}
+
+void Application::hire(CV * c, int weeklyHours)
+{
+	addCollaborator(c->toCollaborator(weeklyHours));
+	removeCV(c);
+}
+
+void Application::removeCV(CV* c)
+{
+	CV_queue temp;
+	bool found = false;
+	while (!cvs.empty())
+	{
+		if (!(cvs.top() == c))
+			temp.push(cvs.top());
+		else found = true;
+		cvs.pop();
+	}
+	while (!temp.empty())
+	{
+		cvs.push(temp.top());
+		temp.pop();
+	}
+	if (found)
+		delete c;
+}
+
+void Application::unsetFormer(Collaborator* c)
+{
+	for (size_t i = 0; i < collaborators.size(); ++i)
+	if (*collaborators.at(i) == *c)
+	{
+		throw ApplicationExcept("Collaborator is currently employed");
+	}
+	auto it = former_collaborators.find(c);
+	if (it == former_collaborators.end())
+		throw ApplicationExcept("Collaborator does not exist");
+	former_collaborators.erase(c);
+	c->reinstate();
+	collaborators.push_back(c);
+	sort(collaborators.begin(), collaborators.end(), Collaborator::CollaboratorComparatorID());
+}
 void Application::addTask(Task* t)
 {
 	for (size_t i = 0; i < tasks.size(); ++i)
@@ -281,7 +356,17 @@ bool Application::removeCollaborator(Collaborator* c)
 	delete c;
 	return true;
 }
-
+ bool Application::removeFormerCollaborator(Collaborator* c)
+{
+	 if (c == NULL)
+		 throw ApplicationExcept("Invalid former collaborator being removed from application");
+	 if (former_collaborators.find(c) == former_collaborators.end())
+	 {
+		 throw ApplicationExcept("Invalid collaborator is not in former collaborator list");
+	 }
+	 else former_collaborators.erase(c);
+	 return true;
+}
 void Application::writeProjects(ofstream& fout)
 {
 	fout.open("projects.txt");
@@ -332,6 +417,17 @@ void Application::writeFormerCollaborators(ofstream& fout)
 	}
 	fout.close();
 }
+void Application::writeCVs(ofstream& fout)
+{
+	fout.open("cvs.txt");
+	vector<CV*> c = getCVs();
+	fout << c.size()<< endl;
+	for (size_t i = 0; i < c.size(); i++)
+	{
+		fout << *c.at(i);
+	}
+	fout.close();
+}
 void Application::writeTasks(ofstream& fout)
 {
 	fout.open("tasks.txt");
@@ -349,6 +445,7 @@ void Application::writeFiles()
 	writeClients(fout);
 	writeCollaborators(fout);
 	writeFormerCollaborators(fout);
+	writeCVs(fout);
 	writeTasks(fout);
 	writeApp(fout);
 	fout.close();
@@ -427,6 +524,22 @@ void Application::readFormerCollaborators(ifstream& fin)
 	}
 	fin.close();
 }
+void Application::readCVs(ifstream& fin)
+{
+	fin.open("cvs.txt");
+	if (!fin)
+		throw ApplicationExcept("cvs.txt does not exist");
+	unsigned int numcvs = 0;
+	fin >> numcvs;
+	fin.ignore();
+	for (size_t i = 0; i < numcvs; i++)
+	{
+		CV* c = new CV();
+		fin >> *c;
+		cvs.push(c);
+	}
+	fin.close();
+}
 void Application::readTasks(ifstream& fin)
 {
 	fin.open("tasks.txt");
@@ -443,6 +556,9 @@ void Application::readTasks(ifstream& fin)
 	}
 	fin.close();
 }
+
+
+
 
 void Application::readApp(ifstream& fin)
 {
@@ -532,6 +648,13 @@ void Application::fillBST()
 		clients.insert(SmartPtr<Client>(tempclients.at(i)));
 	tempclients.clear();
 }
+void Application::updateClientOrder()
+{
+	vector<Client*> v = getClients_Level();
+	clients.makeEmpty();
+	for (size_t i = 0; i < v.size(); i++)
+		clients.insert(SmartPtr<Client>(v.at(i)));
+}
 
 void Application::readFiles()
 {
@@ -540,6 +663,7 @@ void Application::readFiles()
 	readProjects(fin);
 	readCollaborators(fin);
 	readFormerCollaborators(fin);
+	readCVs(fin);
 	readClients(fin);
 	readTasks(fin);
 	readApp(fin);
@@ -620,6 +744,31 @@ vector<Collaborator*> Application::getFormerCollaborators()
 		out.push_back(*it);
 	}
 	return out;
+}
+vector<CV*> Application::getCVs()
+{
+	CV_queue temp = cvs;
+	vector<CV*> out;
+	while (!temp.empty())
+	{
+		out.push_back(temp.top());
+		temp.pop();
+	}
+	return out;
+}
+void Application::updateCVorder()
+{
+	CV_queue temp;
+	while (!cvs.empty())
+	{
+		temp.push(cvs.top());
+		cvs.pop();
+	}
+	while (!temp.empty())
+	{
+		cvs.push(temp.top());
+		temp.pop();
+	}
 }
 vector<Task*> Application::getTasks()
 {

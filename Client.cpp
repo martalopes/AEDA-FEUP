@@ -2,14 +2,15 @@
 
 int Client::lastID = 0;
 
-Client::Client() :ID(0){}
-Client::Client(string name) :name(name), ID(++lastID){}
-Client::Client(string name, int setID) :name(name), ID(setID) { if (setID > lastID) lastID = setID; }
+Client::Client() :ID(0), fiscal(0){}
+Client::Client(string name) :name(name), ID(++lastID),fiscal(0){}
+Client::Client(int fiscal, string name) : name(name), ID(++lastID), fiscal(fiscal){}
+Client::Client(string name, int setID) :name(name), ID(setID), fiscal(0) { if (setID > lastID) lastID = setID; }
 Client::Client(int i)
 {
 	stringstream s1, s2;
 	s1 << "Name " << i;
-	*this = Client(s1.str());
+	*this = Client(rand() % 1000000, s1.str());
 }
 string Client::getName() const { return this->name; }
 vector<Project*> Client::getProjects() const { return this->projects; }
@@ -95,6 +96,14 @@ double Client::getTotal() const
 	for (size_t i = 0; i < projects.size(); i++) 
 		sum += projects.at(i)->getCost(); 
 	return sum;
+}
+int Client::getFiscal()const
+{
+	return this->fiscal;
+}
+void Client::setFiscal(int newfiscal)
+{
+	this->fiscal = newfiscal;
 }
 string Client::toString() const
 {

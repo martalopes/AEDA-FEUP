@@ -5,6 +5,7 @@
 int Collaborator::lastID = 0;
 Collaborator::Collaborator() :ID(0), maxweeklyhours(0), workinghours(0){}
 Collaborator::Collaborator(string name, int maxweeklyhours) : name(name), maxweeklyhours(maxweeklyhours), ID(++lastID), workinghours(0){}
+Collaborator::Collaborator(string name, string contact, string address, int maxweeklyhours) : name(name), contact(contact), address(address), maxweeklyhours(maxweeklyhours), ID(++lastID), workinghours(0){}
 Collaborator::Collaborator(string name, int maxweeklyhours, int setID) : name(name), maxweeklyhours(maxweeklyhours), workinghours(0){ if (setID > lastID) lastID = setID; }
 
 Collaborator::Collaborator(int i)
@@ -22,6 +23,8 @@ Collaborator::Collaborator(int i)
 
 int Collaborator::getID() const { return this->ID; }
 string Collaborator::getName() const { return this->name; }
+string Collaborator::getContact() const{ return this->contact; }
+string Collaborator::getAddress() const{ return this->address; }
 int Collaborator::getWorkingHours() const { return  this->workinghours; }
 int Collaborator::getMaxWeeklyHours() const { return this->maxweeklyhours; }
 vector<Project*> Collaborator::getProjects() const { return this->projects; }
@@ -30,14 +33,17 @@ vector<Task*> Collaborator::getFinishedTasks() const { return this->finishedtask
 double  Collaborator::getCost() const{ return 0; }
 string  Collaborator::getTitle() const{ return "Collaborator"; }
 void Collaborator::setName(string newname){ this->name = newname; }
+void Collaborator::setContact(string newcontact){ this->contact = newcontact; }
+void Collaborator::setAddress(string newaddress){ this->address = newaddress; }
 void Collaborator::setWeeklyHours(int newhours) { this->maxweeklyhours = newhours; }
 bool Collaborator::operator==(const Collaborator& c2)const{ return this->ID == c2.ID; }
 void Collaborator::updateProjects() { projects = calculateProjects(); }
-
 bool Collaborator::addTask(Task* t1, unsigned int hours, bool addCollaborator)
 {
 	if (t1 == NULL)
 		throw CollaboratorExcept("Invalid Task being added to Collaborator");
+	if (isFormer())
+		throw CollaboratorExcept("Collaborator no longer works for the company");
 	if (t1->isCompleted())
 	{
 		for (size_t i = 0; i < finishedtasks.size(); i++)
@@ -92,7 +98,6 @@ bool Collaborator::removeTask(Task* t, bool removeCollaborator)
 	}
 	return false;
 }
-
 bool Collaborator::changeTaskHours(Task* t1, unsigned int hours)
 {
 	for (size_t i = 0; i < this->tasks.size(); ++i)
@@ -111,7 +116,6 @@ string Collaborator::toString() const
 {
 	return normalize(to_string(ID), name, 30);
 }
-
 void Collaborator::connect()
 {
 	for (size_t i = 0; i < projects.size(); i++)
@@ -133,7 +137,6 @@ void Collaborator::connect()
 		tasks.at(i).first = ptr;
 	}
 }
-
 bool Collaborator::removeTrace()
 {
 	for (size_t i = 0; i < tasks.size(); i++)
@@ -142,21 +145,32 @@ bool Collaborator::removeTrace()
 	}
 	return true;
 }
-
-void Collaborator::leave()
+bool Collaborator::leave()
 {
+	if (isFormer())
+		return false;
 	vector<Project*> pr;
 	pr = calculateProjects();
 	for (size_t i = 0; i < tasks.size(); i++)
 	{
 		tasks.at(i).first->removeCollaborator(this);
+		i--;
 	}
 	this->projects = pr;
+	return true;
 }
-
-void Collaborator::reinstate()
+bool Collaborator::reinstate()
 {
+	if (!isFormer())
+		return false;
 	this->projects = calculateProjects();
+	return true;
+}
+bool Collaborator::isFormer() const
+{
+	if (this->projects.size() != 0 && this->tasks.size() == 0)
+		return true;
+	return false;
 }
 //bool CollaboratorEqual::operator()(Collaborator* const c1, Collaborator* const c2) const
 //{
@@ -232,14 +246,12 @@ istream & operator>>(istream& in, Collaborator& c)
 	}
 	return in;
 }
-
 bool Collaborator::reassign(Task* t)
 {
 	if (!removeTask(t, false))
 		return false;
 	finishedtasks.push_back(t);
 }
-
 Collaborator* Collaborator::newRandomCollaborator(int i)
 {
 	int n = rand() % 4;
@@ -262,7 +274,6 @@ Collaborator* Collaborator::newRandomCollaborator(int i)
 		break;
 	}
 }
-
 Collaborator* Collaborator::newCollaboratorTitle(string title)
 {
 	if ("Programmer" == title)
@@ -328,6 +339,7 @@ bool Collaborator::CollaboratorComparatorNumProjects::operator()(const Collabora
 string Collaborator::CollaboratorComparatorNumProjects::getAbbreviation() const{ return "N. Proj"; }
 
 Programmer::Programmer(string name, int maxweeklyhours) : Collaborator(name, maxweeklyhours){}
+Programmer::Programmer(string name, string contact, string address, int maxweeklyhours) : Collaborator(name, contact, address, maxweeklyhours){}
 Programmer::Programmer(string name, int maxweeklyhours, int setID) : Collaborator(name, maxweeklyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; }
 Programmer::Programmer(int i) : Collaborator(i){}
 Programmer::Programmer() : Collaborator(){}
@@ -336,6 +348,7 @@ string Programmer::getTitle() const{ return "Programmer"; }
 
 
 Architect::Architect(string name, int maxweeklyhours) : Collaborator(name, maxweeklyhours){}
+Architect::Architect(string name, string contact, string address, int maxweeklyhours) : Collaborator(name, contact, address, maxweeklyhours){}
 Architect::Architect(string name, int maxweeklyhours, int setID) : Collaborator(name, maxweeklyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; }
 Architect::Architect(int i) : Collaborator(i){}
 Architect::Architect() : Collaborator(){}
@@ -343,6 +356,7 @@ double Architect::getCost() const { return ARCHITECT_COST; }
 string Architect::getTitle() const{ return "Architect"; }
 
 Manager::Manager(string name, int maxweeklyhours) : Collaborator(name, maxweeklyhours){}
+Manager::Manager(string name, string contact, string address, int maxweeklyhours) : Collaborator(name, contact, address, maxweeklyhours){}
 Manager::Manager(string name, int maxweeklyhours, int setID) : Collaborator(name, maxweeklyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; }
 Manager::Manager(int i) : Collaborator(i){}
 Manager::Manager() : Collaborator(){}
@@ -350,6 +364,7 @@ double Manager::getCost() const { return MANAGER_COST; }
 string Manager::getTitle() const{ return "Manager"; }
 
 Tester::Tester(string name, int maxweeklyhours) : Collaborator(name, maxweeklyhours){}
+Tester::Tester(string name, string contact, string address, int maxweeklyhours) : Collaborator(name, contact, address, maxweeklyhours){}
 Tester::Tester(string name, int maxweeklyhours, int setID) : Collaborator(name, maxweeklyhours, setID){ if (setID > Collaborator::lastID) Collaborator::lastID = setID; }
 Tester::Tester(int i) : Collaborator(i){}
 Tester::Tester() : Collaborator(){}

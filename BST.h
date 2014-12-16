@@ -146,8 +146,6 @@ bool BST<Comparable>::isEmpty() const
 {
 	return root == NULL;
 }
-
-
 template <class Comparable>
 void BST<Comparable>::printTree() const
 {

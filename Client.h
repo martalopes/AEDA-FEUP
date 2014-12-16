@@ -29,38 +29,54 @@ class Client
 private:
 	int ID;
 	static int lastID; 
+	int fiscal;
 	string name;
 	vector<Project*> projects;
 public:
 	///construtor por defeito
 	Client();
-	///construtor sem ID especidficado
+
+	///construtor sem ID especificado
 	///@param name nome de Cliente
 	Client(string name);
+
+	///construtor sem ID especificado, com informacao fiscal
+	///@param name nome de Cliente
+	///@param dados fiscais
+	Client(int fiscal, string name);
+
 	///construtor com ID
 	///@param name nome de Cliente
 	///@param setID ID do Cliente
 	Client(string name, int setID);
+
 	///client generico
 	///@param i indice de Cliente	
 	Client(int i);
+
 	///@return nome do client
 	string getName() const ;
+
 	///@return string com o nome e ID do cliente
 	string toString() const;
+
 	///@return projetos do cliente
 	vector<Project*> getProjects() const;
+
 	///@return ID do cliente
 	int getID()const;
+
 	///modificar o nome do cliente
 	///@param name novo nome de Cliente
 	void setName(string name);
+
 	///adicionar projeto a colaborador
 	///@throw projeto nao existe
 	///@param proj projeto
 	///@param setClient indica se o cliente deve ser associado ao projeto
 	///@return sucesso da operacao
 	bool addProject(Project* proj, bool setClient = true);
+
 	///substitui os IDs dos objetos pelos apontadores para os objetos
 	///@throw objeto nao existe na aplicacao
 	void connect();
@@ -74,6 +90,14 @@ public:
 
 	///@return custo total de todos os projetos do cliente
 	double getTotal() const;
+
+	///@return informacao fiscal do cliente
+	int getFiscal()const;
+
+	///modificar informacao fiscal do cliente
+	///@param newfiscal nova informacao fiscal
+	void setFiscal(int newfiscal);
+
 	///dois clientes sao iguais se os seus IDs forem iguais
 	///@param c2 cliente a ser comparado
 	///@return verdadeiro se sao iguais

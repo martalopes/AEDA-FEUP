@@ -9,6 +9,7 @@
 #include "Date.h"
 #include "BST.h"
 #include "SmartPtr.h"
+#include "CV.h"
 
 #include <string>
 #include <utility>
@@ -26,7 +27,9 @@
 
 using namespace std;
 
+
 class Collaborator;
+class CV;
 
 struct CollaboratorEqual
 {
@@ -36,6 +39,16 @@ struct  CollaboratorHash
 {
 	size_t operator()(Collaborator* const  c) const;
 };
+class CVcomparator
+{
+public:
+	bool operator()(const CV* c1, const CV* c2);
+};
+typedef unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual> Colhash;
+typedef unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual>::iterator Colhash_it;
+typedef unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual>::const_iterator const_Colhash_it;
+
+typedef priority_queue<CV*, vector<CV*>, CVcomparator> CV_queue;
 
 class Application
 {
@@ -77,12 +90,18 @@ public:
 	static vector<Client*> getClients_Level();
 
 	static void fillBST();
+
+	static void updateClientOrder();
+
 	////////////////////////////////////////////////////////////////////
 	///@return colaboradores
 	static vector<Collaborator*> getCollaborators();
 
 	static vector<Collaborator*> getFormerCollaborators();
 
+	static vector<CV*> getCVs();
+
+	static void updateCVorder();
 
 	///@return tarefas
 	static vector<Task*> getTasks();
@@ -125,6 +144,13 @@ public:
 	/// @param c apontador para o colaborador
 	static void addCollaborator(Collaborator* c);
 
+	static void setFormer(Collaborator* c);
+
+	static void addCV(CV* c);
+
+	static void hire(CV * c, int weeklyHours);
+
+	static void removeCV(CV* c);
 	/// adicionar tarefa a aplicacao
 	/// @throw tarefa ja existe
 	/// @param t apontador para a tarefa
@@ -154,6 +180,9 @@ public:
 	/// @return sucesso da operacao
 	static bool removeCollaborator(Collaborator* c);
 
+	static bool removeFormerCollaborator(Collaborator* c);
+
+	static void unsetFormer(Collaborator* c);
 
 	/*escrita*/
 
@@ -172,6 +201,8 @@ public:
 	static void writeCollaborators(ofstream& fout);
 
 	static void writeFormerCollaborators(ofstream& fout);
+
+	static void writeCVs(ofstream& fout);
 
 	///escreve os tarefas do sistema em ficheiros
 	///@param fout output file stream
@@ -199,6 +230,8 @@ public:
 	static void readCollaborators(ifstream& fin);
 
 	static void readFormerCollaborators(ifstream& fin);
+
+	static void readCVs(ifstream& fin);
 
 	///le os tarefas do sistema
 	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
@@ -235,7 +268,10 @@ private:
 	///tarefas guaradas no sistema
 	static vector<Task*> tasks;
 
-	static unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual> former_collaborators;
+	static Colhash former_collaborators;
+
+	static CV_queue cvs;
+
 	///data atual
 	static Date d;
 	///apontador para o unico objeto da class
