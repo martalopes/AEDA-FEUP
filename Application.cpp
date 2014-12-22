@@ -682,6 +682,7 @@ void Application::genApplication(){
 	int numclients = NUM_CLIENTS;
 	int numcollaborators = NUM_COLLABORATOR;
 	int numtasks = NUM_TASKS;
+	int numcvs = NUM_CVS;
 	for (int i = 1; i <= numprojects; i++)
 	{
 		Project* p = new Project(i);
@@ -701,6 +702,11 @@ void Application::genApplication(){
 	{
 		Task* t = new Task(i);
 		tasks.push_back(t);
+	}
+	for (int i = 1; i <= numcvs; i++)
+	{
+		CV* t = new CV(i);
+		cvs.push(t);
 	}
 	vector<Client*> clients_vector = getClients_InOrder();
 	for (size_t i = 0; i < projects.size(); i++)
@@ -726,7 +732,19 @@ void Application::genApplication(){
 			collaborators.at(i)->addTask(tasks.at(j), rand() % 5 + 1);
 		}
 	}
-	int i = 0;
+	for (size_t i = 0; i < collaborators.size(); i++)
+	{
+		for (size_t j = 0; j < tasks.size(); j++)
+		if (rand() % 10 == 0)
+		{
+			collaborators.at(i)->addTask(tasks.at(j), rand() % 5 + 1);
+		}
+	}
+	for (size_t i = 0; i < collaborators.size(); i++)
+	{
+		if (rand() % 10 == 0)
+			setFormer(collaborators.at(i));
+	}
 }
 
 

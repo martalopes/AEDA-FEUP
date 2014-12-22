@@ -24,6 +24,7 @@
 #define NUM_CLIENTS 5
 #define NUM_COLLABORATOR 50
 #define NUM_TASKS 100
+#define NUM_CVS 50
 
 using namespace std;
 
