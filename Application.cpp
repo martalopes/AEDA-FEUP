@@ -411,7 +411,7 @@ void Application::writeFormerCollaborators(ofstream& fout)
 	fout.open("formercollaborators.txt");
 	fout << former_collaborators.size() << endl;
 	auto it = former_collaborators.begin();
-	for (; it != former_collaborators.begin(); ++it)
+	for (; it != former_collaborators.end(); ++it)
 	{
 		fout << **it;
 	}
@@ -618,12 +618,10 @@ void Application::connect()
 	}
 	try{
 		auto it = former_collaborators.begin();
-		for (; it!= former_collaborators.end(); ++it)
+		for (; it != former_collaborators.end(); ++it)
 		{
 			Collaborator* c = *it;
-			former_collaborators.erase(it);
 			c->connect();
-			former_collaborators.insert(c);
 		}
 	}
 	catch (Collaborator::CollaboratorExcept& e)
