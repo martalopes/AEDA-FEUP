@@ -145,13 +145,24 @@ public:
 	/// @param c apontador para o colaborador
 	static void addCollaborator(Collaborator* c);
 
+	/// faz com quem um certo colaborador atual passe a ser um colaborador antigo
+	/// @throw se o colaborador já estiver na lista de colaboradores antigos
+	/// @param c apontador para o colaborador
 	static void setFormer(Collaborator* c);
 
+	///adiciona um candidato novo
+	///@param c candidato
 	static void addCV(CV* c);
 
+	///transforma um candidato em colaborador
+	///@param c candidato
+	///@param weeklyHours horas máximas que ele trabalhará
 	static void hire(CV * c, int weeklyHours);
 
+	///remove um candidato
+	///@param c candidato
 	static void removeCV(CV* c);
+
 	/// adicionar tarefa a aplicacao
 	/// @throw tarefa ja existe
 	/// @param t apontador para a tarefa
@@ -181,8 +192,16 @@ public:
 	/// @return sucesso da operacao
 	static bool removeCollaborator(Collaborator* c);
 
+	/// remove colaborador antigo da aplicacao
+	/// @throw colaborador antigo nao existe
+	/// @param c apontador para o colaborador antigo
+	/// @return sucesso da operacao
 	static bool removeFormerCollaborator(Collaborator* c);
 
+	/// faz com que o colaborador deixe de ser antigo
+	/// @throw se o colaborador já estiver empregue na empresa
+	/// @throw se o colaborador não existir
+	/// @param c apontador para o colaborador antigo
 	static void unsetFormer(Collaborator* c);
 
 	/*escrita*/
@@ -201,8 +220,12 @@ public:
 	///@param fout output file stream
 	static void writeCollaborators(ofstream& fout);
 
+	///escreve os colaboradores antigos em ficheiros
+	///@param fout output file stream
 	static void writeFormerCollaborators(ofstream& fout);
 
+	///escreve todos os candidatos em ficheiros
+	///@param fout output file stream
 	static void writeCVs(ofstream& fout);
 
 	///escreve os tarefas do sistema em ficheiros
@@ -268,6 +291,7 @@ private:
 	static vector<Collaborator*> collaborators;
 	///tarefas guaradas no sistema
 	static vector<Task*> tasks;
+
 
 	static Colhash former_collaborators;
 
