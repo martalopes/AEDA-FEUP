@@ -50,7 +50,7 @@ class CVcomparator
 public:
 	///@param c1 candidato
 	///@param c2 candidato
-	///@return verdadeiro se os candidatos forem iguais
+	///@return verdadeiro se o valor do primeiro candidato for menor que o do segundo
 	bool operator()(const CV* c1, const CV* c2);
 };
 typedef unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual> Colhash;
