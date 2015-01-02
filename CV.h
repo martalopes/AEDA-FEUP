@@ -22,14 +22,14 @@ class CV
 	string name;
 	string contact;
 	string address;
-	bool previously_employed;  /// diz-nos se o candidato já trabalhou na empresa
+	bool previously_employed;  /// diz-nos se o candidato ja trabalhou na empresa
 	size_t experience;
 	size_t num_skills;
 public:
 	///construtor por defeito
 	CV();
 
-	///construtor de um candidato aleatório
+	///construtor de um candidato aleatorio
 	CV(string name, string contact, string address, string title, bool previously_employed, size_t experience, size_t num_skills);
 	
 	///construtor de um candidato 
@@ -46,7 +46,7 @@ public:
 	string getContact() const;
 	///@return endereço do candidato
 	string getAddress() const;
-	///@return se ele já trabalhou na empresa ou não
+	///@return se ele já trabalhou na empresa ou nao
 	bool getPreviouslyEmployed() const;
 	///@return experiencia do candidato
 	size_t getExperience() const;
@@ -64,23 +64,23 @@ public:
 	/// escolhe um contacto para o candidato
 	/// @param newContact contacto que vai ser escolhido
 	void setContact(string newContact);
-	/// escolhe um endereço para o candidato
-	/// @param newAddres endereço que vai ser escolhido
+	/// escolhe um endereco para o candidato
+	/// @param newAddres endereco que vai ser escolhido
 	void setAddress(string newAddress);
-	/// escolhe se o candidato já esteve empregue nesta empresa ou não
-	/// @param newPE o estado do candidato (empregue anteriormente ou não)
+	/// escolhe se o candidato já esteve empregue nesta empresa ou nao
+	/// @param newPE o estado do candidato (empregue anteriormente ou nao)
 	void setPreviouslyEmployed(bool newPE);
-	/// dá uma experiencia ao candidato
+	/// da uma experiencia ao candidato
 	/// @param newExp experiencia que vai ser escolhida
 	void setExperience(size_t newExp);
-	/// escolhe o número de skills para o candidato
+	/// escolhe o numero de skills para o candidato
 	/// @param newNumSkills numero de skills que vao ser escolhidas
 	void setNumSkills(size_t newNumSkills);
 
 	///cria um novo colaborador dependendo do seu titulo (programmer, architect, manager, tester)
 	Collaborator* toCollaborator(int maxWorkingHours)const;
 
-
+	
 	friend ostream & operator<<(ostream& out, const CV& c);
 	friend istream & operator>>(istream& in, CV& c);
 	bool operator< (const CV& c2) const;
