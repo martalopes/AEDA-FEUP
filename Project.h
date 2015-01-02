@@ -194,6 +194,8 @@ public:
 		{
 			string description;
 		public:
+			///@param description descricao
+			///construtor da classe
 			ProjectExcept(string description);
 			///@return descricao da excecao
 			string operator()();

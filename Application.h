@@ -34,15 +34,23 @@ class CV;
 
 struct CollaboratorEqual
 {
+	///@param c1 colaborador
+	///@param c2 colaborador
+	///@return verdadeiro se os colaboradores forem iguais
 	bool operator()(Collaborator* const c1, Collaborator* const c2) const;
 };
 struct  CollaboratorHash
 {
+	///@param c colaborador
+	///@return ID do colaborador
 	size_t operator()(Collaborator* const  c) const;
 };
 class CVcomparator
 {
 public:
+	///@param c1 candidato
+	///@param c2 candidato
+	///@return verdadeiro se os candidatos forem iguais
 	bool operator()(const CV* c1, const CV* c2);
 };
 typedef unordered_set<Collaborator*, CollaboratorHash, CollaboratorEqual> Colhash;
@@ -90,22 +98,28 @@ public:
 	static vector<Client*> getClients_PostOrder();
 	static vector<Client*> getClients_Level();
 
+	///cria a bst
 	static void fillBST();
 
+	///atualiza as ordens dos clientes
 	static void updateClientOrder();
 
 	////////////////////////////////////////////////////////////////////
 	///@return colaboradores
 	static vector<Collaborator*> getCollaborators();
-
+	
+	///@return colaboradores antigos
 	static vector<Collaborator*> getFormerCollaborators();
 
+	///@return candidatos
 	static vector<CV*> getCVs();
 
+	///atualiza a ordem dos candidatos
 	static void updateCVorder();
 
 	///@return tarefas
 	static vector<Task*> getTasks();
+
 	/// obter um projeto a partir do seu ID
 	/// @throw projeto nao existe
 	/// @param ID ID do projeto
@@ -292,9 +306,10 @@ private:
 	///tarefas guaradas no sistema
 	static vector<Task*> tasks;
 
-
+	///antigos colaboradores
 	static Colhash former_collaborators;
 
+	///candidatos
 	static CV_queue cvs;
 
 	///data atual

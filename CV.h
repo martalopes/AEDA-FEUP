@@ -33,7 +33,7 @@ public:
 	CV(string name, string contact, string address, string title, bool previously_employed, size_t experience, size_t num_skills);
 	
 	///construtor de um candidato 
-	/// @param i número que desejamos dar ao colaborador
+	/// @param i numero que desejamos dar ao colaborador
 	CV(int i);
 	
 	///@return ID do candidato
@@ -44,15 +44,16 @@ public:
 	string getName() const;
 	///@return contacto do candidato
 	string getContact() const;
-	///@return endereço do candidato
+	///@return endereco do candidato
 	string getAddress() const;
-	///@return se ele já trabalhou na empresa ou nao
+	///@return se ele ja trabalhou na empresa ou nao
 	bool getPreviouslyEmployed() const;
 	///@return experiencia do candidato
 	size_t getExperience() const;
 	///@return skills do candidato
 	size_t getNumSkills() const;
 
+	///passa o ID para string
 	string toString() const;
 
 	/// escolhe um titulo para o candidato
@@ -67,7 +68,7 @@ public:
 	/// escolhe um endereco para o candidato
 	/// @param newAddres endereco que vai ser escolhido
 	void setAddress(string newAddress);
-	/// escolhe se o candidato já esteve empregue nesta empresa ou nao
+	/// escolhe se o candidato ja esteve empregue nesta empresa ou nao
 	/// @param newPE o estado do candidato (empregue anteriormente ou nao)
 	void setPreviouslyEmployed(bool newPE);
 	/// da uma experiencia ao candidato
@@ -80,12 +81,25 @@ public:
 	///cria um novo colaborador dependendo do seu titulo (programmer, architect, manager, tester)
 	Collaborator* toCollaborator(int maxWorkingHours)const;
 
-	
+	///@param out stream de saida
+	///@param c candidato
+	///retorna todas as informacoes sobre o candidato
 	friend ostream & operator<<(ostream& out, const CV& c);
+
+	///@param in stream de entrada
+	///@param c candidato
+	///vai inserir todas as informacoes sobre o candidato
 	friend istream & operator>>(istream& in, CV& c);
+
+	///@param c2 candidato
+	///@return compara os candidatos
 	bool operator< (const CV& c2) const;
+
+	///@param c2 candidato
+	///@return ve se os candidatos são iguais
 	bool operator==(const CV& c2) const;
 
+	///retorna o valor do candidato
 	int getValue() const;
 };
 

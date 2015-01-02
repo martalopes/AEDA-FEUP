@@ -122,6 +122,8 @@ public:
 	{
 		string description;
 	public:
+		///@param description descrição
+		///construtor da classe
 		ClientExcept(string description);
 		///@return descricao da excepcao
 		string operator()();
