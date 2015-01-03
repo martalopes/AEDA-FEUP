@@ -25,24 +25,24 @@ public:
 
 	///construtor com apontador nulo e forma de comparacao vazia
 	SmartPtr() : pointee(NULL) { comparison = new Comparison() };
+	///@brief construtor com apontador igual ao apontador pretendido pelo utlizador e forma de comparacao vazia
 	///@param pointee apontador 
-	///construtor com apontador igual ao apontador pretendido pelo utlizador e forma de comparacao vazia
 	SmartPtr(T* pointee) : pointee(pointee) { comparison = new Comparison(); };
+	///@brief construtor com apontador nulo e a forma de comparacao pretendida pelo utilizador
 	///@param c forma de comparacao
-	///construtor com apontador nulo e a forma de comparacao pretendida pelo utilizador
 	SmartPtr(Comparison * c) : pointee(NULL) { comparison = new Comparison(c) };
+	///@brief construtor com apontador e a forma de comparacao escolhidos pelo utilizador
 	///@param pointee apontador
 	///@param c forma de comparacao
-	///construtor com apontador e a forma de comparacao escolhidos pelo utilizador
 	SmartPtr(T* pointee, Comparison* c) : pointee(pointee) { comparison = new Comparison(*c); };
+	///@brief construtor em que a forma de comparacao vai ser a forma de comparacao de p2
 	///@param p2 elemento constante da classe SmartPtr
-	///construtor em que a forma de comparacao vai ser a forma de comparacao de p2
 	SmartPtr(const SmartPtr& p2) : pointee(p2.pointee) { comparison = new Comparison(*p2.comparison); };
+	///@brief modifica o valor de pointee para t
 	///@param t apontador
-	///modifica o valor de pointee para t
 	void setPointer(T* t){ pointee = t; };
+	///@brief modifica a forma de comparacao para c
 	///@param c forma de comparacao
-	///modifica a forma de comparacao para c
 	void setComparison(Comparison* c){ delete comparison; comparison = new Comparison(*c); };
 	///@throw quando o apontador e nulo
 	///@return apontador
@@ -73,11 +73,11 @@ public:
 	//SmartPtr& operator=(T* pointee){ this->pointee = pointee; this->comparison = new Comparison(); };
 	///@param p2 elemento constante de SmartPtr
 	///@return 
-	bool operator<(const SmartPtr<T, Comparison>& p2) const { return (*comparison)(*this->pointee, *p2.pointee); };
+	bool operator<(const SmartPtr<T, Comparison>& p2) const { return (*comparison)(*this->pointee, *p2.pointee); }; 
 	///@return verifica se o apontador e nulo
 	bool isNull() const { return pointee == NULL; };
+	///@brief o elimina apontador
 	///@throw se o apontador nao existe
-	///vai eliminar o apontador
 	void deletePtr(){ if (pointee == NULL) throw NullDelete(); delete pointee; };
 private:
 	T* pointee;

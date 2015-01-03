@@ -92,7 +92,7 @@ public:
 
 	///@brief remover projeto de cliente
 	///@throw projeto nao existe
-	///@param p projeto
+	///@param p projeto a ser removido 
 	///@param removeClient indica se o cliente deve ser removido ao projeto
 	///@return sucesso da operacao
 	bool removeProject(Project* p, bool removeClient = true);
@@ -121,7 +121,7 @@ public:
 	///@return verdadeiro se sao iguais
 	bool operator < (const Client& c2) const;
 
-	///@brief escrita de todos os dados do client, no lugar dos apontadores sao escritos os IDs dos objetos
+	///@brief escrita de todos os dados do cliente, no lugar dos apontadores sao escritos os IDs dos objetos
 	///@param out stream de saida
 	///@param c cliente a ser escrito
 	///@return stream de saida
