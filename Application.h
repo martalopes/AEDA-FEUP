@@ -34,6 +34,7 @@ class CV;
 
 struct CollaboratorEqual
 {
+	///@brief overloading do operador de igualdade
 	///@param c1 colaborador
 	///@param c2 colaborador
 	///@return verdadeiro se os colaboradores forem iguais
@@ -41,6 +42,7 @@ struct CollaboratorEqual
 };
 struct  CollaboratorHash
 {
+	///@brief Hash funtion 
 	///@param c colaborador
 	///@return ID do colaborador
 	size_t operator()(Collaborator* const  c) const;
@@ -48,6 +50,7 @@ struct  CollaboratorHash
 class CVcomparator
 {
 public:
+	///@brief operador funcao que retorna verdadeiro se o valor do primeiro candidato for menor que o do segundo
 	///@param c1 candidato
 	///@param c2 candidato
 	///@return verdadeiro se o valor do primeiro candidato for menor que o do segundo
@@ -74,20 +77,22 @@ public:
 	public:
 		///construtor de excecao
 		ApplicationExcept(string description);
+
+		///@brief operador de funcao, retorna a descricao da aplicacao
 		/// @return descricao da excecao
 		string operator()();
 	};
 protected:
-	///construtor da classe nao e acessivel fora da classe - apenas existira um objeto da classe
+	///construtor da classe nao e acessivel fora da classe - apenas existirá um objeto da classe
 	Application();
 public:
-	/// apenas pode existir um objeto da classe
-	/// se ainda nao tiver sido criado um objeto da classe, e criado um, senao retorna um apontador para esse objeto
+	///@brief apenas pode existir um objeto da classe
+	///@brief  se ainda nao tiver sido criado um objeto da classe, e criado um, senao retorna um apontador para esse objeto
 	/// @return apontador para aplicacao
 	static Application* Instance();
 	///destrutor
 	~Application();
-	/// elimina todos os dados da aplicacao, permitindo a recuperacao da memoria ocupada por eles
+	///elimina todos os dados da aplicacao, permitindo a recuperacao da memoria ocupada por eles
 	static void clear();
 	///@return projetos
 	static vector<Project*> getProjects();
@@ -120,169 +125,178 @@ public:
 	///@return tarefas
 	static vector<Task*> getTasks();
 
-	/// obter um projeto a partir do seu ID
-	/// @throw projeto nao existe
-	/// @param ID ID do projeto
-	/// @return apontador para o projeto
+	///@brief  obter um projeto a partir do seu ID
+	///@throw projeto nao existe
+	///@param ID ID do projeto
+	///@return apontador para o projeto
 	static Project* getProjectPtr(int ID);
 
-	/// obter um cliente a partir do seu ID
-	/// @throw cliente nao existe
-	/// @param ID ID do cliente
-	/// @return apontador para o cliente
+	///@brief  obter um cliente a partir do seu ID
+	///@throw cliente nao existe
+	///@param ID ID do cliente
+	///@return apontador para o cliente
 	static Client* getClientPtr(int ID);
 
-	/// obter um colaborador a partir do seu ID
-	/// @throw colaborador nao existe
-	/// @param ID ID do colaborador
-	/// @return apontador para o colaborador
+	///@brief  obter um colaborador a partir do seu ID
+	///@throw colaborador nao existe
+	///@param ID ID do colaborador
+	///@return apontador para o colaborador
 	static Collaborator* getCollaboratorPtr(int ID);
 
-	/// obter uma tarefa a partir do seu ID
-	/// @throw tarefa nao existe
-	/// @param ID ID da tarefa
-	/// @return apontador para a tarefa
+	///@brief  obter uma tarefa a partir do seu ID
+	///@throw tarefa nao existe
+	///@param ID ID da tarefa
+	///@return apontador para a tarefa
 	static Task* getTaskPtr(int ID);
 
-	/// adicionar projeto a aplicacao
-	/// @throw projeto ja existe
-	/// @param p apontador para o projeto
+	///adicionar projeto a aplicacao
+	///@throw projeto ja existe
+	///@param p apontador para o projeto
 	static void addProject(Project* p);
 
-	/// adicionar cliente a aplicacao
-	/// @throw cliente ja existe
-	/// @param c apontador para o cliente
+	///@brief  adicionar cliente a aplicacao
+	///@throw cliente ja existe
+	///@param c apontador para o cliente
 	static void addClient(Client* c);
 
-	/// adicionar colaborador a aplicacao
-	/// @throw colaborador ja existe
-	/// @param c apontador para o colaborador
+	///@brief  adicionar colaborador a aplicacao
+	///@throw colaborador ja existe
+	///@param c apontador para o colaborador
 	static void addCollaborator(Collaborator* c);
 
-	/// faz com quem um certo colaborador atual passe a ser um colaborador antigo
-	/// @throw se o colaborador já estiver na lista de colaboradores antigos
-	/// @param c apontador para o colaborador
+	///@brief  faz com quem um certo colaborador atual passe a ser um colaborador antigo
+	///@throw se o colaborador já estiver na lista de colaboradores antigos
+	///@param c apontador para o colaborador
 	static void setFormer(Collaborator* c);
 
-	///adiciona um candidato novo
+	///@brief adiciona um candidato novo
 	///@param c candidato
 	static void addCV(CV* c);
 
-	///transforma um candidato em colaborador
+	///@brief transforma um candidato em colaborador
 	///@param c candidato
 	///@param weeklyHours horas máximas que ele trabalhará
 	static void hire(CV * c, int weeklyHours);
 
-	///remove um candidato
-	///@param c candidato
+	///@brief remove um candidato
+	///@param c apontador para candidato
 	static void removeCV(CV* c);
 
-	/// adicionar tarefa a aplicacao
-	/// @throw tarefa ja existe
-	/// @param t apontador para a tarefa
+	///@brief  adicionar tarefa a aplicacao
+	///@throw tarefa ja existe
+	///@param t apontador para a tarefa
 	static void addTask(Task* t);
 	
-	/// remove projeto da aplicacao
-	/// @throw projeto nao existe
-	/// @param p apontador para o projeto
-	/// @return sucesso da operacao
+	///@brief  remove projeto da aplicacao
+	///@throw projeto nao existe
+	///@param p apontador para o projeto
+	///@return sucesso da operacao
 	static bool removeProject(Project* p);
 
-	/// remove cliente da aplicacao
-	/// @throw cliente nao existe
-	/// @param c apontador para o cliente
-	/// @return sucesso da operacao
+	///@brief  remove cliente da aplicacao
+	///@throw cliente nao existe
+	///@param c apontador para o cliente
+	///@return sucesso da operacao
 	static bool removeClient(Client* c);
 
-	/// remove tarefa da aplicacao
-	/// @throw tarefa nao existe
-	/// @param t apontador para a tarefa
-	/// @return sucesso da operacao
+	///@brief  remove tarefa da aplicacao
+	///@throw tarefa nao existe
+	///@param t apontador para a tarefa
+	///@return sucesso da operacao
 	static bool removeTask(Task* t);
 
-	/// remove colaborador da aplicacao
-	/// @throw colaborador nao existe
-	/// @param c apontador para o colaborador
-	/// @return sucesso da operacao
+	///@brief  remove colaborador da aplicacao
+	///@throw colaborador nao existe
+	///@param c apontador para o colaborador
+	///@return sucesso da operacao
 	static bool removeCollaborator(Collaborator* c);
 
-	/// remove colaborador antigo da aplicacao
-	/// @throw colaborador antigo nao existe
-	/// @param c apontador para o colaborador antigo
-	/// @return sucesso da operacao
+	///@brief  remove colaborador antigo da aplicacao
+	///@throw colaborador antigo nao existe
+	///@param c apontador para o colaborador antigo
+	///@return sucesso da operacao
 	static bool removeFormerCollaborator(Collaborator* c);
 
-	/// faz com que o colaborador deixe de ser antigo
-	/// @throw se o colaborador já estiver empregue na empresa
-	/// @throw se o colaborador não existir
-	/// @param c apontador para o colaborador antigo
+	///@brief faz com que o colaborador deixe de ser antigo
+	///@throw se o colaborador já estiver empregue na empresa
+	///@throw se o colaborador não existir
+	///@param c apontador para o colaborador antigo
 	static void unsetFormer(Collaborator* c);
 
 	/*escrita*/
 
 	///escreve os dados do sistema em ficheiros
 	static void writeFiles();
-	///escreve os projetos do sistema em ficheiros
+	///@brief escreve os projetos do sistema em ficheiros
 	///@param fout output file stream
 	static void writeProjects(ofstream& fout);
 
-	///escreve os clientes do sistema em ficheiros
+	///@brief escreve os clientes do sistema em ficheiros
 	///@param fout output file stream
 	static void writeClients(ofstream& fout);
 
-	///escreve os colaboradores do sistema em ficheiros
+	///@brief escreve os colaboradores do sistema em ficheiros
 	///@param fout output file stream
 	static void writeCollaborators(ofstream& fout);
 
-	///escreve os colaboradores antigos em ficheiros
+	///@brief escreve os colaboradores antigos em ficheiros
 	///@param fout output file stream
 	static void writeFormerCollaborators(ofstream& fout);
 
-	///escreve todos os candidatos em ficheiros
+	///@brief escreve todos os candidatos em ficheiros
 	///@param fout output file stream
 	static void writeCVs(ofstream& fout);
 
-	///escreve os tarefas do sistema em ficheiros
+	///@brief escreve os tarefas do sistema em ficheiros
 	///@param fout output file stream
 	static void writeTasks(ofstream& fout);
 
 	/*leitura*/
+
 	///le dos ficheiros os dados do sistema
 	static void readFiles();
-	///le os projetos do sistema
-	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@brief le os projetos do sistema
+	///@brief no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
 	///@param fin input file stream
 	static void readProjects(ifstream& fin);
 
-	///le os clientes do sistema
-	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@brief le os clientes do sistema
+	///@brief no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
 	///@param fin input file stream
 	static void readClients(ifstream& fin);
 
-	///le os colaboradores do sistema
-	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@brief le os colaboradores do sistema
+	///@brief no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
 	///@param fin input file stream
 	static void readCollaborators(ifstream& fin);
 
+	///@brief le os antigos colaboradores do sistema
+	///@brief no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@throw ficheiro nao existe
+	///@param fin input file stream
 	static void readFormerCollaborators(ifstream& fin);
 
+	///@brief le os candidatos
+	///@brief no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@throw ficheiro nao existe
+	///@param fin input file stream
 	static void readCVs(ifstream& fin);
 
-	///le os tarefas do sistema
-	///no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
+	///@brief le os tarefas do sistema
+	///@brief no lugar dos apontadores escreve os IDs dos objetos para os quais apontam
 	///@throw ficheiro nao existe
 	///@param fin input file stream
 	static void readTasks(ifstream& fin);
 
-	///le a data do sistema
+	///@brief le a data do sistema
 	///@throw ficheiro nao existe
 	///@param fin input file stream
 	static void readApp(ifstream& fin);
 	
-	///escreve a data do sistema
+	///@brief escreve a data do sistema
 	//@param fout output file stream
 	static void writeApp(ofstream& fout);
 

@@ -356,7 +356,7 @@ bool Application::removeCollaborator(Collaborator* c)
 	delete c;
 	return true;
 }
- bool Application::removeFormerCollaborator(Collaborator* c)
+bool Application::removeFormerCollaborator(Collaborator* c)
 {
 	 if (c == NULL)
 		 throw ApplicationExcept("Invalid former collaborator being removed from application");

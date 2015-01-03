@@ -27,94 +27,110 @@ class Project;
 class Client
 {
 private:
+	///ID do cliente
 	int ID;
+	///Antigo ID do cliente
 	static int lastID; 
+	///numero de identificacao fiscal do cliente
 	int fiscal;
+	///nome do cliente
 	string name;
+	///projectos do cliente
 	vector<Project*> projects;
 public:
 	///construtor por defeito
 	Client();
 
-	///construtor sem ID especificado
+	///@brief construtor sem ID especificado
 	///@param name nome de Cliente
 	Client(string name);
 
-	///construtor sem ID especificado, com informacao fiscal
+	///@brief construtor sem ID especificado, com informacao fiscal
 	///@param name nome de Cliente
 	///@param dados fiscais
 	Client(int fiscal, string name);
 
-	///construtor com ID
+	///@brief construtor com ID
 	///@param name nome de Cliente
 	///@param setID ID do Cliente
 	Client(string name, int setID);
 
-	///client generico
+	///@brief client generico
 	///@param i indice de Cliente	
 	Client(int i);
 
-	///@return nome do client
+	///@brief retorna o nome do cliente
+	///@return nome do cliente
 	string getName() const ;
 
+	///@brief retorna string com o nome e ID do cliente
 	///@return string com o nome e ID do cliente
 	string toString() const;
 
+	///@brief retorna projetos do cliente
 	///@return projetos do cliente
 	vector<Project*> getProjects() const;
 
+	///@brief retorna ID do cliente
 	///@return ID do cliente
 	int getID()const;
 
-	///modificar o nome do cliente
+	///@brief modificar o nome do cliente
 	///@param name novo nome de Cliente
 	void setName(string name);
 
-	///adicionar projeto a colaborador
+	///@brief adicionar projeto a cliente
 	///@throw projeto nao existe
 	///@param proj projeto
 	///@param setClient indica se o cliente deve ser associado ao projeto
 	///@return sucesso da operacao
 	bool addProject(Project* proj, bool setClient = true);
 
-	///substitui os IDs dos objetos pelos apontadores para os objetos
+	///@brief substitui os IDs dos objetos pelos apontadores para os objetos
 	///@throw objeto nao existe na aplicacao
 	void connect();
 
-	///remover projeto de colaborador
+	///@brief remover projeto de cliente
 	///@throw projeto nao existe
 	///@param p projeto
 	///@param removeClient indica se o cliente deve ser removido ao projeto
 	///@return sucesso da operacao
 	bool removeProject(Project* p, bool removeClient = true);
 
+	///@brief retorna custo total de todos os projetos do cliente
 	///@return custo total de todos os projetos do cliente
 	double getTotal() const;
 
+	///@brief retorna informacao fiscal do cliente
 	///@return informacao fiscal do cliente
 	int getFiscal()const;
 
-	///modificar informacao fiscal do cliente
+	///@brief modificar informacao fiscal do cliente
 	///@param newfiscal nova informacao fiscal
 	void setFiscal(int newfiscal);
 
-	///dois clientes sao iguais se os seus IDs forem iguais
+	///@brief dois clientes sao iguais se os seus IDs forem iguais
 	///@param c2 cliente a ser comparado
 	///@return verdadeiro se sao iguais
 	bool operator==(const Client& c2) const;
 
+	///@brief operador menor associado a ordenacao de clientes que é baseada no montante acumulado
+	///@brief clientes com o mesmo valor pago sao diferenciados pelo numero de projectos
+	///@brief clientes com o mesmo numero de projectos e com o mesmo valor pago sao diferenciados pelo ID de cada um
+	///@param c2 cliente a ser comparado
+	///@return verdadeiro se sao iguais
 	bool operator < (const Client& c2) const;
 
-	/// escrita de todos os dados do client, no lugar dos apontadores sao escritos os IDs dos objetos
-	/// @param out stream de saida
-	/// @param c cliente a ser escrito
-	/// @return stream de saida
+	///@brief escrita de todos os dados do client, no lugar dos apontadores sao escritos os IDs dos objetos
+	///@param out stream de saida
+	///@param c cliente a ser escrito
+	///@return stream de saida
 	friend ostream & operator<<(ostream& out, const Client& c);
 
-	/// leitura de todos os dados do cliente, no lugar dos apontadores sao lidos os IDs dos objetos
-	/// @param in stream de entrada
-	/// @param c cliente a ser lido
-	/// @return stream de entreada
+	///@brief leitura de todos os dados do cliente, no lugar dos apontadores sao lidos os IDs dos objetos
+	///@param in stream de entrada
+	///@param c cliente a ser lido
+	///@return stream de entreada
 	friend istream & operator>>(istream& in, Client& c);
 
 	///class de excepcao associada a Clientes
@@ -122,9 +138,10 @@ public:
 	{
 		string description;
 	public:
+		///@brief construtor da classe
 		///@param description descrição
-		///construtor da classe
 		ClientExcept(string description);
+		///retorna descricao da excepcao
 		///@return descricao da excepcao
 		string operator()();
 	};
@@ -132,16 +149,17 @@ public:
 	class ClientComparator
 	{
 	public:
-		///comparacao entre clientes
+		///@brief comparacao entre clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		virtual bool operator()(const Client& c1, const Client& c2) = 0;
-		///comparacao entre apontadores para clientes
+		///@brief comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		virtual bool operator()(const Client* c1, const Client* c2) = 0;
+		///@brief retorna string que contem uma abreviacao do nome do comparador
 		///@return string que contem uma abreviacao do nome do comparador
 		virtual string getAbbreviation() const=0;
 	};
@@ -149,16 +167,17 @@ public:
 	class ClientComparatorID: public ClientComparator
 	{
 	public:
-		///comparacao entre clientes
+		///@brief comparacao entre clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		bool operator()(const Client& c1, const Client& c2);
-		///comparacao entre apontadores para clientes
+		///@brief comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
+		///@brief retorna string que contem uma abreviacao do nome do comparador
 		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};
@@ -166,16 +185,17 @@ public:
 	class ClientComparatorAlphabetic : public ClientComparator
 	{
 	public:
-		///comparacao entre clientes
+		///@brief comparacao entre clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		bool operator()(const Client& c1, const Client& c2);
-		///comparacao entre apontadores para clientes
+		///@brief comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
+		///@brief retorna string que contem uma abreviacao do nome do comparador
 		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};
@@ -183,16 +203,17 @@ public:
 	class ClientComparatorNumProjects : public ClientComparator
 	{
 	public:
-		///comparacao entre clientes
+		///@brief comparacao entre clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		bool operator()(const Client& c1, const Client& c2);
-		///comparacao entre apontadores para clientes
+		///@brief comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
+		///@brief rertorna string que contem uma abreviacao do nome do comparador
 		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};
@@ -200,16 +221,17 @@ public:
 	class ClientComparatorTotal : public ClientComparator
 	{
 	public:
-		///comparacao entre clientes
+		///@brief comparacao entre clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		bool operator()(const Client& c1, const Client& c2);
-		///comparacao entre apontadores para clientes
+		///@brief comparacao entre apontadores para clientes
 		///@param c1 objecto1
 		///@param c2 objecto2
 		///@return c1 < c2
 		bool operator()(const Client* c1, const Client* c2);
+		///@brief retorna string que contem uma abreviacao do nome do comparador
 		///@return string que contem uma abreviacao do nome do comparador
 		string getAbbreviation() const;
 	};

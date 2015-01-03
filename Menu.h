@@ -20,6 +20,7 @@ using namespace std;
 
 class Application;
 
+///@brief 
 void menus(int& state, Application& app);
 
 string normalize(const string& s1, const string& s2, int n);

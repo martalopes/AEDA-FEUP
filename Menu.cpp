@@ -16,14 +16,14 @@ const int SPACE = 32;
 const int BACKSPACE = 8;
 const int ESCAPE = 27;
 
-///largura do ecra
+
 const int WIDTH = 80;
 
-///usado para guardar o numero de '\n' ate ao fim do ecra atual
+
 int end_of_screen = 24;
-///cor atual
+
 int current_color = 7;
-///@return uma string de tamanho n, com s1 no inicio e s2 no fim
+
 string normalize(const string& s1, const string& s2, int n)
 {
 	string s_out = s1;
@@ -72,7 +72,7 @@ void ClearScreen() /* http://www.cplusplus.com/articles/4z18T05o/ */
 	/* Move the cursor home */
 	SetConsoleCursorPosition(hStdOut, homeCoords);
 }/* http://www.cplusplus.com/articles/4z18T05o/ */
-///centra uma string
+
 ostream& operator>>(ostream& out, string s)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
@@ -85,13 +85,12 @@ ostream& operator>>(ostream& out, string s)
 	out << s;
 	return out;
 }
-///usado em vez de el de modo a contabilizar o numero de '\n' ate ao fim do ecra atual
+
 ostream& el(ostream& out)
 {
 	end_of_screen--;
 	return out << endl;
 }
-///move o cursor ate ao fim do ecra e restaura end_of_screen
 void go_end_of_screen()
 {
 	while (end_of_screen > 0)
@@ -109,7 +108,7 @@ void changecolor(string color)
 		current_color = 112;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), current_color);
 }
-///mostra um menu generico e atualiza o estado
+
 void genericmenu(int &state, Application &app, string name, string text, vector<string> options, vector<int> results)
 {
 	bool more = true;//falso termina a funcao
