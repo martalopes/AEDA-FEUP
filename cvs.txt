@@ -87,22 +87,6 @@ Contact 22
 0
 16
 5
-24
-Architect
-Name 24
-Address 24
-Contact 24
-0
-17
-3
-20
-Tester
-Name 20
-Address 20
-Contact 20
-0
-14
-8
 36
 Architect
 Name 36
@@ -111,6 +95,22 @@ Contact 36
 0
 14
 8
+20
+Tester
+Name 20
+Address 20
+Contact 20
+0
+14
+8
+24
+Architect
+Name 24
+Address 24
+Contact 24
+0
+17
+3
 43
 Programmer
 Name 43
@@ -135,19 +135,19 @@ Contact 28
 0
 11
 10
-12
-Tester
-Name 12
-Address 12
-Contact 12
-0
-16
-1
 39
 Architect
 Name 39
 Address 39
 Contact 39
+0
+16
+1
+12
+Tester
+Name 12
+Address 12
+Contact 12
 0
 16
 1
@@ -167,14 +167,6 @@ Contact 2
 0
 15
 2
-13
-Tester
-Name 13
-Address 13
-Contact 13
-0
-13
-3
 19
 Tester
 Name 19
@@ -183,14 +175,14 @@ Contact 19
 0
 13
 3
-27
-Manager
-Name 27
-Address 27
-Contact 27
+13
+Tester
+Name 13
+Address 13
+Contact 13
 0
-9
-9
+13
+3
 46
 Architect
 Name 46
@@ -199,6 +191,14 @@ Contact 46
 0
 12
 4
+27
+Manager
+Name 27
+Address 27
+Contact 27
+0
+9
+9
 25
 Tester
 Name 25

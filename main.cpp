@@ -22,7 +22,8 @@ int main()
 	srand((unsigned int)time(NULL));
 	Application* app = Application::Instance();
 	try{
-		/*Application::readFiles();
+		Application::readFiles();
+		/*
 		Application::genApplication();
 		Application::writeFiles();
 		return 0;*/
